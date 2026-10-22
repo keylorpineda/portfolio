@@ -1,0 +1,281 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="1200" height="480" role="img" aria-label="HealthyCropping: Offline crop disease diagnosis on Android">
+<style>
+  text { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; }
+  .pulse { animation: pDot 2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes pDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(1.4); } }
+
+  .scene { opacity: 0; animation: 12s linear infinite; }
+  .s1 { opacity: 1; animation-name: s1; }
+  .s2 { animation-name: s2; }
+  .s3 { animation-name: s3; }
+  .s4 { animation-name: s4; }
+
+  @keyframes s1 { 0% { opacity: 0; } 2%, 23% { opacity: 1; } 25%, 100% { opacity: 0; } }
+  @keyframes s2 { 0%, 25% { opacity: 0; } 27%, 48% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @keyframes s3 { 0%, 50% { opacity: 0; } 52%, 73% { opacity: 1; } 75%, 100% { opacity: 0; } }
+  @keyframes s4 { 0%, 75% { opacity: 0; } 77%, 98% { opacity: 1; } 100% { opacity: 0; } }
+
+  .pill rect { fill: #121A15; stroke: #203026; animation: 12s linear infinite; }
+  .pill text { fill: #94A3B8; animation: 12s linear infinite; }
+  .p1 rect { animation-name: r1; } .p2 rect { animation-name: r2; } .p3 rect { animation-name: r3; } .p4 rect { animation-name: r4; }
+  .p1 text { animation-name: t1; } .p2 text { animation-name: t2; } .p3 text { animation-name: t3; } .p4 text { animation-name: t4; }
+
+  @keyframes r1 { 0%, 24% { fill: #059669; stroke: #10B981; } 25%, 99% { fill: #121A15; stroke: #203026; } 100% { fill: #059669; stroke: #10B981; } }
+  @keyframes t1 { 0%, 24% { fill: #FFFFFF; } 25%, 99% { fill: #94A3B8; } 100% { fill: #FFFFFF; } }
+
+  @keyframes r2 { 0%, 25% { fill: #121A15; stroke: #203026; } 26%, 49% { fill: #059669; stroke: #10B981; } 50%, 100% { fill: #121A15; stroke: #203026; } }
+  @keyframes t2 { 0%, 25% { fill: #94A3B8; } 26%, 49% { fill: #FFFFFF; } 50%, 100% { fill: #94A3B8; } }
+
+  @keyframes r3 { 0%, 50% { fill: #121A15; stroke: #203026; } 51%, 74% { fill: #059669; stroke: #10B981; } 75%, 100% { fill: #121A15; stroke: #203026; } }
+  @keyframes t3 { 0%, 50% { fill: #94A3B8; } 51%, 74% { fill: #FFFFFF; } 75%, 100% { fill: #94A3B8; } }
+
+  @keyframes r4 { 0%, 75% { fill: #121A15; stroke: #203026; } 76%, 99% { fill: #059669; stroke: #10B981; } 100% { fill: #121A15; stroke: #203026; } }
+  @keyframes t4 { 0%, 75% { fill: #94A3B8; } 76%, 99% { fill: #FFFFFF; } 100% { fill: #94A3B8; } }
+
+  .scan-beam { animation: scanMove 3s ease-in-out infinite; }
+  @keyframes scanMove { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(110px); } }
+
+  .pop-chip { animation: popIn 12s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes popIn { 0%, 7% { transform: scale(0.7); opacity: 0; } 10%, 24% { transform: scale(1); opacity: 1; } 25%, 100% { opacity: 0; } }
+
+  .rot-sync { animation: syncRotate 3s linear infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes syncRotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; }
+    .s1 { opacity: 1; }
+    .p1 rect { fill: #059669; stroke: #10B981; }
+    .p1 text { fill: #FFFFFF; }
+  }
+</style>
+
+<defs>
+  <clipPath id="screen-clip">
+    <rect x="870" y="44" width="244" height="392" rx="26"/>
+  </clipPath>
+</defs>
+
+<!-- Main Container Card -->
+<rect x="0.5" y="0.5" width="1199" height="479" rx="24" fill="#0B0F0E" stroke="#1E2922"/>
+
+<!-- Left Content Area -->
+<!-- App Icon & Title -->
+<g transform="translate(72, 60)">
+  <rect width="44" height="44" rx="12" fill="#10B981"/>
+  <!-- Leaf icon path -->
+  <path d="M22 8C14 8 10 14 10 22C10 30 18 34 22 36C26 34 34 30 34 22C34 14 30 8 22 8Z" fill="#FFFFFF" opacity="0.95"/>
+  <path d="M22 14V30M18 19L22 23M26 21L22 25" stroke="#059669" stroke-width="2" stroke-linecap="round"/>
+</g>
+
+<text x="130" y="91" font-size="28" font-weight="800" fill="#F1F5F9" letter-spacing="-0.5">HealthyCropping</text>
+
+<!-- Active Development Status Tag -->
+<g transform="translate(360, 68)">
+  <rect width="250" height="28" rx="14" fill="#0D281E"/>
+  <circle cx="16" cy="14" r="5" fill="#10B981" class="pulse"/>
+  <text x="30" y="19" font-size="12" font-weight="700" fill="#34D399" letter-spacing="0.5">ACTIVE DEV · PHASE 6 IN PROGRESS</text>
+</g>
+
+<!-- Hero Headlines -->
+<text x="72" y="168" font-size="44" font-weight="800" fill="#F1F5F9" letter-spacing="-1.2">Offline crop disease diagnosis.</text>
+<text x="72" y="222" font-size="44" font-weight="800" fill="#10B981" letter-spacing="-1.2">Instant AI triage in the field.</text>
+<text x="72" y="272" font-size="19" fill="#94A3B8">On-device TFLite models for Coffee, Cacao &amp; Banana. Zero signal needed.</text>
+
+<!-- 4 Interactive Step Navigation Pills -->
+<g class="pill p1">
+  <rect x="72" y="324" width="140" height="40" rx="20"/>
+  <text x="142" y="349" text-anchor="middle" font-size="14" font-weight="700">1  On-Device AI</text>
+</g>
+
+<g class="pill p2">
+  <rect x="222" y="324" width="136" height="40" rx="20"/>
+  <text x="290" y="349" text-anchor="middle" font-size="14" font-weight="700">2  Multi-Crop</text>
+</g>
+
+<g class="pill p3">
+  <rect x="368" y="324" width="144" height="40" rx="20"/>
+  <text x="440" y="349" text-anchor="middle" font-size="14" font-weight="700">3  SQLite &amp; Sync</text>
+</g>
+
+<g class="pill p4">
+  <rect x="522" y="324" width="144" height="40" rx="20"/>
+  <text x="594" y="349" text-anchor="middle" font-size="14" font-weight="700">4  Gemini RAG</text>
+</g>
+
+<!-- Milestone Details Bar -->
+<g transform="translate(72, 396)">
+  <rect width="660" height="40" rx="10" fill="#131C17" stroke="#223328"/>
+  <text x="18" y="25" font-size="13" font-weight="700" fill="#10B981">Target:</text>
+  <text x="68" y="25" font-size="13" fill="#94A3B8">Coffee Leaf Rust, Cacao Moniliasis &amp; Banana Sigatoka · ICAFE &amp; CATIE Grounded</text>
+</g>
+
+<!-- Right Side: Phone Hardware Mockup -->
+<rect x="864" y="38" width="256" height="404" rx="30" fill="#16201B" stroke="#2A3D31" stroke-width="2"/>
+<!-- Dynamic Island Notch -->
+<rect x="957" y="47" width="70" height="11" rx="5.5" fill="#000000" opacity="0.3"/>
+
+<!-- Clipped Screen Content -->
+<g clip-path="url(#screen-clip)">
+  <rect x="870" y="44" width="244" height="392" fill="#080C0A"/>
+
+  <!-- ================= SCENE 1: CAMERA SCANNER & LEAF ================= -->
+  <g class="scene s1">
+    <!-- Screen Header -->
+    <text x="888" y="78" font-size="13" font-weight="800" fill="#F1F5F9">Coffee Scanner</text>
+    <rect x="1040" y="66" width="60" height="18" rx="9" fill="#132E22"/>
+    <text x="1070" y="79" font-size="10" font-weight="700" fill="#10B981" text-anchor="middle">OFFLINE</text>
+
+    <!-- Camera Viewport Box -->
+    <rect x="886" y="94" width="212" height="210" rx="14" fill="#131C17" stroke="#223328"/>
+
+    <!-- Viewfinder Reticles -->
+    <path d="M898 106h14M898 106v14 M1086 106h-14M1086 106v14 M898 292h14M898 292v-14 M1086 292h-14M1086 292v-14" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Simulated Coffee Leaf -->
+    <g transform="translate(992, 198) scale(0.85)">
+      <path d="M0 -70 C45 -50 70 0 0 75 C-70 0 -45 -50 0 -70 Z" fill="#143D28"/>
+      <path d="M0 -60 V65 M-25 -20 L0 5 M25 -20 L0 5 M-30 15 L0 35 M30 15 L0 35" stroke="#245C3E" stroke-width="2" stroke-linecap="round"/>
+      <!-- Disease Rust Spots -->
+      <circle cx="-16" cy="-12" r="8" fill="#B45309" opacity="0.9"/>
+      <circle cx="18" cy="14" r="10" fill="#B45309" opacity="0.9"/>
+      <circle cx="-6" cy="30" r="6" fill="#B45309" opacity="0.85"/>
+    </g>
+
+    <!-- Animated Scanning Laser Beam -->
+    <g class="scan-beam">
+      <line x1="890" y1="130" x2="1094" y2="130" stroke="#10B981" stroke-width="2.5" opacity="0.85"/>
+      <rect x="890" y="125" width="204" height="10" fill="#10B981" opacity="0.15"/>
+    </g>
+
+    <!-- Diagnosis Result Card -->
+    <g class="pop-chip" transform="translate(886, 316)">
+      <rect width="212" height="104" rx="12" fill="#131C17" stroke="#223328"/>
+      <text x="14" y="24" font-size="13" font-weight="800" fill="#F1F5F9">Coffee Leaf Rust</text>
+      <text x="14" y="42" font-size="11" font-weight="700" fill="#10B981">94.2% Confidence</text>
+      <!-- Severity Indicator -->
+      <rect x="14" y="56" width="184" height="6" rx="3" fill="#203026"/>
+      <rect x="14" y="56" width="120" height="6" rx="3" fill="#F59E0B"/>
+      <text x="14" y="76" font-size="10" fill="#94A3B8">Severity: Moderate · Save to Plot</text>
+      <rect x="14" y="82" width="184" height="16" rx="8" fill="#059669"/>
+      <text x="106" y="94" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">STORED TO LOCAL SQLITE</text>
+    </g>
+  </g>
+
+  <!-- ================= SCENE 2: MULTI-CROP AI MODELS ================= -->
+  <g class="scene s2">
+    <text x="888" y="78" font-size="13" font-weight="800" fill="#F1F5F9">Model Specialist Zoo</text>
+    <text x="888" y="94" font-size="10" fill="#94A3B8">Dedicated TFLite architectures</text>
+
+    <!-- Crop 1: Coffee (Active) -->
+    <g transform="translate(886, 110)">
+      <rect width="212" height="74" rx="12" fill="#131C17" stroke="#10B981" stroke-width="1.5"/>
+      <circle cx="24" cy="28" r="12" fill="#132E22"/>
+      <text x="24" y="32" font-size="10" font-weight="800" fill="#10B981" text-anchor="middle">CF</text>
+      <text x="46" y="25" font-size="12" font-weight="800" fill="#F1F5F9">Coffee Specialist</text>
+      <text x="46" y="41" font-size="10" fill="#94A3B8">Rust · Leaf Spot · Phoma</text>
+      <rect x="46" y="48" width="80" height="16" rx="8" fill="#059669"/>
+      <text x="86" y="60" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">INT8 Ready</text>
+    </g>
+
+    <!-- Crop 2: Cacao -->
+    <g transform="translate(886, 194)">
+      <rect width="212" height="68" rx="12" fill="#131C17" stroke="#223328"/>
+      <circle cx="24" cy="26" r="12" fill="#132E22"/>
+      <text x="24" y="30" font-size="10" font-weight="800" fill="#10B981" text-anchor="middle">CC</text>
+      <text x="46" y="24" font-size="12" font-weight="800" fill="#F1F5F9">Cacao Specialist</text>
+      <text x="46" y="40" font-size="10" fill="#94A3B8">Moniliasis · Black Pod</text>
+      <text x="46" y="56" font-size="9" font-weight="700" fill="#10B981">FP16 Quantized · 98.4% Acc</text>
+    </g>
+
+    <!-- Crop 3: Banana -->
+    <g transform="translate(886, 272)">
+      <rect width="212" height="68" rx="12" fill="#131C17" stroke="#223328"/>
+      <circle cx="24" cy="26" r="12" fill="#132E22"/>
+      <text x="24" y="30" font-size="10" font-weight="800" fill="#10B981" text-anchor="middle">BN</text>
+      <text x="46" y="24" font-size="12" font-weight="800" fill="#F1F5F9">Banana Specialist</text>
+      <text x="46" y="40" font-size="10" fill="#94A3B8">Black Sigatoka · Cordana</text>
+      <text x="46" y="56" font-size="9" font-weight="700" fill="#10B981">224x224 RGB Tensor Parity</text>
+    </g>
+
+    <!-- Parity Chip -->
+    <g transform="translate(886, 350)">
+      <rect width="212" height="68" rx="12" fill="#132E22" stroke="#10B981"/>
+      <text x="106" y="25" font-size="11" font-weight="800" fill="#10B981" text-anchor="middle">Zero Cloud Dependency</text>
+      <text x="106" y="43" font-size="10" fill="#F1F5F9" text-anchor="middle">&lt; 50ms Edge Inference</text>
+      <text x="106" y="58" font-size="9" fill="#94A3B8" text-anchor="middle">Verified Fixture Parity</text>
+    </g>
+  </g>
+
+  <!-- ================= SCENE 3: SQLITE & PLOT TRACKING ================= -->
+  <g class="scene s3">
+    <text x="888" y="78" font-size="13" font-weight="800" fill="#F1F5F9">Local Farm Storage</text>
+    <text x="888" y="94" font-size="10" fill="#94A3B8">SQLite offline-first database</text>
+
+    <!-- Farm Card -->
+    <g transform="translate(886, 110)">
+      <rect width="212" height="84" rx="12" fill="#131C17" stroke="#223328"/>
+      <text x="14" y="24" font-size="12" font-weight="800" fill="#F1F5F9">Finca La Alianza</text>
+      <text x="14" y="40" font-size="10" fill="#94A3B8">Tarrazu Valley · 1,600m</text>
+      <rect x="14" y="50" width="80" height="20" rx="10" fill="#132E22"/>
+      <text x="54" y="64" font-size="9" font-weight="700" fill="#10B981" text-anchor="middle">3 Active Plots</text>
+      <rect x="100" y="50" width="88" height="20" rx="10" fill="#121A15" stroke="#223328"/>
+      <text x="144" y="64" font-size="9" font-weight="700" fill="#94A3B8" text-anchor="middle">38 Scans Saved</text>
+    </g>
+
+    <!-- Unsynced Queue Card -->
+    <g transform="translate(886, 206)">
+      <rect width="212" height="120" rx="12" fill="#131C17" stroke="#223328"/>
+      <g transform="translate(18, 20)">
+        <circle cx="16" cy="16" r="16" fill="#132E22"/>
+        <path class="rot-sync" d="M16 8 A8 8 0 0 1 24 16 L22 16 M16 24 A8 8 0 0 1 8 16 L10 16" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <text x="60" y="32" font-size="12" font-weight="800" fill="#F1F5F9">Cloud Sync Queue</text>
+      <text x="60" y="48" font-size="10" fill="#94A3B8">4 scans awaiting WiFi</text>
+      <line x1="14" y1="64" x2="198" y2="64" stroke="#223328"/>
+      <text x="14" y="84" font-size="10" font-weight="700" fill="#10B981">Status: Local first</text>
+      <text x="14" y="100" font-size="9" fill="#94A3B8">Auto-pushes to FastAPI when online</text>
+    </g>
+
+    <!-- Cloudinary Image Processing -->
+    <g transform="translate(886, 338)">
+      <rect width="212" height="80" rx="12" fill="#131C17" stroke="#223328"/>
+      <text x="14" y="24" font-size="11" font-weight="800" fill="#F1F5F9">Cloud Media Bridge</text>
+      <text x="14" y="42" font-size="10" fill="#94A3B8">FastAPI &amp; Cloudinary CDN</text>
+      <rect x="14" y="52" width="184" height="18" rx="9" fill="#059669"/>
+      <text x="106" y="65" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">SECURE FIREBASE TOKEN AUTH</text>
+    </g>
+  </g>
+
+  <!-- ================= SCENE 4: GEMINI RAG ADVISORY ================= -->
+  <g class="scene s4">
+    <text x="888" y="78" font-size="13" font-weight="800" fill="#F1F5F9">Gemini RAG Advisory</text>
+    <text x="888" y="94" font-size="10" fill="#94A3B8">Grounded agronomic guidance</text>
+
+    <!-- Advisory Recommendation Box -->
+    <g transform="translate(886, 110)">
+      <rect width="212" height="180" rx="12" fill="#131C17" stroke="#223328"/>
+      <rect x="14" y="14" width="94" height="20" rx="10" fill="#132E22"/>
+      <text x="61" y="28" font-size="9" font-weight="800" fill="#10B981" text-anchor="middle">CULTURAL CONTROL</text>
+      <text x="14" y="54" font-size="12" font-weight="800" fill="#F1F5F9">Manage Shade Canopy</text>
+      <text x="14" y="72" font-size="10" fill="#94A3B8">Prune excessive shade trees to</text>
+      <text x="14" y="88" font-size="10" fill="#94A3B8">reduce relative leaf moisture</text>
+      <text x="14" y="104" font-size="10" fill="#94A3B8">below 80% during morning hours.</text>
+      <line x1="14" y1="120" x2="198" y2="120" stroke="#223328"/>
+      <text x="14" y="140" font-size="9" font-weight="800" fill="#10B981">Grounded Reference Source:</text>
+      <text x="14" y="156" font-size="9" fill="#F1F5F9">ICAFE Guia Cafetalera 2024 · p. 48</text>
+      <text x="14" y="170" font-size="8" fill="#94A3B8">Verified Phytosanitary Lab Manual</text>
+    </g>
+
+    <!-- Decision Support Disclaimer Tag -->
+    <g transform="translate(886, 302)">
+      <rect width="212" height="116" rx="12" fill="#132E22" stroke="#10B981"/>
+      <text x="14" y="24" font-size="11" font-weight="800" fill="#10B981">Decision Support Layer</text>
+      <text x="14" y="42" font-size="9" fill="#F1F5F9">Does not replace an agronomist.</text>
+      <text x="14" y="58" font-size="9" fill="#F1F5F9">Supports field observations with</text>
+      <text x="14" y="74" font-size="9" fill="#F1F5F9">institutional references.</text>
+      <rect x="14" y="86" width="184" height="18" rx="9" fill="#059669"/>
+      <text x="106" y="99" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">NO HALLUCINATED REMEDIES</text>
+    </g>
+  </g>
+</g>
+</svg>

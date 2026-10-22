@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keylor Pineda · Software Developer</title>
+  <meta name="description" content="Keylor Pineda, software developer from Costa Rica. Full-stack products, on-device machine learning and retrieval systems.">
+  <meta name="author" content="Keylor Pineda">
+  <link rel="canonical" href="https://keylorpineda.dev/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://keylorpineda.dev/">
+  <meta property="og:title" content="Keylor Pineda · Software Developer">
+  <meta property="og:description" content="Full-stack products, on-device machine learning and retrieval systems. Costa Rica.">
+  <meta property="og:image" content="https://keylorpineda.dev/assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#F3EFE6" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F0F11" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    // Set theme and language before first paint to avoid a flash.
+    (function () {
+      var s = function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } };
+      var t = s('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var l = s('lang') || ((navigator.language || 'en').toLowerCase().indexOf('es') === 0 ? 'es' : 'en');
+      document.documentElement.dataset.theme = t;
+      document.documentElement.lang = l;
+    })();
+  </script>
+  <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#work" data-i18n="skip">Skip to content</a>
+  <div class="spotlight" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="nav-inner box">
+      <a class="brand" href="#top" aria-label="Keylor Pineda">
+        <span class="brand-tile">KP</span>
+        <span class="brand-name">keylorpineda<span class="brand-dot">.dev</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#work" data-i18n="nav.work">Work</a>
+        <a href="#stack" data-i18n="nav.stack">Stack</a>
+        <a href="#certs" data-i18n="nav.certs">Certifications</a>
+        <a href="#activity" data-i18n="nav.activity">Activity</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="pill-btn" id="lang-toggle" type="button" aria-label="Cambiar a español">
+          <span data-lang="en">EN</span><span class="slash">/</span><span data-lang="es">ES</span>
+        </button>
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero container">
+      <div class="hero-copy">
+        <p class="eyebrow mono reveal"><span class="dot-live"></span><span data-i18n="hero.eyebrow">Software developer · Costa Rica</span></p>
+        <h1 class="board" aria-label="Keylor Pineda">
+          <span class="board-row" data-flap="KEYLOR" aria-hidden="true"></span>
+          <span class="board-row" data-flap="PINEDA" aria-hidden="true"></span>
+        </h1>
+        <div class="roles" aria-hidden="true"><span class="board-row small" id="roles"></span></div>
+        <p class="lead reveal" data-i18n="hero.lead">I build full-stack products end to end, and machine learning that runs right on a phone, even with no signal.</p>
+        <div class="cta-row reveal">
+          <a class="btn btn-primary" href="#work"><span data-i18n="hero.cta1">See my work</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+          <a class="btn" href="#contact" data-i18n="hero.cta2">Get in touch</a>
+        </div>
+        <ul class="facts reveal">
+          <li><strong>3</strong><span data-i18n="hero.f1">products shipped from scratch</span></li>
+          <li><strong>4</strong><span data-i18n="hero.f2">cloud and AI certifications</span></li>
+          <li><strong>UTC−6</strong><span data-i18n="hero.f3">based in Costa Rica</span></li>
+        </ul>
+      </div>
+
+      <div class="deck" aria-label="Project previews">
+        <a class="deck-card box c1" href="#healthycropping" style="--accent:#3FA163">
+          <span class="deck-tag mono">01 · Android</span>
+          <img class="theme-dark fit" src="assets/img/projects/hc-hero-dark.svg" alt="HealthyCropping" loading="eager">
+          <img class="theme-light fit" src="assets/img/projects/hc-hero-light.svg" alt="HealthyCropping" loading="eager">
+          <span class="deck-title">HealthyCropping</span>
+        </a>
+        <a class="deck-card box c2" href="#booth" style="--accent:#6366F1">
+          <span class="deck-tag mono">02 · Web</span>
+          <img src="assets/img/projects/booth-storefront-desktop.webp" alt="Booth storefront" loading="eager">
+          <span class="deck-title">Booth</span>
+        </a>
+        <a class="deck-card box c3" href="#rag" style="--accent:#1F9E98">
+          <span class="deck-tag mono">03 · AI</span>
+          <img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="RAG Research Engine benchmark" loading="eager" class="fit">
+          <img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="RAG Research Engine benchmark" loading="eager" class="fit">
+          <span class="deck-title">RAG Research Engine</span>
+        </a>
+        <span class="sticker mono" data-i18n="hero.sticker">Now building HealthyCropping</span>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="tape" aria-hidden="true">
+      <div class="tape-track" id="tape-a"></div>
+      <div class="tape-track reverse" id="tape-b"></div>
+    </div>
+
+    <!-- WORK -->
+    <section id="work" class="section container">
+      <header class="section-head reveal">
+        <span class="section-num mono">01</span>
+        <h2 data-i18n="work.title">Selected work</h2>
+        <p data-i18n="work.sub">Three products I designed, built and shipped from scratch, from the database to the interface.</p>
+      </header>
+
+      <!-- HealthyCropping -->
+      <article class="project" id="healthycropping" style="--accent:#3FA163">
+        <div class="story">
+          <div class="project-head reveal">
+            <span class="kicker mono" data-i18n="hc.kicker">Android · On-device ML</span>
+            <h3>HealthyCropping</h3>
+            <span class="status"><span class="status-dot"></span><span data-i18n="hc.status">In development</span></span>
+            <p data-i18n="hc.desc">An offline-first Android app that detects coffee, cacao and banana diseases from a phone photo, built for farms in Costa Rica where the signal drops.</p>
+          </div>
+          <div class="step" data-shot="0">
+            <span class="step-num mono">A</span>
+            <h4 data-i18n="hc.s1t">Diagnosis without signal</h4>
+            <p data-i18n="hc.s1">Each crop has its own MobileNetV3 model running on the phone with TensorFlow Lite. Scans, farms and plots stay in SQLite, so nothing depends on a connection.</p>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/hc-hero-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/hc-hero-light.svg" alt="" loading="lazy"></figure>
+          </div>
+          <div class="step" data-shot="1">
+            <span class="step-num mono">B</span>
+            <h4 data-i18n="hc.s2t">Trained on real field photos</h4>
+            <p data-i18n="hc.s2">Public datasets from coffee, cacao and banana plots, deduplicated by perceptual hash and split by plant so no leaf leaks between training and test.</p>
+            <figure class="step-shot box"><img src="assets/img/projects/hc-dataset.webp" alt="" loading="lazy"></figure>
+          </div>
+          <div class="step" data-shot="2">
+            <span class="step-num mono">C</span>
+            <h4 data-i18n="hc.s3t">It shows where it looks</h4>
+            <p data-i18n="hc.s3">Grad-CAM heatmaps show which part of the leaf drove each prediction, and every experiment, including the failed ones, is documented.</p>
+            <figure class="step-shot box"><img src="assets/img/projects/hc-gradcam.webp" alt="" loading="lazy"></figure>
+          </div>
+          <dl class="metrics reveal">
+            <div><dt>0.97</dt><dd data-i18n="hc.m1">banana test Macro-F1</dd></div>
+            <div><dt>6 MB</dt><dd data-i18n="hc.m2">per model, float16</dd></div>
+            <div><dt>3</dt><dd data-i18n="hc.m3">crops, one model each</dd></div>
+          </dl>
+          <ul class="logos reveal" aria-label="Stack">
+            <li><img src="assets/logos/react.svg" alt="">React Native</li>
+            <li><img src="assets/logos/expo.svg" alt="">Expo</li>
+            <li><img src="assets/logos/typescript.svg" alt="">TypeScript</li>
+            <li><img src="assets/logos/tensorflow.svg" alt="">TensorFlow Lite</li>
+            <li><img src="assets/logos/python.svg" alt="">Python</li>
+            <li><img src="assets/logos/fastapi.svg" alt="">FastAPI</li>
+            <li><img src="assets/logos/firebase.svg" alt="">Firebase</li>
+            <li><img src="assets/logos/sqlite.svg" alt="">SQLite</li>
+            <li><img src="assets/logos/gemini.svg" alt="">Gemini</li>
+          </ul>
+          <div class="cta-row reveal">
+            <a class="btn" href="https://github.com/keylorpineda/healthycropping" target="_blank" rel="noopener"><img src="assets/logos/github.svg" alt=""><span data-i18n="common.code">Source code</span></a>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="frame box">
+            <div class="frame-bar"><i></i><i></i><i></i><span class="mono">healthycropping</span></div>
+            <div class="shots">
+              <figure class="shot contain is-active"><img class="theme-dark" src="assets/img/projects/hc-hero-dark.svg" alt="HealthyCropping overview"><img class="theme-light" src="assets/img/projects/hc-hero-light.svg" alt="HealthyCropping overview"></figure>
+              <figure class="shot contain"><img src="assets/img/projects/hc-dataset.webp" alt="Sample grid of the coffee dataset" loading="lazy"></figure>
+              <figure class="shot contain"><img src="assets/img/projects/hc-gradcam.webp" alt="Grad-CAM heatmaps on coffee leaves" loading="lazy"></figure>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Booth -->
+      <article class="project flip" id="booth" style="--accent:#6366F1">
+        <div class="story">
+          <div class="project-head reveal">
+            <span class="kicker mono" data-i18n="booth.kicker">Web app · Commerce</span>
+            <h3>Booth</h3>
+            <span class="status"><span class="status-dot"></span><span data-i18n="booth.status">Live demo</span></span>
+            <p data-i18n="booth.desc">Small businesses already sell through WhatsApp, one chat at a time. Booth gives each store a single link with its catalog and keeps orders, payments and stock in one place.</p>
+          </div>
+          <div class="step" data-shot="0">
+            <span class="step-num mono">A</span>
+            <h4 data-i18n="booth.s1t">One link per store</h4>
+            <p data-i18n="booth.s1">Shoppers open the store link, browse the catalog and build a cart. No app to install and no account to create.</p>
+            <figure class="step-shot box"><img src="assets/img/projects/booth-storefront-desktop.webp" alt="" loading="lazy"></figure>
+          </div>
+          <div class="step" data-shot="1">
+            <span class="step-num mono">B</span>
+            <h4 data-i18n="booth.s2t">Orders, not chats</h4>
+            <p data-i18n="booth.s2">The cart turns into a clean WhatsApp message, stock is reserved atomically, and the owner moves each order from pending to ready on the dashboard.</p>
+            <figure class="step-shot box"><img src="assets/img/projects/booth-dashboard-orders.webp" alt="" loading="lazy"></figure>
+          </div>
+          <div class="step" data-shot="2">
+            <span class="step-num mono">C</span>
+            <h4 data-i18n="booth.s3t">Receipts checked by AI</h4>
+            <p data-i18n="booth.s3">For bank transfers, Gemini reads the receipt and tells the owner whether the amount and recipient match before the payment is confirmed.</p>
+            <figure class="step-shot box"><img src="assets/img/projects/booth-ai-receipt-verification.webp" alt="" loading="lazy"></figure>
+          </div>
+          <dl class="metrics reveal">
+            <div><dt data-i18n="booth.m1v">Multi</dt><dd data-i18n="booth.m1">tenant, isolated per store</dd></div>
+            <div><dt>ES · EN</dt><dd data-i18n="booth.m2">and every currency in minor units</dd></div>
+            <div><dt>360 px</dt><dd data-i18n="booth.m3">mobile end to end tests</dd></div>
+          </dl>
+          <ul class="logos reveal" aria-label="Stack">
+            <li><img src="assets/logos/react.svg" alt="">React</li>
+            <li><img src="assets/logos/typescript.svg" alt="">TypeScript</li>
+            <li><img src="assets/logos/vite.svg" alt="">Vite</li>
+            <li><img src="assets/logos/tailwind.svg" alt="">Tailwind</li>
+            <li><img src="assets/logos/tanstack.svg" alt="">TanStack Query</li>
+            <li><img src="assets/logos/nestjs.svg" alt="">NestJS</li>
+            <li><img src="assets/logos/prisma.svg" alt="">Prisma</li>
+            <li><img src="assets/logos/postgresql.svg" alt="">PostgreSQL</li>
+            <li><img src="assets/logos/gemini.svg" alt="">Gemini</li>
+            <li><img src="assets/logos/playwright.svg" alt="">Playwright</li>
+            <li><img src="assets/logos/vercel.svg" alt="">Vercel</li>
+          </ul>
+          <div class="cta-row reveal">
+            <a class="btn btn-primary" href="https://booth-tawny.vercel.app/s/panaderia-demo" target="_blank" rel="noopener"><span data-i18n="common.demo">Live demo</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            <a class="btn" href="https://github.com/keylorpineda/booth" target="_blank" rel="noopener"><img src="assets/logos/github.svg" alt=""><span data-i18n="common.code">Source code</span></a>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="frame box">
+            <div class="frame-bar"><i></i><i></i><i></i><span class="mono">booth-tawny.vercel.app</span></div>
+            <div class="shots">
+              <figure class="shot is-active"><img src="assets/img/projects/booth-storefront-desktop.webp" alt="Booth storefront"></figure>
+              <figure class="shot"><img src="assets/img/projects/booth-dashboard-orders.webp" alt="Booth orders dashboard" loading="lazy"></figure>
+              <figure class="shot"><img src="assets/img/projects/booth-ai-receipt-verification.webp" alt="Booth AI receipt verification" loading="lazy"></figure>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- RAG -->
+      <article class="project" id="rag" style="--accent:#1F9E98">
+        <div class="story">
+          <div class="project-head reveal">
+            <span class="kicker mono" data-i18n="rag.kicker">AI · Retrieval</span>
+            <h3>RAG Research Engine</h3>
+            <span class="status"><span class="status-dot"></span><span data-i18n="rag.status">v2.1 · benchmarked in CI</span></span>
+            <p data-i18n="rag.desc">Upload PDFs and notes, ask in English or Spanish, and get answers that cite the exact passages they use. When the documents do not hold the answer, it refuses instead of guessing.</p>
+          </div>
+          <div class="step" data-shot="0">
+            <span class="step-num mono">A</span>
+            <h4 data-i18n="rag.s1t">Answers with receipts</h4>
+            <p data-i18n="rag.s1">Every answer cites numbered passages, and citations to passages the model was never given are removed and reported.</p>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-hero-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-hero-light.svg" alt="" loading="lazy"></figure>
+          </div>
+          <div class="step" data-shot="1">
+            <span class="step-num mono">B</span>
+            <h4 data-i18n="rag.s2t">Hybrid retrieval, then a gate</h4>
+            <p data-i18n="rag.s2">pgvector and Postgres full-text search fused with Reciprocal Rank Fusion, an optional Cohere reranker, and a calibrated threshold that stops the model when the evidence is weak.</p>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-flow-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-flow-light.svg" alt="" loading="lazy"></figure>
+          </div>
+          <div class="step" data-shot="2">
+            <span class="step-num mono">C</span>
+            <h4 data-i18n="rag.s3t">Measured on every pull request</h4>
+            <p data-i18n="rag.s3">A benchmark of 82 questions in English and Spanish runs in CI and fails the build if retrieval quality drops.</p>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="" loading="lazy"></figure>
+          </div>
+          <dl class="metrics reveal">
+            <div><dt>0.88</dt><dd data-i18n="rag.m1">Recall@5 with reranking</dd></div>
+            <div><dt>88%</dt><dd data-i18n="rag.m2">unanswerable questions refused</dd></div>
+            <div><dt>10 ms</dt><dd data-i18n="rag.m3">search over 50k chunks, down from 39 s</dd></div>
+          </dl>
+          <ul class="logos reveal" aria-label="Stack">
+            <li><img src="assets/logos/python.svg" alt="">Python</li>
+            <li><img src="assets/logos/fastapi.svg" alt="">FastAPI</li>
+            <li><img src="assets/logos/postgresql.svg" alt="">pgvector</li>
+            <li><img src="assets/logos/sqlalchemy.svg" alt="">SQLAlchemy</li>
+            <li><img src="assets/logos/angular.svg" alt="">Angular</li>
+            <li><img src="assets/logos/cohere.svg" alt="">Cohere</li>
+            <li><img src="assets/logos/groq.svg" alt="" class="wide">Groq</li>
+            <li><img src="assets/logos/docker.svg" alt="">Docker</li>
+            <li><img src="assets/logos/pytest.svg" alt="">pytest</li>
+          </ul>
+          <div class="cta-row reveal">
+            <a class="btn" href="https://github.com/keylorpineda/RAG-Research-Engine" target="_blank" rel="noopener"><img src="assets/logos/github.svg" alt=""><span data-i18n="common.code">Source code</span></a>
+          </div>
+        </div>
+        <div class="stage">
+          <div class="frame box">
+            <div class="frame-bar"><i></i><i></i><i></i><span class="mono">research-engine</span></div>
+            <div class="shots">
+              <figure class="shot contain is-active"><img class="theme-dark" src="assets/img/projects/rag-hero-dark.svg" alt="Research Engine overview"><img class="theme-light" src="assets/img/projects/rag-hero-light.svg" alt="Research Engine overview"></figure>
+              <figure class="shot contain"><img class="theme-dark" src="assets/img/projects/rag-flow-dark.svg" alt="How retrieval works" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-flow-light.svg" alt="How retrieval works" loading="lazy"></figure>
+              <figure class="shot contain"><img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="Benchmark results" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="Benchmark results" loading="lazy"></figure>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="section container">
+      <header class="section-head reveal">
+        <span class="section-num mono">02</span>
+        <h2 data-i18n="stack.title">Toolbox</h2>
+        <p data-i18n="stack.sub">What I reach for, grouped by where it lives.</p>
+      </header>
+      <div class="tabs reveal" role="tablist" id="stack-tabs"></div>
+      <ul class="stack-grid" id="stack-grid"></ul>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section id="certs" class="section container">
+      <header class="section-head reveal">
+        <span class="section-num mono">03</span>
+        <h2 data-i18n="certs.title">Certifications</h2>
+        <p data-i18n="certs.sub">Cloud and AI fundamentals, verified by the issuers.</p>
+      </header>
+      <div class="cert-grid">
+        <article class="cert box reveal">
+          <div class="cert-logo"><img src="assets/logos/oracle.svg" alt="Oracle"></div>
+          <div class="cert-body">
+            <span class="cert-issuer mono">Oracle</span>
+            <h3>OCI Certified Architect Associate</h3>
+            <p class="cert-date"><span data-i18n="certs.issued">Issued</span> <span data-i18n="month.oct">Oct</span> 2026 · <span data-i18n="certs.expires">Expires</span> <span data-i18n="month.oct">Oct</span> 2028</p>
+            <p class="cert-id mono">ID 103563028OCI26CAA</p>
+          </div>
+          <a class="cert-verify mono" href="https://www.linkedin.com/in/keylor-pineda/details/certifications/" target="_blank" rel="noopener" data-i18n="certs.verify">Verify</a>
+        </article>
+        <article class="cert box reveal">
+          <div class="cert-logo"><img src="assets/logos/oracle.svg" alt="Oracle"></div>
+          <div class="cert-body">
+            <span class="cert-issuer mono">Oracle</span>
+            <h3>OCI Certified AI Foundations Associate</h3>
+            <p class="cert-date"><span data-i18n="certs.issued">Issued</span> <span data-i18n="month.oct">Oct</span> 2026 · <span data-i18n="certs.expires">Expires</span> <span data-i18n="month.oct">Oct</span> 2028</p>
+            <p class="cert-id mono">ID 103563028OCI26AICFA</p>
+          </div>
+          <a class="cert-verify mono" href="https://www.linkedin.com/in/keylor-pineda/details/certifications/" target="_blank" rel="noopener" data-i18n="certs.verify">Verify</a>
+        </article>
+        <article class="cert box reveal">
+          <div class="cert-logo"><img src="assets/logos/google.svg" alt="Google"></div>
+          <div class="cert-body">
+            <span class="cert-issuer mono">Google</span>
+            <h3>Google Cloud Computing Foundations</h3>
+            <p class="cert-date"><span data-i18n="certs.issued">Issued</span> <span data-i18n="month.oct">Oct</span> 2026</p>
+            <p class="cert-id mono" data-i18n="certs.tags.gcp">Google Cloud · Big data</p>
+          </div>
+          <a class="cert-verify mono" href="https://www.linkedin.com/in/keylor-pineda/details/certifications/" target="_blank" rel="noopener" data-i18n="certs.verify">Verify</a>
+        </article>
+        <article class="cert box reveal">
+          <div class="cert-logo"><img src="assets/logos/aws.svg" alt="AWS"></div>
+          <div class="cert-body">
+            <span class="cert-issuer mono">Amazon Web Services</span>
+            <h3 data-i18n="certs.aws">Advanced Generative AI Implementation on AWS</h3>
+            <p class="cert-date"><span data-i18n="certs.issued">Issued</span> <span data-i18n="month.sep">Sep</span> 2025</p>
+            <p class="cert-id mono" data-i18n="certs.tags.aws">Generative AI · Machine learning</p>
+          </div>
+          <a class="cert-verify mono" href="https://www.linkedin.com/in/keylor-pineda/details/certifications/" target="_blank" rel="noopener" data-i18n="certs.verify">Verify</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section id="activity" class="section container">
+      <header class="section-head reveal">
+        <span class="section-num mono">04</span>
+        <h2 data-i18n="act.title">Activity</h2>
+        <p data-i18n="act.sub">Pulled from GitHub and refreshed every day.</p>
+      </header>
+      <div class="activity box reveal">
+        <img class="theme-dark" src="https://raw.githubusercontent.com/keylorpineda/keylorpineda/output/activity-stats-dark.svg" alt="Contribution totals and streaks" loading="lazy">
+        <img class="theme-light" src="https://raw.githubusercontent.com/keylorpineda/keylorpineda/output/activity-stats-light.svg" alt="Contribution totals and streaks" loading="lazy">
+        <img class="theme-dark" src="https://raw.githubusercontent.com/keylorpineda/keylorpineda/output/activity-calendar-dark.svg" alt="Contribution calendar for the last year" loading="lazy">
+        <img class="theme-light" src="https://raw.githubusercontent.com/keylorpineda/keylorpineda/output/activity-calendar-light.svg" alt="Contribution calendar for the last year" loading="lazy">
+      </div>
+    </section>
+
+    <!-- LEARNING -->
+    <section class="section container">
+      <header class="section-head reveal">
+        <span class="section-num mono">05</span>
+        <h2 data-i18n="next.title">Learning next</h2>
+      </header>
+      <div class="next-grid">
+        <article class="next box reveal" style="--accent:#FF9900">
+          <img src="assets/logos/aws.svg" alt="">
+          <h3>AWS</h3>
+          <p data-i18n="next.aws">Cloud architecture. I started with generative AI on AWS and I am going deeper into the core services.</p>
+        </article>
+        <article class="next box reveal" style="--accent:#FF3621">
+          <img src="assets/logos/databricks.svg" alt="">
+          <h3>Databricks</h3>
+          <p data-i18n="next.dbx">Data engineering at scale: Spark, Delta Lake and the lakehouse model.</p>
+        </article>
+        <article class="next box reveal" style="--accent:#4C9BE8">
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 1.5 3 6v8c0 6.5 4.7 11 11 13 6.3-2 11-6.5 11-13V6z"/><path d="M9 14l3.6 3.6L19.5 10.5"/></svg>
+          <h3 data-i18n="next.secT">Cybersecurity</h3>
+          <p data-i18n="next.sec">How systems get attacked, from the network to the application, so I can build ones that hold up.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section container">
+      <div class="contact box reveal">
+        <span class="section-num mono">06</span>
+        <h2 class="contact-title" data-i18n="contact.title">Let's build something.</h2>
+        <p data-i18n="contact.sub">Have a project, a role or a question about something I built? Write me, I'd like to hear about it.</p>
+        <div class="contact-actions">
+          <button class="btn btn-primary btn-xl" id="copy-email" type="button" data-email="keylorpineda729@gmail.com">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+            <span>keylorpineda729@gmail.com</span>
+            <span class="copy-hint mono" data-i18n="contact.copy">Copy</span>
+          </button>
+          <a class="btn btn-xl" href="https://www.linkedin.com/in/keylor-pineda" target="_blank" rel="noopener"><img src="assets/logos/linkedin.svg" alt="">LinkedIn</a>
+          <a class="btn btn-xl" href="https://github.com/keylorpineda" target="_blank" rel="noopener"><img src="assets/logos/github.svg" alt="">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container">
+    <span class="mono">© 2026 Keylor Pineda</span>
+    <span data-i18n="footer">Designed and built from scratch in Costa Rica.</span>
+  </footer>
+
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
