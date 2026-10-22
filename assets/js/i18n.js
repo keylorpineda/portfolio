@@ -110,7 +110,7 @@ window.I18N = {
     'hero.cta1': 'Ver proyectos',
     'hero.cta2': 'Contactarme',
     'hero.f1': 'productos lanzados',
-    'hero.f2': 'certificaciones',
+    'hero.f2': 'certificados',
     'hero.f3': 'Costa Rica',
     'nav.learning': 'Aprendiendo',
     'nav.top': 'keylorpineda.dev',

@@ -10,6 +10,11 @@
   var t = function (key) { return (window.I18N[root.lang] || window.I18N.en)[key]; };
 
   /* ------------------------------------------------------------------ split-flap */
+  var FLIP = [
+    { transform: 'rotateX(0)', filter: 'brightness(1)' },
+    { transform: 'rotateX(-82deg) scaleY(0.9)', filter: 'brightness(0.6)' },
+    { transform: 'rotateX(0)', filter: 'brightness(1)' },
+  ];
   var CHARS = ' ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÑ0123456789-·.';
 
   function buildRow(row, length) {
@@ -43,12 +48,10 @@
           n++;
           var ch = n >= steps ? target : CHARS[(current + n * 3) % CHARS.length];
           face.textContent = ch;
-          tile.classList.remove('tick');
-          void tile.offsetWidth;
-          tile.classList.add('tick');
+          // Web Animations instead of re-adding a class: no forced reflow of the whole page.
+          if (face.animate) face.animate(FLIP, { duration: Math.min(70, speed), easing: 'linear' });
           if (n >= steps) {
             clearInterval(tile._timer);
-            tile.classList.remove('tick');
             if (opts.settle) { tile.classList.add('done'); }
           }
         }, speed);
@@ -74,7 +77,7 @@
   function showRole(full) { flipTo(roleTiles, pad(t('roles')[roleIndex % t('roles').length]), { full: full, stagger: 22, speed: 45 }); }
   setTimeout(function () { showRole(true); }, 1300);
   if (!reduced) {
-    setInterval(function () { roleIndex++; showRole(false); }, 3400);
+    setInterval(function () { if (root.classList.contains('theme-switching') || document.hidden) return; roleIndex++; showRole(false); }, 3400);
   }
 
   /* ------------------------------------------------------------------ language */

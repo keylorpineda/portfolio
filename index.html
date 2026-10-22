@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=9">
+  <link rel="stylesheet" href="assets/css/style.css?v=11">
   <script>
     // Set theme and language before first paint to avoid a flash.
     (function () {
@@ -30,9 +30,9 @@
       document.documentElement.lang = l;
     })();
   </script>
-  <script src="assets/js/i18n.js?v=9" defer></script>
-  <script src="assets/js/main.js?v=9" defer></script>
-  <script src="assets/js/motion.js?v=9" defer></script>
+  <script src="assets/js/i18n.js?v=11" defer></script>
+  <script src="assets/js/main.js?v=11" defer></script>
+  <script src="assets/js/motion.js?v=11" defer></script>
 </head>
 <body>
   <a class="skip" href="#work" data-i18n="skip">Skip to content</a>
@@ -109,8 +109,8 @@
       <div class="deck" aria-label="Project previews">
         <a class="deck-card box c1" href="#healthycropping" style="--accent:#3FA163">
           <span class="deck-tag mono">01 · Android</span>
-          <img class="theme-dark fit" src="assets/img/projects/hc-hero-dark.svg" alt="HealthyCropping" loading="eager">
-          <img class="theme-light fit" src="assets/img/projects/hc-hero-light.svg" alt="HealthyCropping" loading="eager">
+          <img class="theme-dark fit" src="assets/img/projects/hc-hero-dark.webp" alt="HealthyCropping" loading="eager">
+          <img class="theme-light fit" src="assets/img/projects/hc-hero-light.webp" alt="HealthyCropping" loading="eager">
           <span class="deck-title">HealthyCropping</span>
         </a>
         <a class="deck-card box c2" href="#booth" style="--accent:#6366F1">
@@ -120,8 +120,8 @@
         </a>
         <a class="deck-card box c3" href="#rag" style="--accent:#1F9E98">
           <span class="deck-tag mono">03 · AI</span>
-          <img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="RAG Research Engine benchmark" loading="eager" class="fit">
-          <img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="RAG Research Engine benchmark" loading="eager" class="fit">
+          <img class="theme-dark" src="assets/img/projects/rag-results-dark.webp" alt="RAG Research Engine benchmark" loading="eager" class="fit">
+          <img class="theme-light" src="assets/img/projects/rag-results-light.webp" alt="RAG Research Engine benchmark" loading="eager" class="fit">
           <span class="deck-title">RAG Research Engine</span>
         </a>
         <span class="sticker mono" data-i18n="hero.sticker">Now building HealthyCropping</span>
@@ -157,7 +157,7 @@
             <span class="step-num mono">A</span>
             <h4 data-i18n="hc.s1t">Diagnosis without signal</h4>
             <p data-i18n="hc.s1">Each crop has its own MobileNetV3 model running on the phone with TensorFlow Lite. Scans, farms and plots stay in SQLite, so nothing depends on a connection.</p>
-            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/hc-hero-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/hc-hero-light.svg" alt="" loading="lazy"></figure>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/hc-hero-dark.webp" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/hc-hero-light.webp" alt="" loading="lazy"></figure>
           </div>
           <div class="step" data-shot="1">
             <span class="step-num mono">B</span>
@@ -196,7 +196,7 @@
           <div class="frame box">
             <div class="frame-bar"><i></i><i></i><i></i><span class="mono">healthycropping</span></div>
             <div class="shots">
-              <figure class="shot contain is-active"><img class="theme-dark" src="assets/img/projects/hc-hero-dark.svg" alt="HealthyCropping overview"><img class="theme-light" src="assets/img/projects/hc-hero-light.svg" alt="HealthyCropping overview"></figure>
+              <figure class="shot contain is-active"><img class="theme-dark" src="assets/img/projects/hc-hero-dark.webp" alt="HealthyCropping overview"><img class="theme-light" src="assets/img/projects/hc-hero-light.webp" alt="HealthyCropping overview"></figure>
               <figure class="shot contain"><img src="assets/img/projects/hc-dataset.webp" alt="Sample grid of the coffee dataset" loading="lazy"></figure>
               <figure class="shot contain"><img src="assets/img/projects/hc-gradcam.webp" alt="Grad-CAM heatmaps on coffee leaves" loading="lazy"></figure>
             </div>
@@ -282,19 +282,19 @@
             <span class="step-num mono">A</span>
             <h4 data-i18n="rag.s1t">Answers with receipts</h4>
             <p data-i18n="rag.s1">Every answer cites numbered passages, and citations to passages the model was never given are removed and reported.</p>
-            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-hero-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-hero-light.svg" alt="" loading="lazy"></figure>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-hero-dark.webp" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-hero-light.webp" alt="" loading="lazy"></figure>
           </div>
           <div class="step" data-shot="1">
             <span class="step-num mono">B</span>
             <h4 data-i18n="rag.s2t">Hybrid retrieval, then a gate</h4>
             <p data-i18n="rag.s2">pgvector and Postgres full-text search fused with Reciprocal Rank Fusion, an optional Cohere reranker, and a calibrated threshold that stops the model when the evidence is weak.</p>
-            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-flow-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-flow-light.svg" alt="" loading="lazy"></figure>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-flow-dark.webp" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-flow-light.webp" alt="" loading="lazy"></figure>
           </div>
           <div class="step" data-shot="2">
             <span class="step-num mono">C</span>
             <h4 data-i18n="rag.s3t">Measured on every pull request</h4>
             <p data-i18n="rag.s3">A benchmark of 82 questions in English and Spanish runs in CI and fails the build if retrieval quality drops.</p>
-            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="" loading="lazy"></figure>
+            <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-results-dark.webp" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.webp" alt="" loading="lazy"></figure>
           </div>
           </div>
           <dl class="metrics reveal">
@@ -321,9 +321,9 @@
           <div class="frame box">
             <div class="frame-bar"><i></i><i></i><i></i><span class="mono">research-engine</span></div>
             <div class="shots">
-              <figure class="shot contain is-active"><img class="theme-dark" src="assets/img/projects/rag-hero-dark.svg" alt="Research Engine overview"><img class="theme-light" src="assets/img/projects/rag-hero-light.svg" alt="Research Engine overview"></figure>
-              <figure class="shot contain"><img class="theme-dark" src="assets/img/projects/rag-flow-dark.svg" alt="How retrieval works" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-flow-light.svg" alt="How retrieval works" loading="lazy"></figure>
-              <figure class="shot contain"><img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="Benchmark results" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="Benchmark results" loading="lazy"></figure>
+              <figure class="shot contain is-active"><img class="theme-dark" src="assets/img/projects/rag-hero-dark.webp" alt="Research Engine overview"><img class="theme-light" src="assets/img/projects/rag-hero-light.webp" alt="Research Engine overview"></figure>
+              <figure class="shot contain"><img class="theme-dark" src="assets/img/projects/rag-flow-dark.webp" alt="How retrieval works" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-flow-light.webp" alt="How retrieval works" loading="lazy"></figure>
+              <figure class="shot contain"><img class="theme-dark" src="assets/img/projects/rag-results-dark.webp" alt="Benchmark results" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.webp" alt="Benchmark results" loading="lazy"></figure>
             </div>
           </div>
         </div>
