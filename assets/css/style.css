@@ -103,13 +103,6 @@ p { margin: 0; }
   @keyframes drift { to { transform: translateY(-5%); } }
 }
 .topo-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-.coords {
-  position: fixed; left: 18px; bottom: 16px; z-index: 0; pointer-events: none;
-  font: 500 11px var(--font-mono); letter-spacing: 0.08em; color: var(--muted); opacity: 0.7;
-  display: flex; gap: 10px; align-items: center;
-}
-.coords::before { content: ''; width: 22px; height: 1.5px; background: currentColor; }
-@media (max-width: 760px) { .coords { display: none; } }
 main, .nav, .footer { position: relative; z-index: 1; }
 /* The tilted tape is wider than the viewport on purpose; clip it without breaking sticky children. */
 main { overflow-x: clip; }
@@ -192,8 +185,14 @@ main { overflow-x: clip; }
   padding-block: 72px 56px; min-height: calc(100svh - 80px);
 }
 .eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); margin-bottom: 22px; }
-.dot-live { width: 10px; height: 10px; border-radius: 50%; background: #3fa163; box-shadow: 0 0 0 0 rgba(63, 161, 99, 0.6); animation: live 2s infinite; }
-@keyframes live { 70% { box-shadow: 0 0 0 10px rgba(63, 161, 99, 0); } 100% { box-shadow: 0 0 0 0 rgba(63, 161, 99, 0); } }
+/* A tiny peak drawn as contour rings, echoing the topographic background. */
+.peak { width: 22px; height: 22px; flex: none; fill: none; stroke-linecap: round; }
+.peak path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: contour 1.1s var(--ease) forwards; }
+.peak .r3 { stroke: var(--ink); stroke-width: 1.4; opacity: 0.55; animation-delay: 0.2s; }
+.peak .r2 { stroke: var(--ink); stroke-width: 1.6; opacity: 0.8; animation-delay: 0.45s; }
+.peak .r1 { stroke: var(--hi); stroke-width: 2.6; fill: var(--hi); fill-opacity: 0; animation: contour 1.1s var(--ease) 0.7s forwards, summit 2.8s ease-in-out 1.8s infinite; }
+@keyframes contour { to { stroke-dashoffset: 0; } }
+@keyframes summit { 50% { fill-opacity: 1; } }
 
 /* Split-flap board */
 .board { display: grid; gap: 10px; margin: 0 0 18px; font-size: inherit; }
@@ -514,6 +513,7 @@ main { overflow-x: clip; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .peak path { stroke-dashoffset: 0; }
   .reveal { opacity: 1; transform: none; }
   .shot { filter: none; }
 }
