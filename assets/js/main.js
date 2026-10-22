@@ -87,6 +87,7 @@
     });
     document.getElementById('lang-toggle').setAttribute('aria-label', dict['aria.lang']);
     document.getElementById('theme-toggle').setAttribute('aria-label', dict['aria.theme']);
+    document.getElementById('menu-toggle').setAttribute('aria-label', dict['aria.menu']);
     document.title = lang === 'es' ? 'Keylor Pineda · Desarrollador de software' : 'Keylor Pineda · Software Developer';
     store.set('lang', lang);
     document.dispatchEvent(new Event('langchange'));
@@ -176,16 +177,74 @@
   /* ------------------------------------------------------------------ nav current section */
   var links = {};
   document.querySelectorAll('.nav-links a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  var SECTIONS = ['top', 'work', 'stack', 'certs', 'activity', 'learning', 'contact'];
+  var current = 'top';
+  var label = document.getElementById('nav-current');
+  function showCurrent() {
+    var i = SECTIONS.indexOf(current);
+    var text = current === 'top' ? 'keylorpineda.dev' : '0' + i + ' · ' + t('nav.' + current);
+    if (label.textContent === text) return;
+    label.classList.add('swap');
+    setTimeout(function () { label.textContent = text; label.classList.remove('swap'); }, 180);
+  }
   var nio = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
-      var a = links[en.target.id];
-      if (a && en.isIntersecting) {
-        Object.keys(links).forEach(function (k) { links[k].classList.remove('is-current'); });
-        a.classList.add('is-current');
-      }
+      if (!en.isIntersecting) return;
+      current = en.target.id === 'top-hero' ? 'top' : en.target.id;
+      Object.keys(links).forEach(function (k) { links[k].classList.toggle('is-current', k === current); });
+      document.querySelectorAll('.menu-tile').forEach(function (m) { m.classList.toggle('is-current', m.getAttribute('href') === '#' + current); });
+      showCurrent();
     });
   }, { rootMargin: '-40% 0px -55% 0px' });
-  Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) nio.observe(s); });
+  var heroEl = document.querySelector('.hero');
+  if (heroEl) { heroEl.id = heroEl.id || 'top-hero'; nio.observe(heroEl); }
+  SECTIONS.slice(1).forEach(function (id) { var s = document.getElementById(id); if (s) nio.observe(s); });
+  document.addEventListener('langchange', showCurrent);
+
+  /* ------------------------------------------------------------------ quick-access menu */
+  var menu = document.getElementById('menu');
+  var menuBtn = document.getElementById('menu-toggle');
+  function openMenu() {
+    menu.hidden = false;
+    menu.classList.remove('closing');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    root.classList.add('menu-open');
+    var first = menu.querySelector('.menu-tile');
+    if (first) first.focus({ preventScroll: true });
+  }
+  function closeMenu(after) {
+    if (menu.hidden) { if (after) after(); return; }
+    menuBtn.setAttribute('aria-expanded', 'false');
+    root.classList.remove('menu-open');
+    if (reduced) { menu.hidden = true; if (after) after(); return; }
+    menu.classList.add('closing');
+    setTimeout(function () { menu.hidden = true; menu.classList.remove('closing'); if (after) after(); }, 230);
+  }
+  // Images further down load while the page scrolls and push the target; keep correcting
+  // until the section really sits under the nav.
+  function goTo(target) {
+    if (!target) return;
+    target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    var tries = 0;
+    var check = setInterval(function () {
+      var off = target.getBoundingClientRect().top - parseFloat(getComputedStyle(root).scrollPaddingTop || 0);
+      if (Math.abs(off) < 24 || ++tries > 14) { clearInterval(check); return; }
+      if (tries % 3 === 0) target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    }, 250);
+  }
+  menuBtn.addEventListener('click', function () { if (menu.hidden) openMenu(); else closeMenu(); });
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('[data-close]')) { closeMenu(); return; }
+    var tile = e.target.closest('.menu-tile');
+    if (tile) {
+      e.preventDefault();
+      var target = document.querySelector(tile.getAttribute('href'));
+      closeMenu(function () { goTo(target); });
+      return;
+    }
+    if (e.target.closest('[data-copy-email]')) { copyEmail(); closeMenu(); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) { closeMenu(); menuBtn.focus(); } });
 
   /* ------------------------------------------------------------------ stack */
   var TOOLS = [
@@ -247,15 +306,16 @@
 
   /* ------------------------------------------------------------------ copy email */
   var toast = document.getElementById('toast');
-  document.getElementById('copy-email').addEventListener('click', function (e) {
-    var email = e.currentTarget.dataset.email;
+  var EMAIL = document.getElementById('copy-email').dataset.email;
+  function copyEmail() {
     var done = function () {
       toast.textContent = t('contact.copied');
       toast.classList.add('show');
       clearTimeout(toast._t);
       toast._t = setTimeout(function () { toast.classList.remove('show'); }, 2200);
     };
-    if (navigator.clipboard) navigator.clipboard.writeText(email).then(done, function () { location.href = 'mailto:' + email; });
-    else location.href = 'mailto:' + email;
-  });
+    if (navigator.clipboard) navigator.clipboard.writeText(EMAIL).then(done, function () { location.href = 'mailto:' + EMAIL; });
+    else location.href = 'mailto:' + EMAIL;
+  }
+  document.getElementById('copy-email').addEventListener('click', copyEmail);
 })();

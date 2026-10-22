@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=7">
+  <link rel="stylesheet" href="assets/css/style.css?v=9">
   <script>
     // Set theme and language before first paint to avoid a flash.
     (function () {
@@ -30,9 +30,9 @@
       document.documentElement.lang = l;
     })();
   </script>
-  <script src="assets/js/i18n.js?v=7" defer></script>
-  <script src="assets/js/main.js?v=7" defer></script>
-  <script src="assets/js/motion.js?v=7" defer></script>
+  <script src="assets/js/i18n.js?v=9" defer></script>
+  <script src="assets/js/main.js?v=9" defer></script>
+  <script src="assets/js/motion.js?v=9" defer></script>
 </head>
 <body>
   <a class="skip" href="#work" data-i18n="skip">Skip to content</a>
@@ -43,6 +43,7 @@
         <span class="brand-tile">KP</span>
         <span class="brand-name">keylorpineda<span class="brand-dot">.dev</span></span>
       </a>
+      <span class="nav-current mono" id="nav-current" aria-hidden="true">keylorpineda.dev</span>
       <nav class="nav-links" aria-label="Sections">
         <a href="#work" data-i18n="nav.work">Work</a>
         <a href="#stack" data-i18n="nav.stack">Stack</a>
@@ -58,9 +59,27 @@
           <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
           <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
         </button>
+        <button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu">
+          <span class="burger" aria-hidden="true"><i></i><i></i><i></i></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <div class="menu" id="menu" hidden>
+    <div class="menu-backdrop" data-close></div>
+    <div class="menu-panel box" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+      <p class="menu-title mono" id="menu-title" data-i18n="menu.title">Jump to</p>
+      <nav class="menu-grid" aria-label="Sections"><a class="menu-tile" href="#work" style="--n:1"><span class="menu-num mono">01</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16v11H4z"/><path d="M9 8V5h6v3M4 13h16"/></svg><span data-i18n="nav.work"></span></a><a class="menu-tile" href="#stack" style="--n:2"><span class="menu-num mono">02</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><span data-i18n="nav.stack"></span></a><a class="menu-tile" href="#certs" style="--n:3"><span class="menu-num mono">03</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/></svg><span data-i18n="nav.certs"></span></a><a class="menu-tile" href="#activity" style="--n:4"><span class="menu-num mono">04</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M22 20H2"/></svg><span data-i18n="nav.activity"></span></a><a class="menu-tile" href="#learning" style="--n:5"><span class="menu-num mono">05</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg><span data-i18n="nav.learning"></span></a><a class="menu-tile" href="#contact" style="--n:6"><span class="menu-num mono">06</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span data-i18n="nav.contact"></span></a></nav>
+      <p class="menu-title mono" data-i18n="menu.quick">Quick actions</p>
+      <div class="menu-quick">
+        <button type="button" class="quick" data-copy-email style="--n:7"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg><span data-i18n="menu.copy">Copy email</span></button>
+        <a class="quick" href="https://www.linkedin.com/in/keylor-pineda" target="_blank" rel="noopener" style="--n:8"><img src="assets/logos/linkedin.svg" alt="">LinkedIn</a>
+        <a class="quick" href="https://github.com/keylorpineda" target="_blank" rel="noopener" style="--n:9"><img src="assets/logos/github.svg" alt="">GitHub</a>
+        <a class="quick" href="https://booth-tawny.vercel.app/s/panaderia-demo" target="_blank" rel="noopener" style="--n:10"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg><span data-i18n="menu.demo">Booth demo</span></a>
+      </div>
+    </div>
+  </div>
 
   <main id="top">
     <!-- HERO -->
@@ -68,20 +87,22 @@
       <div class="deco" aria-hidden="true"><span class="shape spin" style="bottom:8%;right:-2%;--s:clamp(70px,9vw,120px);--d:9s;--c:var(--c-yellow)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path d="M50.0 4.0 L58.0 20.1 L73.0 10.2 L71.9 28.1 L89.8 27.0 L79.9 42.0 L96.0 50.0 L79.9 58.0 L89.8 73.0 L71.9 71.9 L73.0 89.8 L58.0 79.9 L50.0 96.0 L42.0 79.9 L27.0 89.8 L28.1 71.9 L10.2 73.0 L20.1 58.0 L4.0 50.0 L20.1 42.0 L10.2 27.0 L28.1 28.1 L27.0 10.2 L42.0 20.1Z"/></svg></span><span class="shape lg-only" style="top:16%;right:44%;--s:clamp(26px,3vw,44px);--d:6s;--c:var(--c-coral)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44"/></svg></span><span class="shape lg-only" style="bottom:4%;left:36%;--s:clamp(90px,11vw,150px);--d:8s;--c:var(--c-lilac)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path class="line" d="M6 62C18 24 32 22 42 50S64 84 74 48 92 22 96 38"/></svg></span></div>
       <div class="hero-copy">
         <p class="eyebrow mono reveal"><svg class="spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50.0 4.0 L58.0 20.1 L73.0 10.2 L71.9 28.1 L89.8 27.0 L79.9 42.0 L96.0 50.0 L79.9 58.0 L89.8 73.0 L71.9 71.9 L73.0 89.8 L58.0 79.9 L50.0 96.0 L42.0 79.9 L27.0 89.8 L28.1 71.9 L10.2 73.0 L20.1 58.0 L4.0 50.0 L20.1 42.0 L10.2 27.0 L28.1 28.1 L27.0 10.2 L42.0 20.1Z"/></svg><span data-i18n="hero.eyebrow">Software developer · Costa Rica</span></p>
+        <div class="board-wrap">
         <h1 class="board" aria-label="Keylor Pineda">
           <span class="board-row" data-flap="KEYLOR" aria-hidden="true"></span>
           <span class="board-row" data-flap="PINEDA" aria-hidden="true"></span>
         </h1>
         <div class="roles" aria-hidden="true"><span class="board-row small" id="roles"></span></div>
+        </div>
         <p class="lead reveal" data-i18n="hero.lead">I build full-stack products end to end, and machine learning that runs right on a phone, even with no signal.</p>
         <div class="cta-row reveal">
           <a class="btn btn-primary" href="#work"><span data-i18n="hero.cta1">See my work</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
           <a class="btn" href="#contact" data-i18n="hero.cta2">Get in touch</a>
         </div>
         <ul class="facts reveal">
-          <li><strong>3</strong><span data-i18n="hero.f1">products shipped from scratch</span></li>
-          <li><strong>4</strong><span data-i18n="hero.f2">cloud and AI certifications</span></li>
-          <li><strong>UTC−6</strong><span data-i18n="hero.f3">based in Costa Rica</span></li>
+          <li><strong>3</strong><span data-i18n="hero.f1">products shipped</span></li>
+          <li><strong>4</strong><span data-i18n="hero.f2">cloud &amp; AI certs</span></li>
+          <li><strong>UTC−6</strong><span data-i18n="hero.f3">Costa Rica</span></li>
         </ul>
       </div>
 
@@ -131,6 +152,7 @@
             <span class="status"><span class="status-dot"></span><span data-i18n="hc.status">In development</span></span>
             <p data-i18n="hc.desc">An offline-first Android app that detects coffee, cacao and banana diseases from a phone photo, built for farms in Costa Rica where the signal drops.</p>
           </div>
+          <div class="steps">
           <div class="step" data-shot="0">
             <span class="step-num mono">A</span>
             <h4 data-i18n="hc.s1t">Diagnosis without signal</h4>
@@ -148,6 +170,7 @@
             <h4 data-i18n="hc.s3t">It shows where it looks</h4>
             <p data-i18n="hc.s3">Grad-CAM heatmaps show which part of the leaf drove each prediction, and every experiment, including the failed ones, is documented.</p>
             <figure class="step-shot box"><img src="assets/img/projects/hc-gradcam.webp" alt="" loading="lazy"></figure>
+          </div>
           </div>
           <dl class="metrics reveal">
             <div><dt>0.97</dt><dd data-i18n="hc.m1">banana test Macro-F1</dd></div>
@@ -190,6 +213,7 @@
             <span class="status"><span class="status-dot"></span><span data-i18n="booth.status">Live demo</span></span>
             <p data-i18n="booth.desc">Small businesses already sell through WhatsApp, one chat at a time. Booth gives each store a single link with its catalog and keeps orders, payments and stock in one place.</p>
           </div>
+          <div class="steps">
           <div class="step" data-shot="0">
             <span class="step-num mono">A</span>
             <h4 data-i18n="booth.s1t">One link per store</h4>
@@ -207,6 +231,7 @@
             <h4 data-i18n="booth.s3t">Receipts checked by AI</h4>
             <p data-i18n="booth.s3">For bank transfers, Gemini reads the receipt and tells the owner whether the amount and recipient match before the payment is confirmed.</p>
             <figure class="step-shot box"><img src="assets/img/projects/booth-ai-receipt-verification.webp" alt="" loading="lazy"></figure>
+          </div>
           </div>
           <dl class="metrics reveal">
             <div><dt data-i18n="booth.m1v">Multi</dt><dd data-i18n="booth.m1">tenant, isolated per store</dd></div>
@@ -252,6 +277,7 @@
             <span class="status"><span class="status-dot"></span><span data-i18n="rag.status">v2.1 · benchmarked in CI</span></span>
             <p data-i18n="rag.desc">Upload PDFs and notes, ask in English or Spanish, and get answers that cite the exact passages they use. When the documents do not hold the answer, it refuses instead of guessing.</p>
           </div>
+          <div class="steps">
           <div class="step" data-shot="0">
             <span class="step-num mono">A</span>
             <h4 data-i18n="rag.s1t">Answers with receipts</h4>
@@ -269,6 +295,7 @@
             <h4 data-i18n="rag.s3t">Measured on every pull request</h4>
             <p data-i18n="rag.s3">A benchmark of 82 questions in English and Spanish runs in CI and fails the build if retrieval quality drops.</p>
             <figure class="step-shot box"><img class="theme-dark" src="assets/img/projects/rag-results-dark.svg" alt="" loading="lazy"><img class="theme-light" src="assets/img/projects/rag-results-light.svg" alt="" loading="lazy"></figure>
+          </div>
           </div>
           <dl class="metrics reveal">
             <div><dt>0.88</dt><dd data-i18n="rag.m1">Recall@5 with reranking</dd></div>
@@ -383,7 +410,7 @@
     </section>
 
     <!-- LEARNING -->
-    <section class="section container">
+    <section id="learning" class="section container">
       <header class="section-head reveal">
         <span class="section-num mono">05</span>
         <h2 data-i18n="next.title">Learning next</h2>
