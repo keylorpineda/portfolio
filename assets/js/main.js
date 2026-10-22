@@ -144,6 +144,83 @@
         }
       });
     }, { passive: true });
+
+    // The hovered card tilts toward the cursor and catches the light.
+    document.querySelectorAll('.deck-card').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--ry', ((x - 0.5) * 10).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', ((0.5 - y) * 8).toFixed(2) + 'deg');
+        card.style.setProperty('--gx', (x * 100).toFixed(1) + '%');
+        card.style.setProperty('--gy', (y * 100).toFixed(1) + '%');
+      });
+      card.addEventListener('pointerleave', function () {
+        card.style.removeProperty('--rx'); card.style.removeProperty('--ry');
+      });
+    });
+
+    // Hero buttons lean toward the cursor.
+    document.querySelectorAll('.hero .cta-row .btn').forEach(function (btn) {
+      btn.addEventListener('pointermove', function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = (e.clientX - (r.left + r.width / 2)) * 0.22, y = (e.clientY - (r.top + r.height / 2)) * 0.32;
+        btn.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
+      });
+      btn.addEventListener('pointerleave', function () { btn.style.translate = ''; });
+    });
+  }
+
+  /* ------------------------------------------------------------------ deck shuffle */
+  // Every few seconds the front card tucks in behind the others, so each project gets its turn.
+  if (deck) {
+    var CYCLE = 5000;
+    var order = Array.prototype.slice.call(deck.querySelectorAll('.deck-card'));
+    var bars = deck.querySelectorAll('.deck-pager button');
+    var paint = function () {
+      order.forEach(function (c, i) { c.dataset.slot = i; });
+      var front = order[0];
+      bars.forEach(function (b, i) {
+        var on = deck.querySelectorAll('.deck-card')[i] === front;
+        b.classList.remove('is-on');
+        if (on) { void b.offsetWidth; b.classList.add('is-on'); } // restart the fill
+        b.setAttribute('aria-pressed', on);
+      });
+    };
+    var timer = 0, hovering = false, visible = true, started = false;
+    var schedule = function () {
+      clearTimeout(timer);
+      var run = started && !reduced && !hovering && visible && !document.hidden;
+      deck.classList.toggle('paused', !run);
+      if (run) timer = setTimeout(advance, CYCLE);
+    };
+    var advance = function () {
+      var leaving = order.shift();
+      order.push(leaving);
+      leaving.classList.add('is-leaving');
+      paint();
+      schedule();
+    };
+    order.forEach(function (c) {
+      c.addEventListener('animationend', function (e) { if (e.animationName === 'to-back') c.classList.remove('is-leaving'); });
+    });
+    bars.forEach(function (b, i) {
+      b.addEventListener('click', function () {
+        var target = deck.querySelectorAll('.deck-card')[i];
+        while (order[0] !== target) order.push(order.shift());
+        paint();
+        schedule();
+      });
+    });
+    deck.addEventListener('pointerenter', function () { hovering = true; schedule(); });
+    deck.addEventListener('pointerleave', function () { hovering = false; schedule(); });
+    deck.addEventListener('focusin', function () { hovering = true; schedule(); });
+    deck.addEventListener('focusout', function () { hovering = false; schedule(); });
+    document.addEventListener('visibilitychange', schedule);
+    new IntersectionObserver(function (en) { visible = en[0].isIntersecting; schedule(); }, { threshold: 0.4 }).observe(deck);
+    deck.style.setProperty('--cycle', CYCLE + 'ms');
+    paint();
+    if (!reduced) setTimeout(function () { started = true; deck.classList.add('cycling'); paint(); schedule(); }, 2200);
   }
 
   /* ------------------------------------------------------------------ reveal */

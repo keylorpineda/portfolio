@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=11">
+  <link rel="stylesheet" href="assets/css/style.css?v=12">
   <script>
     // Set theme and language before first paint to avoid a flash.
     (function () {
@@ -30,9 +30,9 @@
       document.documentElement.lang = l;
     })();
   </script>
-  <script src="assets/js/i18n.js?v=11" defer></script>
-  <script src="assets/js/main.js?v=11" defer></script>
-  <script src="assets/js/motion.js?v=11" defer></script>
+  <script src="assets/js/i18n.js?v=12" defer></script>
+  <script src="assets/js/main.js?v=12" defer></script>
+  <script src="assets/js/motion.js?v=12" defer></script>
 </head>
 <body>
   <a class="skip" href="#work" data-i18n="skip">Skip to content</a>
@@ -84,9 +84,9 @@
   <main id="top">
     <!-- HERO -->
     <section class="hero container">
-      <div class="deco" aria-hidden="true"><span class="shape spin" style="bottom:8%;right:-2%;--s:clamp(70px,9vw,120px);--d:9s;--c:var(--c-yellow)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path d="M50.0 4.0 L58.0 20.1 L73.0 10.2 L71.9 28.1 L89.8 27.0 L79.9 42.0 L96.0 50.0 L79.9 58.0 L89.8 73.0 L71.9 71.9 L73.0 89.8 L58.0 79.9 L50.0 96.0 L42.0 79.9 L27.0 89.8 L28.1 71.9 L10.2 73.0 L20.1 58.0 L4.0 50.0 L20.1 42.0 L10.2 27.0 L28.1 28.1 L27.0 10.2 L42.0 20.1Z"/></svg></span><span class="shape lg-only" style="top:16%;right:44%;--s:clamp(26px,3vw,44px);--d:6s;--c:var(--c-coral)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44"/></svg></span><span class="shape lg-only" style="bottom:4%;left:36%;--s:clamp(90px,11vw,150px);--d:8s;--c:var(--c-lilac)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path class="line" d="M6 62C18 24 32 22 42 50S64 84 74 48 92 22 96 38"/></svg></span></div>
+      <div class="deco" aria-hidden="true"><span class="shape" style="bottom:6%;right:-1%;--s:clamp(64px,7vw,104px);--d:9s;--c:var(--c-yellow)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path class="ring" d="M50 6a44 44 0 1 1 0 88a44 44 0 1 1 0-88zM50 30a20 20 0 1 0 0 40a20 20 0 1 0 0-40z"/></svg></span><span class="shape lg-only" style="top:16%;right:44%;--s:clamp(26px,3vw,44px);--d:6s;--c:var(--c-coral)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44"/></svg></span></div>
       <div class="hero-copy">
-        <p class="eyebrow mono reveal"><svg class="spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50.0 4.0 L58.0 20.1 L73.0 10.2 L71.9 28.1 L89.8 27.0 L79.9 42.0 L96.0 50.0 L79.9 58.0 L89.8 73.0 L71.9 71.9 L73.0 89.8 L58.0 79.9 L50.0 96.0 L42.0 79.9 L27.0 89.8 L28.1 71.9 L10.2 73.0 L20.1 58.0 L4.0 50.0 L20.1 42.0 L10.2 27.0 L28.1 28.1 L27.0 10.2 L42.0 20.1Z"/></svg><span data-i18n="hero.eyebrow">Software developer · Costa Rica</span></p>
+        <p class="eyebrow mono reveal"><svg class="spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4C54 34 66 46 96 50C66 54 54 66 50 96C46 66 34 54 4 50C34 46 46 34 50 4Z"/></svg><span data-i18n="hero.eyebrow">Software developer · Costa Rica</span></p>
         <div class="board-wrap">
         <h1 class="board" aria-label="Keylor Pineda">
           <span class="board-row" data-flap="KEYLOR" aria-hidden="true"></span>
@@ -107,25 +107,31 @@
       </div>
 
       <div class="deck" aria-label="Project previews">
-        <a class="deck-card box c1" href="#healthycropping" style="--accent:#3FA163">
+        <a class="deck-card box c1" data-slot="0" href="#healthycropping" style="--accent:#3FA163">
           <span class="deck-tag mono">01 · Android</span>
           <img class="theme-dark fit" src="assets/img/projects/hc-hero-dark.webp" alt="HealthyCropping" loading="eager">
           <img class="theme-light fit" src="assets/img/projects/hc-hero-light.webp" alt="HealthyCropping" loading="eager">
           <span class="deck-title">HealthyCropping</span>
         </a>
-        <a class="deck-card box c2" href="#booth" style="--accent:#6366F1">
+        <a class="deck-card box c2" data-slot="1" href="#booth" style="--accent:#6366F1">
           <span class="deck-tag mono">02 · Web</span>
           <img src="assets/img/projects/booth-storefront-desktop.webp" alt="Booth storefront" loading="eager">
           <span class="deck-title">Booth</span>
         </a>
-        <a class="deck-card box c3" href="#rag" style="--accent:#1F9E98">
+        <a class="deck-card box c3" data-slot="2" href="#rag" style="--accent:#1F9E98">
           <span class="deck-tag mono">03 · AI</span>
-          <img class="theme-dark" src="assets/img/projects/rag-results-dark.webp" alt="RAG Research Engine benchmark" loading="eager" class="fit">
-          <img class="theme-light" src="assets/img/projects/rag-results-light.webp" alt="RAG Research Engine benchmark" loading="eager" class="fit">
+          <img class="theme-dark fit" src="assets/img/projects/rag-results-dark.webp" alt="RAG Research Engine benchmark" loading="eager">
+          <img class="theme-light fit" src="assets/img/projects/rag-results-light.webp" alt="RAG Research Engine benchmark" loading="eager">
           <span class="deck-title">RAG Research Engine</span>
         </a>
         <span class="sticker mono" data-i18n="hero.sticker">Now building HealthyCropping</span>
+        <div class="deck-pager" role="group" aria-label="Project previews">
+          <button type="button" aria-label="HealthyCropping"><i></i></button>
+          <button type="button" aria-label="Booth"><i></i></button>
+          <button type="button" aria-label="RAG Research Engine"><i></i></button>
+        </div>
       </div>
+      <a class="scroll-cue mono" href="#work" aria-hidden="true" tabindex="-1"><span data-i18n="hero.scroll">Scroll</span><i></i></a>
     </section>
 
     <!-- MARQUEE -->
@@ -436,7 +442,7 @@
 
     <!-- CONTACT -->
     <section id="contact" class="section container">
-      <div class="deco" aria-hidden="true"><span class="shape spin" style="bottom:-10px;right:-2%;--s:clamp(70px,8vw,120px);--d:9s;--c:var(--c-coral)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path d="M50.0 4.0 L58.0 20.1 L73.0 10.2 L71.9 28.1 L89.8 27.0 L79.9 42.0 L96.0 50.0 L79.9 58.0 L89.8 73.0 L71.9 71.9 L73.0 89.8 L58.0 79.9 L50.0 96.0 L42.0 79.9 L27.0 89.8 L28.1 71.9 L10.2 73.0 L20.1 58.0 L4.0 50.0 L20.1 42.0 L10.2 27.0 L28.1 28.1 L27.0 10.2 L42.0 20.1Z"/></svg></span><span class="shape lg-only" style="top:28px;left:-1%;--s:clamp(80px,9vw,130px);--d:8s;--c:var(--c-yellow)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path class="line" d="M6 62C18 24 32 22 42 50S64 84 74 48 92 22 96 38"/></svg></span></div>
+      <div class="deco" aria-hidden="true"><span class="shape" style="bottom:10px;right:1%;--s:clamp(70px,8vw,120px);--d:9s;--r:-24deg;--c:var(--c-coral)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><rect class="pill" x="8" y="30" width="84" height="40" rx="20"/></svg></span><span class="shape lg-only" style="top:28px;left:-1%;--s:clamp(80px,9vw,130px);--d:8s;--c:var(--c-yellow)"><svg class="float" viewBox="0 0 100 100" aria-hidden="true"><path class="line" d="M6 62C18 24 32 22 42 50S64 84 74 48 92 22 96 38"/></svg></span></div>
       <div class="contact box reveal">
         <span class="section-num mono">06</span>
         <h2 class="contact-title" data-i18n="contact.title">Let's build something.</h2>
