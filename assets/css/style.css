@@ -57,7 +57,6 @@ body {
   font: 400 17px/1.6 var(--font-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
@@ -84,6 +83,8 @@ p { margin: 0; }
   transition: opacity 0.3s;
 }
 main, .nav, .footer { position: relative; z-index: 1; }
+/* The tilted tape is wider than the viewport on purpose; clip it without breaking sticky children. */
+main { overflow-x: clip; }
 
 /* ---------- the box ---------- */
 .box {
@@ -196,7 +197,7 @@ main, .nav, .footer { position: relative; z-index: 1; }
 .roles { margin-bottom: 28px; }
 .board-row.small { gap: 3px; }
 .board-row.small .flap {
-  --w: clamp(17px, 2.4vw, 28px);
+  --w: clamp(14px, 4.3vw, 28px);
   box-shadow: 2px 2px 0 var(--shadow); border-width: 1.5px; border-radius: 5px;
   font: 700 calc(var(--w) * 0.66) / 1 var(--font-mono);
 }
@@ -446,7 +447,10 @@ main, .nav, .footer { position: relative; z-index: 1; }
 
 /* ---------- theme switch: circular reveal ---------- */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-::view-transition-new(root) { animation: reveal-theme 0.7s var(--ease); }
+::view-transition-new(root) { animation: reveal-theme 0.42s cubic-bezier(0.4, 0, 0.2, 1); }
+::view-transition-group(root) { animation-duration: 0.42s; }
+/* While the theme flips, nothing else animates, so the circle stays smooth. */
+.theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
 @keyframes reveal-theme { from { clip-path: circle(0 at var(--vx, 90%) var(--vy, 5%)); } to { clip-path: circle(150% at var(--vx, 90%) var(--vy, 5%)); } }
 
 /* ---------- responsive ---------- */

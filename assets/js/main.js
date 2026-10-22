@@ -104,8 +104,22 @@
     root.style.setProperty('--vx', e.clientX + 'px');
     root.style.setProperty('--vy', e.clientY + 'px');
     var go = function () { root.dataset.theme = next; store.set('theme', next); };
-    if (document.startViewTransition && !reduced) document.startViewTransition(go); else go();
+    root.classList.add('theme-switching');
+    var end = function () { root.classList.remove('theme-switching'); };
+    if (document.startViewTransition && !reduced) document.startViewTransition(go).finished.then(end, end);
+    else { go(); requestAnimationFrame(end); }
   });
+
+  // Warm the images of the other theme once the page is idle, so switching never waits on the network.
+  var warm = function () {
+    document.querySelectorAll('img.theme-dark, img.theme-light').forEach(function (img) {
+      var pre = new Image();
+      pre.decoding = 'async';
+      pre.src = img.currentSrc || img.src;
+      if (pre.decode) pre.decode().catch(function () {});
+    });
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 2500 }); else setTimeout(warm, 1500);
 
   /* ------------------------------------------------------------------ pointer effects */
   var deck = document.querySelector('.deck');
