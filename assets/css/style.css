@@ -498,6 +498,58 @@ main { overflow-x: clip; }
   .section { padding-block: 56px; }
 }
 
+/* ==========================================================================
+   Scroll-linked motion (variables written by assets/js/motion.js)
+   ========================================================================== */
+
+/* Progress line under the nav */
+.nav-inner { position: relative; }
+.nav-inner::after {
+  content: ''; position: absolute; left: 14px; right: 14px; bottom: -2px; height: 3px; border-radius: 3px;
+  background: var(--hi); transform-origin: left center; transform: scaleX(var(--sp, 0));
+}
+
+/* Hero exit: the copy lifts away, the deck tips back into the page */
+.hero-copy { transform-origin: 0 0; will-change: transform, opacity;
+  transform: translateY(calc(var(--hx, 0) * -48px)) scale(calc(1 - var(--hx, 0) * 0.06));
+  opacity: calc(1.15 - var(--hx, 0) * 1.3); }
+.deck { transform-origin: 50% 100%; will-change: transform, opacity;
+  transform: perspective(1100px) translateY(calc(var(--hx, 0) * 70px)) rotateX(calc(var(--hx, 0) * 24deg)) scale(calc(1 - var(--hx, 0) * 0.12));
+  opacity: calc(1.1 - var(--hx, 0) * 1.1); }
+
+/* Headings rise word by word out of a slot */
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.split .w > span { display: inline-block; transform: translateY(110%); transition: transform 0.95s cubic-bezier(0.2, 0.9, 0.2, 1) calc(var(--i, 0) * 70ms); }
+.in .split .w > span, .split.shown .w > span { transform: none; }
+
+/* The tape leans with scroll speed */
+.tape { transform: rotate(-1.6deg) scale(1.03) skewX(var(--skew, 0deg)); }
+
+/* Image curtain on the inline screenshots */
+.step-shot img { clip-path: inset(100% 0 0 0); transform: scale(1.18); transition: clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 1.3s var(--ease); }
+.step-shot.shown img { clip-path: inset(0 0 0 0); transform: none; }
+
+@media (max-width: 1020px) {
+  /* Phones and tablets: the hero copy fades late, the deck rises from a tilt into place */
+  .hero-copy { transform: translateY(calc(var(--hx, 0) * -30px)); opacity: calc(1.3 - var(--hx, 0) * 1.6); }
+  .deck { opacity: 1; transform-origin: 50% 0;
+    transform: perspective(900px) rotateX(clamp(0deg, calc((0.5 - var(--hx, 0)) * 44deg), 22deg)) scale(clamp(0.88, calc(0.88 + var(--hx, 0) * 0.26), 1)); }
+  /* Step cards stack like a deck: each one sticks, and shrinks as the next slides over it */
+  .story .step, .story .step.is-active {
+    position: sticky; top: calc(88px + var(--k, 0) * 14px);
+    transform: scale(calc(1 - var(--cover, 0) * 0.08)); transform-origin: 50% 0;
+    filter: brightness(calc(1 - var(--cover, 0) * 0.22));
+    margin-bottom: 22px;
+  }
+  .story .step-shot img { max-height: min(320px, 30svh); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy, .deck { transform: none !important; opacity: 1 !important; }
+  .step-shot img { clip-path: none !important; transform: none !important; }
+  .split .w > span { transform: none !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }

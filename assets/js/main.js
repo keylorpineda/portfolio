@@ -89,6 +89,7 @@
     document.getElementById('theme-toggle').setAttribute('aria-label', dict['aria.theme']);
     document.title = lang === 'es' ? 'Keylor Pineda · Desarrollador de software' : 'Keylor Pineda · Software Developer';
     store.set('lang', lang);
+    document.dispatchEvent(new Event('langchange'));
   }
   applyLang(root.lang === 'es' ? 'es' : 'en');
   document.getElementById('lang-toggle').addEventListener('click', function () {
