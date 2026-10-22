@@ -130,6 +130,7 @@
       if (raf) return;
       raf = requestAnimationFrame(function () {
         raf = 0;
+        root.classList.add('has-pointer');
         root.style.setProperty('--mx', e.clientX + 'px');
         root.style.setProperty('--my', e.clientY + 'px');
         if (deck) {

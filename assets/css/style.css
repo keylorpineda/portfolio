@@ -6,7 +6,8 @@
 
 :root {
   --bg: #f3efe6;
-  --bg-dot: rgba(17, 17, 17, 0.09);
+  --topo-line: rgba(18, 18, 18, 0.12);
+  --topo-glow: rgba(214, 150, 0, 0.85);
   --surface: #ffffff;
   --surface-2: #fbf8f1;
   --ink: #121212;
@@ -33,7 +34,8 @@
 
 :root[data-theme='dark'] {
   --bg: #0f0f11;
-  --bg-dot: rgba(246, 241, 228, 0.07);
+  --topo-line: rgba(246, 241, 228, 0.075);
+  --topo-glow: rgba(255, 201, 60, 0.75);
   --surface: #17171b;
   --surface-2: #1d1d22;
   --ink: #f6f1e4;
@@ -51,8 +53,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 body {
   margin: 0;
   background-color: var(--bg);
-  background-image: radial-gradient(var(--bg-dot) 1.2px, transparent 1.2px);
-  background-size: 22px 22px;
   color: var(--ink);
   font: 400 17px/1.6 var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -76,12 +76,40 @@ p { margin: 0; }
 .skip:focus { top: 16px; }
 :focus-visible { outline: 3px solid var(--hi); outline-offset: 3px; border-radius: 6px; }
 
-/* Soft light that follows the cursor across the dotted paper. */
-.spotlight {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 201, 60, 0.16), transparent 70%);
-  transition: opacity 0.3s;
+/* Topographic map of made-up Costa Rican ridges (scripts/build-topo.py). The lines are a
+   CSS mask, so the same file works in both themes; a second copy only shows the lines
+   under a moving light, like a flashlight over a paper map. */
+@property --mx { syntax: '<length-percentage>'; inherits: true; initial-value: 30%; }
+@property --my { syntax: '<length-percentage>'; inherits: true; initial-value: 30%; }
+.topo, .spotlight {
+  position: fixed; inset: -6% 0; pointer-events: none; z-index: 0;
+  -webkit-mask: url('../img/topo.svg') center / cover no-repeat;
+  mask: url('../img/topo.svg') center / cover no-repeat;
 }
+.topo { background: var(--topo-line); }
+.spotlight {
+  background: radial-gradient(260px circle at var(--mx) var(--my), var(--topo-glow), transparent 75%);
+  animation: wander 18s ease-in-out infinite alternate;
+}
+:root.has-pointer .spotlight { animation: none; }
+@keyframes wander {
+  0% { --mx: 15%; --my: 25%; }
+  33% { --mx: 70%; --my: 40%; }
+  66% { --mx: 40%; --my: 75%; }
+  100% { --mx: 85%; --my: 80%; }
+}
+@supports (animation-timeline: scroll()) {
+  .topo-wrap { animation: drift linear both; animation-timeline: scroll(root); }
+  @keyframes drift { to { transform: translateY(-5%); } }
+}
+.topo-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.coords {
+  position: fixed; left: 18px; bottom: 16px; z-index: 0; pointer-events: none;
+  font: 500 11px var(--font-mono); letter-spacing: 0.08em; color: var(--muted); opacity: 0.7;
+  display: flex; gap: 10px; align-items: center;
+}
+.coords::before { content: ''; width: 22px; height: 1.5px; background: currentColor; }
+@media (max-width: 760px) { .coords { display: none; } }
 main, .nav, .footer { position: relative; z-index: 1; }
 /* The tilted tape is wider than the viewport on purpose; clip it without breaking sticky children. */
 main { overflow-x: clip; }
