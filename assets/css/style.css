@@ -6,8 +6,7 @@
 
 :root {
   --bg: #f3efe6;
-  --topo-line: rgba(18, 18, 18, 0.12);
-  --topo-glow: rgba(214, 150, 0, 0.85);
+  --topo-line: rgba(18, 18, 18, 0.14);
   --surface: #ffffff;
   --surface-2: #fbf8f1;
   --ink: #121212;
@@ -34,8 +33,7 @@
 
 :root[data-theme='dark'] {
   --bg: #0f0f11;
-  --topo-line: rgba(246, 241, 228, 0.075);
-  --topo-glow: rgba(255, 201, 60, 0.75);
+  --topo-line: rgba(246, 241, 228, 0.09);
   --surface: #17171b;
   --surface-2: #1d1d22;
   --ink: #f6f1e4;
@@ -76,33 +74,30 @@ p { margin: 0; }
 .skip:focus { top: 16px; }
 :focus-visible { outline: 3px solid var(--hi); outline-offset: 3px; border-radius: 6px; }
 
-/* Topographic map of made-up Costa Rican ridges (scripts/build-topo.py). The lines are a
-   CSS mask, so the same file works in both themes; a second copy only shows the lines
-   under a moving light, like a flashlight over a paper map. */
-@property --mx { syntax: '<length-percentage>'; inherits: true; initial-value: 30%; }
-@property --my { syntax: '<length-percentage>'; inherits: true; initial-value: 30%; }
-.topo, .spotlight {
-  position: fixed; inset: -6% 0; pointer-events: none; z-index: 0;
-  -webkit-mask: url('../img/topo.svg') center / cover no-repeat;
-  mask: url('../img/topo.svg') center / cover no-repeat;
+/* Topographic map of made-up Costa Rican ridges (scripts/build-topo.py), used only as a
+   cover behind the hero and as a quiet echo behind the contact card. The SVG lines are a
+   mask, so one file serves both themes, and a gradient fades each band out. */
+.map-band {
+  position: absolute; left: 0; right: 0; pointer-events: none; z-index: 0;
+  background: var(--topo-line);
+  -webkit-mask-image: url('../img/topo.svg'), var(--fade);
+  -webkit-mask-size: 1600px auto, 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center top, 0 0;
+  -webkit-mask-composite: source-in;
+  mask-image: url('../img/topo.svg'), var(--fade);
+  mask-size: 1600px auto, 100% 100%;
+  mask-repeat: no-repeat;
+  mask-position: center top, 0 0;
+  mask-composite: intersect;
 }
-.topo { background: var(--topo-line); }
-.spotlight {
-  background: radial-gradient(260px circle at var(--mx) var(--my), var(--topo-glow), transparent 75%);
-  animation: wander 18s ease-in-out infinite alternate;
+.map-top { top: 0; height: min(1000px, 115svh); --fade: linear-gradient(#000 0 45%, transparent 100%); }
+#contact { position: relative; }
+.map-bottom {
+  top: -10%; bottom: -30%; left: 50%; width: 100vw; transform: translateX(-50%);
+  --fade: radial-gradient(ellipse at 50% 60%, #000 0 25%, transparent 70%);
+  -webkit-mask-position: center 30%, 0 0; mask-position: center 30%, 0 0;
 }
-:root.has-pointer .spotlight { animation: none; }
-@keyframes wander {
-  0% { --mx: 15%; --my: 25%; }
-  33% { --mx: 70%; --my: 40%; }
-  66% { --mx: 40%; --my: 75%; }
-  100% { --mx: 85%; --my: 80%; }
-}
-@supports (animation-timeline: scroll()) {
-  .topo-wrap { animation: drift linear both; animation-timeline: scroll(root); }
-  @keyframes drift { to { transform: translateY(-5%); } }
-}
-.topo-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 main, .nav, .footer { position: relative; z-index: 1; }
 /* The tilted tape is wider than the viewport on purpose; clip it without breaking sticky children. */
 main { overflow-x: clip; }
