@@ -600,7 +600,11 @@ main { overflow-x: clip; }
   .board-row { gap: 5px; justify-content: space-between; }
   .facts { gap: 10px; }
   .facts li { padding: 12px 12px 14px; }
-  .nav-current { position: static; transform: none; margin-left: 4px; font-size: 10.5px; }
+  /* the section label gives way first, so the buttons never get pushed off the bar */
+  .nav-current { position: static; transform: none; margin-left: 4px; font-size: 10.5px; flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .nav-inner { gap: 10px; }
+  .brand, .nav-actions { flex: none; }
+  .nav-actions { gap: 6px; }
   .container { width: min(1200px, 100% - 32px); }
   .nav { padding-inline: 12px; }
   .brand-name { display: none; }
