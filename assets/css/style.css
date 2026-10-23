@@ -194,6 +194,7 @@ main { overflow-x: clip; }
 .menu-tile.is-current .menu-num { color: #121212; }
 @keyframes tile-in { from { opacity: 0; transform: translateY(14px) scale(0.92); } }
 .menu-quick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.menu-quick .quick:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .quick {
   display: flex; align-items: center; gap: 10px; padding: 12px 14px; min-height: 52px; text-decoration: none;
   border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink);
@@ -273,6 +274,7 @@ main { overflow-x: clip; }
 .lead { font-size: clamp(18px, 1.7vw, 21px); max-width: 34ch; color: var(--muted); margin-bottom: 28px; }
 .lead::first-line { color: var(--ink); }
 .cta-row { display: flex; flex-wrap: wrap; gap: 14px; }
+.cta-note { margin-top: 14px; font-size: 12px; line-height: 1.5; color: var(--muted); max-width: 52ch; }
 .facts { list-style: none; padding: 0; margin: 34px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 520px; }
 .facts li {
   display: grid; gap: 4px; align-content: start; padding: 14px 16px 16px;
