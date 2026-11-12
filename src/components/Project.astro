@@ -1,0 +1,117 @@
+---
+import Shot from './Shot.astro';
+import type { Copy, Lang, Project } from '../data/content';
+
+interface Props {
+  project: Project;
+  t: Copy;
+  lang: Lang;
+  index: number;
+}
+const { project, t, lang, index } = Astro.props;
+const p = t.projects[project.id as keyof Copy['projects']];
+const letters = ['A', 'B', 'C'];
+const num = String(index + 1).padStart(2, '0');
+// Where along the pinned scroll (0 → 1) each step takes over. The first is there from the start.
+const starts = [-1, 0.33, 0.66, 9];
+const timing = (i: number) => `--s:${starts[i]};--n:${starts[i + 1]}`;
+// Fixed figures (no theme variant) sit on white, like a printed plate.
+const kind = (i: number) => {
+  const s = project.shots[i];
+  return [s.fit ?? 'cover', { 'focus-right': s.focus === 'right', paper: !s.key && !s.dark && s.fit === 'contain' }];
+};
+---
+
+<article class="project" style={`--tint:${project.tint}`}>
+  <header class="wrap project-top">
+    <p class="project-meta mono reveal">
+      <span class="project-idx">{num}</span>
+      <span>{p.kicker}</span>
+      <span class="status"><i></i>{p.status}</span>
+    </p>
+    <h3 class="project-title reveal">{project.name}</h3>
+    <p class="project-desc reveal">{p.desc}</p>
+  </header>
+
+  <!-- Pinned scene: the window stays while the scroll drives its three screens. -->
+  <div class="scene scene-project" data-scene="project">
+    <div class="scene-pin">
+      <div class="scene-glow" aria-hidden="true"></div>
+      <div class="wrap scene-grid">
+        <div class="scene-media">
+          <div class="window">
+            <div class="window-bar" aria-hidden="true">
+              <span class="lights"><i></i><i></i><i></i></span>
+              <span class="window-url mono">{project.window}</span>
+              <span class="window-tabs">
+                {letters.map((l) => <i class="mono">{l}</i>)}
+              </span>
+            </div>
+            <div class="window-view">
+              {
+                project.shots.map((s, i) => (
+                  <figure class:list={['shot', ...kind(i)]} style={timing(i)}>
+                    <Shot shot={s} lang={lang} alt={p.alts[i]} />
+                  </figure>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="scene-text">
+          <ol class="scene-steps">
+            {
+              p.steps.map((s, i) => (
+                <li class="step" style={timing(i)}>
+                  <span class="step-n mono">{letters[i]}</span>
+                  <h4>{s.t}</h4>
+                  <p>{s.d}</p>
+                </li>
+              ))
+            }
+          </ol>
+          <div class="scene-bars" aria-hidden="true">
+            {letters.map((_, i) => <i style={`--from:${i / 3}`} />)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <dl class="metrics">
+      {
+        project.metrics.map((m, i) => (
+          <div class="metric reveal" style={`--d:${i * 90}ms`}>
+            <dt>{p.metrics[i]}</dt>
+            <dd data-count={m.count} data-dec={m.decimals ?? 0} data-suffix={m.suffix ?? ''}>
+              {m.value}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="project-foot reveal">
+      <ul class="chips">
+        {project.chips.map((c) => <li>{c}</li>)}
+      </ul>
+      <div class="project-links">
+        {
+          project.demo && (
+            <a class="btn" href={project.demo} target="_blank" rel="noopener">
+              <span>{t.work.demo}</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6" /></svg>
+            </a>
+          )
+        }
+        <a class="btn btn-line" href={project.code} target="_blank" rel="noopener">
+          <span>{t.work.code}</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6" /></svg>
+        </a>
+      </div>
+      {p.note && <p class="project-note">{p.note}</p>}
+    </div>
+  </div>
+</article>

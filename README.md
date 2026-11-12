@@ -1,22 +1,35 @@
 # keylorpineda.dev
 
-Personal portfolio of Keylor Pineda, software developer from Costa Rica.
+Personal portfolio of Keylor Pineda, built with [Astro](https://astro.build). Static output, no client framework: the interactions are one small TypeScript file.
 
-Plain HTML, CSS and JavaScript, no framework and no build step:
-
-- Split-flap hero board, scroll-driven project stories that swap real screenshots, and a circular theme transition (View Transitions API).
-- Light and dark themes, English and Spanish, and full support for `prefers-reduced-motion`.
-- Brand logos exported from [svg-logos](https://github.com/gilbarbara/logos) and [Simple Icons](https://simpleicons.org) with `scripts/build-logos.py`.
-- The activity cards are generated daily in [keylorpineda/keylorpineda](https://github.com/keylorpineda/keylorpineda).
-
-## Run locally
+## Run it
 
 ```bash
-python3 -m http.server 8000
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # static site in dist/
 ```
 
-Then open <http://localhost:8000>.
+## Where things live
 
-## Deploy
+| Path | What it holds |
+| :-- | :-- |
+| `src/data/content.ts` | Every text in English and Spanish, plus projects, tools and links |
+| `src/components/Home.astro` | The page: hero, statement, work, stack, certifications, activity, contact |
+| `src/components/Project.astro` | One project: header, pinned scroll scene, metrics, links |
+| `src/components/Shot.astro` | A screenshot, with its light and dark variant |
+| `src/styles/global.css` | All styles and the two themes |
+| `src/scripts/app.ts` | Theme, language switch, scroll scenes, dock, command palette |
+| `public/img/shots/` | Captures of the live demos, per language and theme |
 
-Hosted on Vercel as a static site (`vercel.json` sets caching and security headers).
+## How it behaves
+
+- **Languages.** English at `/`, Spanish at `/es/`. Both are real pages; switching fetches the other one and rewrites the texts in place, so nothing reloads. A first-time visitor with a Spanish browser is sent to `/es/`.
+- **Theme.** Light and dark, following the system until the visitor chooses. The change spreads from the button using the View Transitions API and falls back to an instant switch.
+- **Scroll scenes.** The hero, the statement and each project are tall blocks with a pinned screen. The script turns the scroll position into two CSS variables (`--e`, `--p`) and the styles do the rest.
+- **Navigation.** A dock at the bottom on every screen size, and a command palette on Ctrl/Cmd + K.
+- **Reduced motion and no JavaScript** are both handled: the content is plain, readable HTML either way.
+
+## Screenshots
+
+The captures in `public/img/shots/` were taken from the live Booth and Research Engine demos at 1440×900. The page shows the English set in both languages; change `shotLang` in `src/components/Shot.astro` to follow the page language instead.

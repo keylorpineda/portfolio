@@ -1,0 +1,66 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/instrument-sans';
+import '@fontsource-variable/geist-mono';
+import '../styles/global.css';
+import { SITE, type Copy, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+  t: Copy;
+}
+const { lang, t } = Astro.props;
+const path = lang === 'en' ? '/' : '/es/';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={SITE.url + path} />
+    <link rel="alternate" hreflang="en" href={SITE.url + '/'} />
+    <link rel="alternate" hreflang="es" href={SITE.url + '/es/'} />
+    <link rel="alternate" hreflang="x-default" href={SITE.url + '/'} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={SITE.url + path} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_CR'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#f4f3ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Runs before paint: no theme flash, and a first-time Spanish visitor lands on /es/. -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var get = function (k) {
+          try {
+            return localStorage.getItem(k);
+          } catch (e) {
+            return null;
+          }
+        };
+        var theme = get('theme');
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        d.dataset.theme = theme;
+        if (!get('lang') && location.pathname === '/' && /^es\b/i.test(navigator.language || '')) {
+          location.replace('/es/' + location.hash);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      import '../scripts/app.ts';
+    </script>
+  </body>
+</html>

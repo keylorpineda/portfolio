@@ -1,0 +1,27 @@
+---
+// One screenshot. Live captures exist per language and theme; CSS shows the one for the theme.
+import type { Lang, Shot } from '../data/content';
+
+interface Props {
+  shot: Shot;
+  lang: Lang;
+  alt: string;
+}
+const { shot, alt } = Astro.props;
+// Captures are shown in English on both versions of the site. Spanish ones exist too:
+// set `shotLang = lang` to follow the page language instead.
+const shotLang: Lang = 'en';
+const light = shot.key ? `/img/shots/${shot.key}-${shotLang}-light.webp` : shot.src;
+const dark = shot.key ? `/img/shots/${shot.key}-${shotLang}-dark.webp` : shot.dark;
+---
+
+{
+  dark ? (
+    <>
+      <img class="only-light" src={light} width={shot.w} height={shot.h} alt={alt} loading="lazy" decoding="async" />
+      <img class="only-dark" src={dark} width={shot.w} height={shot.h} alt={alt} loading="lazy" decoding="async" />
+    </>
+  ) : (
+    <img src={light} width={shot.w} height={shot.h} alt={alt} loading="lazy" decoding="async" />
+  )
+}

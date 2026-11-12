@@ -1,0 +1,341 @@
+---
+import Base from '../layouts/Base.astro';
+import Project from './Project.astro';
+import Shot from './Shot.astro';
+import { COPY, PROJECTS, SITE, TABS, TOOLS, type Lang } from '../data/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = COPY[lang];
+
+const icons = {
+  home: 'M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.500v-5.500h-5V20H5a1 1 0 0 1-1-1z',
+  work: 'M3.500 6.500h17v12h-17zM3.500 10h17M6.500 8.200h.01M9 8.200h.01',
+  stack: 'm12 4 8.500 4.500L12 13 3.500 8.500zM3.500 12.500 12 17l8.500-4.500M3.500 16.200 12 20.700l8.500-4.500',
+  certs: 'M12 14.500a5.500 5.500 0 1 0 0-11 5.500 5.500 0 0 0 0 11zM8.500 13.500 7 21l5-2.700L17 21l-1.500-7.500',
+  activity: 'M5 20v-7M10 20V5M15 20v-9M20 20v-4',
+  contact: 'M4 6.500h16v11H4zM4.500 7l7.500 6 7.500-6',
+  search: 'M10.500 17a6.500 6.500 0 1 0 0-13 6.500 6.500 0 0 0 0 13zM15.500 15.500 20 20',
+};
+const dock = [
+  { href: '#top', label: t.palette.home, icon: icons.home },
+  { href: '#work', label: t.nav.work, icon: icons.work },
+  { href: '#stack', label: t.nav.stack, icon: icons.stack },
+  { href: '#certs', label: t.nav.certs, icon: icons.certs },
+  { href: '#activity', label: t.nav.activity, icon: icons.activity },
+  { href: '#contact', label: t.nav.contact, icon: icons.contact },
+];
+const groups = TABS.filter((c) => c !== 'all').map((cat) => ({ label: t.stack.tabs[cat], tools: TOOLS.filter((tool) => tool[2] === cat) }));
+const activity = 'https://raw.githubusercontent.com/keylorpineda/keylorpineda/output/activity-';
+const pad = (i: number) => String(i + 1).padStart(2, '0');
+// Headlines are split into characters so each one can animate; words stay unbreakable.
+const split = (title: string[], accent: number) => {
+  let n = 0;
+  return title.map((line, li) => ({ accent: li === accent, words: line.split(' ').map((w) => [...w].map((ch) => ({ ch, i: n++ }))) }));
+};
+const heroLines = split(t.hero.title, t.hero.accent);
+const contactLines = split(t.contact.title, 1);
+const [role, place] = t.hero.eyebrow.split(' · ');
+const statement = t.hero.lead.split(' ');
+const slide = [-1, 1, -1];
+---
+
+<Base lang={lang} t={t}>
+  <a class="skip" href="#main">{t.skip}</a>
+
+  <header class="bar" data-bar>
+    <a class="bar-name" href="#top">Keylor Pineda</a>
+    <div class="bar-tools">
+      <div class="lang mono" role="group" aria-label={t.aria.lang}>
+        <a href="/" hreflang="en" lang="en" data-lang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+        <a href="/es/" hreflang="es" lang="es" data-lang="es" aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
+      </div>
+      <button class="theme-btn" type="button" data-theme-toggle aria-label={t.aria.theme}>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Dock: the navigation, on every screen size. -->
+  <nav class="dock" data-dock aria-label={t.nav.menu}>
+    {
+      dock.map((d) => (
+        <a class="dock-item" href={d.href} aria-label={d.label} data-tip={d.label}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d.icon} /></svg>
+        </a>
+      ))
+    }
+    <span class="dock-sep" aria-hidden="true"></span>
+    <button class="dock-item" type="button" data-palette-open aria-label={t.palette.open} data-tip={t.palette.open}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icons.search}></path></svg>
+    </button>
+  </nav>
+
+  <!-- Command palette (Ctrl/Cmd + K). -->
+  <dialog class="palette" data-palette aria-label={t.palette.open}>
+    <div class="palette-head">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icons.search}></path></svg>
+      <input type="text" data-palette-input placeholder={t.palette.placeholder} autocomplete="off" spellcheck="false" aria-label={t.palette.open} />
+      <kbd class="mono">esc</kbd>
+    </div>
+    <ul class="palette-list" data-palette-list>
+      <li class="palette-group mono">{t.palette.go}</li>
+      {
+        dock.map((d) => (
+          <li><a href={d.href} data-cmd>{d.label}<span class="mono">{d.href}</span></a></li>
+        ))
+      }
+      <li class="palette-group mono">{t.palette.projects}</li>
+      {
+        PROJECTS.flatMap((p) => [
+          p.demo && (
+            <li><a href={p.demo} target="_blank" rel="noopener" data-cmd>{p.name} · {t.work.demo}<span class="mono">↗</span></a></li>
+          ),
+          <li><a href={p.code} target="_blank" rel="noopener" data-cmd>{p.name} · {t.work.code}<span class="mono">↗</span></a></li>,
+        ])
+      }
+      <li class="palette-group mono">{t.palette.actions}</li>
+      <li><button type="button" data-cmd data-action="theme">{t.palette.theme}</button></li>
+      <li><button type="button" data-cmd data-action="lang">{t.palette.lang}</button></li>
+      <li><button type="button" data-cmd data-action="copy">{t.palette.copy}<span class="mono">{SITE.email}</span></button></li>
+      <li><a href={SITE.github} target="_blank" rel="noopener" data-cmd>GitHub<span class="mono">↗</span></a></li>
+      <li><a href={SITE.linkedin} target="_blank" rel="noopener" data-cmd>LinkedIn<span class="mono">↗</span></a></li>
+    </ul>
+    <p class="palette-empty" data-palette-empty hidden>{t.palette.empty}</p>
+  </dialog>
+
+  <main id="main">
+    <!-- HERO: pinned. Scrolling pulls the headline apart while the three projects rise into a fan. -->
+    <section class="scene scene-hero" id="top" data-scene="hero">
+      <div class="scene-pin hero">
+        <div class="hero-sun" aria-hidden="true"></div>
+        <div class="wrap hero-inner">
+          <h1 class="hero-title chars" data-chars="load" aria-label={t.hero.title.join(' ')}>
+            {
+              heroLines.map((line, li) => (
+                <>
+                  <span class:list={['line', { accent: line.accent }]} style={`--dir:${slide[li % 3]}`} aria-hidden="true">
+                    {line.words.map((word) => (
+                      <>
+                        <span class="word">{word.map((c) => <span class="ch" style={`--i:${c.i}`}>{c.ch}</span>)}</span>{' '}
+                      </>
+                    ))}
+                  </span>{' '}
+                </>
+              ))
+            }
+          </h1>
+          <p class="hero-role hero-fade hero-out" style="--d:450ms">
+            {role}
+            <span class="mono">{place}</span>
+          </p>
+          <div class="cta hero-fade hero-out" style="--d:700ms">
+            <a class="btn" href="#work">
+              <span>{t.hero.cta1}</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5"></path></svg>
+            </a>
+            <a class="btn btn-line" href="#contact"><span>{t.hero.cta2}</span></a>
+          </div>
+        </div>
+
+        <dl class="wrap strip hero-out">
+          {
+            t.hero.facts.map((f, i) => (
+              <div class="strip-cell hero-fade" style={`--d:${900 + i * 80}ms`}>
+                <dt class="mono">{f.l}</dt>
+                <dd>{f.v}</dd>
+              </div>
+            ))
+          }
+          <div class="strip-cell hero-fade" style="--d:1060ms">
+            <dt class="mono">{t.clock}</dt>
+            <dd data-clock>--:--</dd>
+          </div>
+          <div class="strip-cell strip-now hero-fade" style="--d:1140ms">
+            <dt class="mono">{t.nowLabel}</dt>
+            <dd><span class="pulse" aria-hidden="true"></span>{t.hero.now}</dd>
+          </div>
+        </dl>
+
+        <div class="fan" aria-hidden="true">
+          <div class="fan-card left"><span class="lights"><i></i><i></i><i></i></span><Shot shot={PROJECTS[0].shots[0]} lang={lang} alt="" /></div>
+          <div class="fan-card right"><span class="lights"><i></i><i></i><i></i></span><Shot shot={PROJECTS[2].shots[2]} lang={lang} alt="" /></div>
+          <div class="fan-card center"><span class="lights"><i></i><i></i><i></i></span><Shot shot={PROJECTS[1].shots[0]} lang={lang} alt="" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATEMENT: the words light up as the page scrolls. -->
+    <section class="scene scene-statement" data-scene="statement">
+      <div class="scene-pin">
+        <p class="wrap statement" style={`--n:${statement.length}`} aria-label={t.hero.lead}>
+          {
+            statement.map((w, i) => (
+              <>
+                <span style={`--i:${i}`} aria-hidden="true">{w}</span>{' '}
+              </>
+            ))
+          }
+        </p>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="section" id="work">
+      <header class="wrap sec-head">
+        <p class="mono sec-label reveal">01 / {t.nav.work}</p>
+        <h2 class="reveal">{t.work.title}</h2>
+        <p class="sec-sub reveal">{t.work.sub}</p>
+      </header>
+      <div class="projects">
+        {PROJECTS.map((project, i) => <Project project={project} t={t} lang={lang} index={i} />)}
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="section" id="stack">
+      <header class="wrap sec-head">
+        <p class="mono sec-label reveal">02 / {t.nav.stack}</p>
+        <h2 class="reveal">{t.stack.title}</h2>
+        <p class="sec-sub reveal">{t.stack.sub}</p>
+      </header>
+      <ul class="wrap stack">
+        {
+          groups.map((g) => (
+            <li class="stack-row reveal">
+              <p class="mono stack-cat">
+                {g.label}
+                <span>{String(g.tools.length).padStart(2, '0')}</span>
+              </p>
+              <ul class="stack-list">
+                {g.tools.map(([logo, name]) => (
+                  <li>
+                    <span class="logo">
+                      <img src={`/logos/${logo}.svg`} alt="" width="18" height="18" loading="lazy" />
+                    </span>
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section class="section" id="certs">
+      <header class="wrap sec-head">
+        <p class="mono sec-label reveal">03 / {t.nav.certs}</p>
+        <h2 class="reveal">{t.certs.title}</h2>
+        <p class="sec-sub reveal">{t.certs.sub}</p>
+      </header>
+      <ul class="wrap ledger">
+        {
+          t.certs.items.map((c) => (
+            <li class="reveal">
+              <a class="ledger-row" href={SITE.certs} target="_blank" rel="noopener">
+                <span class="logo lg"><img src={`/logos/${c.logo}.svg`} alt="" width="26" height="26" loading="lazy" /></span>
+                <span class="ledger-main">
+                  <span class="ledger-name">{c.name}</span>
+                  <span class="ledger-meta">
+                    {c.org} · {c.meta}
+                  </span>
+                </span>
+                <span class="mono ledger-id">{c.id}</span>
+                <span class="ledger-verify">
+                  {t.certs.verify}
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6" /></svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="section" id="activity">
+      <header class="wrap sec-head">
+        <p class="mono sec-label reveal">04 / {t.nav.activity}</p>
+        <h2 class="reveal">{t.activity.title}</h2>
+        <p class="sec-sub reveal">{t.activity.sub}</p>
+      </header>
+      <div class="wrap">
+        <a class="activity reveal" href={SITE.github} target="_blank" rel="noopener">
+          <img class="only-dark" src={`${activity}stats-dark.svg`} alt={t.activity.alt1} loading="lazy" />
+          <img class="only-light" src={`${activity}stats-light.svg`} alt={t.activity.alt1} loading="lazy" />
+          <img class="only-dark" src={`${activity}calendar-dark.svg`} alt={t.activity.alt2} loading="lazy" />
+          <img class="only-light" src={`${activity}calendar-light.svg`} alt={t.activity.alt2} loading="lazy" />
+        </a>
+      </div>
+    </section>
+
+    <!-- LEARNING -->
+    <section class="section" id="learning">
+      <header class="wrap sec-head">
+        <p class="mono sec-label reveal">05</p>
+        <h2 class="reveal">{t.learning.title}</h2>
+      </header>
+      <ol class="wrap learning">
+        {
+          t.learning.items.map((item, i) => (
+            <li class="reveal" style={`--d:${i * 90}ms`}>
+              <span class="mono">{pad(i)}</span>
+              <h3>{item.t}</h3>
+              <p>{item.d}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+      <div class="wrap">
+        <p class="mono sec-label reveal">06 / {t.nav.contact}</p>
+        <h2 class="contact-title chars" data-chars="view" aria-label={t.contact.title.join(' ')}>
+          {
+            contactLines.map((line) => (
+              <>
+                <span class:list={['line', { accent: line.accent }]} aria-hidden="true">
+                  {line.words.map((word) => (
+                    <>
+                      <span class="word">{word.map((c) => <span class="ch" style={`--i:${c.i}`}>{c.ch}</span>)}</span>{' '}
+                    </>
+                  ))}
+                </span>{' '}
+              </>
+            ))
+          }
+        </h2>
+        <div class="contact-grid">
+          <p class="lead reveal">{t.contact.sub}</p>
+          <div class="reveal">
+            <a class="mail-link" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+            <div class="contact-links">
+              <button class="btn btn-line" type="button" data-copy={SITE.email} data-copied={t.contact.copied}>
+                <span>{t.contact.copy}</span>
+              </button>
+              <a class="btn btn-line" href={SITE.linkedin} target="_blank" rel="noopener">
+                <span>LinkedIn</span>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"></path></svg>
+              </a>
+              <a class="btn btn-line" href={SITE.github} target="_blank" rel="noopener">
+                <span>GitHub</span>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6"></path></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap mono">
+    <p>© {new Date().getFullYear()} Keylor Pineda</p>
+    <p>{t.footer}</p>
+  </footer>
+</Base>
