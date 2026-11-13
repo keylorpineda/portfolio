@@ -18,7 +18,7 @@ const timing = (i: number) => `--s:${starts[i]};--n:${starts[i + 1]}`;
 // Fixed figures (no theme variant) sit on white, like a printed plate.
 const kind = (i: number) => {
   const s = project.shots[i];
-  return [s.fit ?? 'cover', { 'focus-right': s.focus === 'right', paper: !s.key && !s.dark && s.fit === 'contain' }];
+  return [s.fit ?? 'cover', { 'focus-right': s.focus === 'right', whole: s.whole, paper: !s.key && !s.dark && s.fit === 'contain' }];
 };
 ---
 

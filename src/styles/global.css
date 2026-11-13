@@ -2054,7 +2054,7 @@ html:not(.js) .statement span {
 
 /* Phones: desktop captures are zoomed into their top-left so the interface stays readable. */
 @media (max-width: 959px) {
-  .shot.cover img {
+  .shot.cover:not(.whole) img {
     width: 160%;
     height: 160%;
     max-width: none;

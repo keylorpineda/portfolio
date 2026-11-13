@@ -11,7 +11,8 @@ export const SITE = {
 };
 
 // `key` shots are live captures stored as /img/shots/<key>-<lang>-<theme>.webp; `src` shots are fixed images.
-export type Shot = { key?: string; focus?: 'right'; src?: string; dark?: string; w: number; h: number; fit?: 'cover' | 'contain' };
+// `whole`: a composed slide that must always be shown entire, never zoomed in on phones.
+export type Shot = { key?: string; focus?: 'right'; whole?: boolean; src?: string; dark?: string; w: number; h: number; fit?: 'cover' | 'contain' };
 
 export type Project = {
   id: string;
@@ -39,7 +40,7 @@ export const PROJECTS: Project[] = [
     ],
     chips: ['React Native', 'Expo', 'TypeScript', 'TensorFlow Lite', 'Python', 'FastAPI', 'Firebase', 'SQLite', 'Gemini'],
     shots: [
-      { src: '/img/hc-hero-light.webp', dark: '/img/hc-hero-dark.webp', w: 1800, h: 720, fit: 'contain' },
+      { src: '/img/hc-slide-light.webp', dark: '/img/hc-slide-dark.webp', w: 1440, h: 900, whole: true },
       { src: '/img/hc-dataset.webp', w: 695, h: 926, fit: 'contain' },
       { src: '/img/hc-gradcam.webp', w: 631, h: 1056, fit: 'contain' },
     ],
