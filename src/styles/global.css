@@ -871,7 +871,10 @@ button {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center;
+  place-content: center;
+  justify-items: center;
+  row-gap: clamp(18px, 3.5vh, 34px);
+  padding: var(--bar-h) 0 calc(var(--dock-h) + 30px);
   perspective: 1600px;
   pointer-events: none;
   transform: translateY(calc((1 - var(--f)) * 105vh));
@@ -880,8 +883,15 @@ button {
 
 .fan-card {
   grid-area: 1 / 1;
-  width: min(820px, 84vw);
+  /* Leave room above for the bar and below for the carousel controls and the dock. */
+  width: min(820px, 84vw, calc((100svh - var(--bar-h) - var(--dock-h) - 190px) * 1.45));
   will-change: transform;
+}
+
+/* While the fan is still rising, the windows are only scenery. */
+.fan:not(.is-ready) .fan-card,
+.fan:not(.is-ready) .fan-nav {
+  pointer-events: none;
 }
 
 /* The window itself. It floats on its own and leans toward the pointer (--mx, --my: -1 to 1).
@@ -903,16 +913,16 @@ button {
   will-change: transform, translate;
 }
 
-.fan-card.center .fan-inner {
+.fan-card[data-pos='0'] .fan-inner {
   --depth: 1.6;
   animation-duration: 8s;
 }
 
-.fan-card.left .fan-inner {
+.fan-card[data-card='0'] .fan-inner {
   animation-delay: -2.6s;
 }
 
-.fan-card.right .fan-inner {
+.fan-card[data-card='2'] .fan-inner {
   animation-delay: -5.1s;
   animation-duration: 6.5s;
 }
@@ -937,11 +947,11 @@ button {
   pointer-events: none;
 }
 
-.fan-card.left .fan-inner::after {
+.fan-card[data-card='0'] .fan-inner::after {
   animation-delay: 3s;
 }
 
-.fan-card.right .fan-inner::after {
+.fan-card[data-card='2'] .fan-inner::after {
   animation-delay: 6s;
 }
 
@@ -978,12 +988,12 @@ button {
   animation: fan-look 16s ease-in-out infinite alternate;
 }
 
-.fan-card.left img {
+.fan-card[data-card='0'] img {
   transform-origin: 20% 60%;
   animation-delay: -6s;
 }
 
-.fan-card.right img {
+.fan-card[data-card='2'] img {
   transform-origin: 70% 40%;
   animation-delay: -11s;
 }
@@ -1004,17 +1014,247 @@ button {
   animation-play-state: paused;
 }
 
-.fan-card.center {
-  transform: rotateX(calc((1 - var(--f)) * 55deg)) scale(calc(0.72 + var(--f) * 0.28));
+/* Each card's place in the fan lives in typed variables, so changing places glides
+   while the scroll-driven --f still applies instantly.
+   --sx/--sy: offset in %, --sr: tilt, --c: 1 for the front card, 0 for the sides. */
+@property --sx {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --sy {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --sr {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --c {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+.fan-card {
+  --sx: 0;
+  --sy: 0;
+  --sr: 0;
+  --c: 1;
+  transform: translateX(calc(var(--f) * var(--sx) * 1%)) translateY(calc(var(--f) * var(--sy) * 1%)) rotate(calc(var(--f) * var(--sr) * 1deg))
+    rotateX(calc((1 - var(--f)) * 55deg * var(--c))) scale(calc(var(--c) * (0.72 + var(--f) * 0.28) + (1 - var(--c)) * 0.8));
   transform-origin: 50% 100%;
+  transition:
+    --sx 0.9s var(--ease),
+    --sy 0.9s var(--ease),
+    --sr 0.9s var(--ease),
+    --c 0.9s var(--ease);
+  pointer-events: auto;
+  touch-action: pan-y;
+  cursor: pointer;
 }
 
-.fan-card.left {
-  transform: translateX(calc(var(--f) * -30%)) translateY(calc(var(--f) * 4%)) rotate(calc(var(--f) * -9deg)) scale(0.8);
+.fan-card[data-pos='0'] {
+  z-index: 3;
+  cursor: default;
 }
 
-.fan-card.right {
-  transform: translateX(calc(var(--f) * 30%)) translateY(calc(var(--f) * 4%)) rotate(calc(var(--f) * 9deg)) scale(0.8);
+.fan-card[data-pos='1'] {
+  --sx: 30;
+  --sy: 4;
+  --sr: 9;
+  --c: 0;
+  z-index: 2;
+}
+
+.fan-card[data-pos='2'] {
+  --sx: -30;
+  --sy: 4;
+  --sr: -9;
+  --c: 0;
+  z-index: 1;
+}
+
+/* The card coming to the front is raised above the others for the whole trip. */
+.fan-card.is-rising {
+  z-index: 4;
+}
+
+/* A side window brightens a little under the pointer, inviting a click. */
+.fan-card:not([data-pos='0']) .fan-inner {
+  filter: brightness(0.92);
+  transition:
+    filter 0.4s,
+    translate 0.9s var(--ease),
+    rotate 0.9s var(--ease);
+}
+
+@media (hover: hover) {
+  .fan-card:not([data-pos='0']):hover .fan-inner {
+    filter: brightness(1.04);
+  }
+}
+
+/* Arrows, the name of the front project, and dots. */
+/* Sits right under the front window, whatever the screen height. */
+.fan-nav {
+  grid-area: 2 / 1;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: clamp(0, calc((var(--f) - 0.7) * 4), 1);
+  pointer-events: auto;
+}
+
+.fan-arrow {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.4s var(--ease),
+    border-color 0.3s;
+}
+
+.fan-arrow svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fan-arrow:active {
+  transform: scale(0.9);
+}
+
+@media (hover: hover) {
+  .fan-arrow:hover {
+    border-color: var(--accent);
+  }
+}
+
+.fan-caption {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  min-width: min(300px, 56vw);
+  padding: 10px 18px 12px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.fan-label {
+  grid-area: 1 / 1;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  translate: 0 8px;
+  transition:
+    opacity 0.35s,
+    translate 0.5s var(--ease),
+    visibility 0s 0.35s;
+}
+
+.fan-label.is-on {
+  opacity: 1;
+  visibility: visible;
+  translate: 0 0;
+  transition:
+    opacity 0.45s 0.15s,
+    translate 0.6s var(--ease) 0.15s,
+    visibility 0s;
+}
+
+.fan-label .mono {
+  color: var(--ink-3);
+  font-size: 0.625rem;
+}
+
+.fan-label b {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.fan-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+.fan-view svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fan-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.fan-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--line);
+  transition:
+    width 0.5s var(--ease),
+    background-color 0.3s;
+}
+
+.fan-dots i.is-on {
+  width: 20px;
+  background: var(--accent);
+}
+
+/* Phones: the side windows peek in less so the front one stays readable. */
+@media (max-width: 759px) {
+  .fan-card[data-pos='1'] {
+    --sx: 24;
+  }
+
+  .fan-card[data-pos='2'] {
+    --sx: -24;
+  }
+
+  .fan-nav {
+    gap: 8px;
+  }
+
+  .fan-arrow {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 /* --------------------------------------------------------------- statement */

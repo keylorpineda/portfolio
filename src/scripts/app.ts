@@ -473,3 +473,69 @@ if (fan) {
     );
   }
 }
+
+/* --------------------------------------------------------------- carousel */
+// The fan is a carousel. data-pos 0 is the front card, 1 the right one, 2 the left one.
+if (fan) {
+  const cards = $$('[data-card]', fan);
+  const labels = $$('[data-label]', fan);
+  const dots = $$('[data-dot]', fan);
+  const heroPin = $('.scene-hero .scene-pin');
+  let front = 1;
+  let timer = 0;
+  let resumeAt = 0;
+
+  const show = (next: number) => {
+    next = (next + cards.length) % cards.length;
+    if (next === front) return;
+    const rising = cards[next];
+    rising.classList.add('is-rising');
+    setTimeout(() => rising.classList.remove('is-rising'), 700);
+    front = next;
+    cards.forEach((card, i) => (card.dataset.pos = String((i - front + cards.length) % cards.length)));
+    labels.forEach((l, i) => l.classList.toggle('is-on', i === front));
+    dots.forEach((d, i) => d.classList.toggle('is-on', i === front));
+  };
+  // Any choice by the visitor holds the autoplay back for a while.
+  const choose = (next: number) => {
+    resumeAt = performance.now() + 9000;
+    show(next);
+  };
+
+  $$<HTMLButtonElement>('[data-fan-step]', fan).forEach((b) => b.addEventListener('click', () => choose(front + Number(b.dataset.fanStep))));
+  cards.forEach((card, i) =>
+    card.addEventListener('click', () => {
+      if (i !== front) choose(i);
+    }),
+  );
+  fan.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') choose(front + 1);
+    else if (e.key === 'ArrowLeft') choose(front - 1);
+  });
+
+  // Swipe sideways on touch screens; vertical drags still scroll the page.
+  let startX = 0;
+  let startY = 0;
+  fan.addEventListener('pointerdown', (e) => {
+    startX = e.clientX;
+    startY = e.clientY;
+  });
+  fan.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'mouse') return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(e.clientY - startY) * 1.4) choose(front + (dx < 0 ? 1 : -1));
+  });
+
+  // The fan only takes clicks once it has risen, and only plays on its own while it is fully up.
+  const tick = () => {
+    const f = Number(getComputedStyle(heroPin ?? fan).getPropertyValue('--p')) || 0;
+    const ready = (f - 0.12) / 0.7 > 0.85;
+    fan.classList.toggle('is-ready', ready);
+    if (ready && !reduced && !fan.classList.contains('is-idle') && !fan.matches(':hover') && performance.now() > resumeAt) show(front + 1);
+  };
+  const ready = () => fan.classList.toggle('is-ready', (Number(getComputedStyle(heroPin ?? fan).getPropertyValue('--p')) - 0.12) / 0.7 > 0.85);
+  addEventListener('scroll', ready, { passive: true });
+  ready();
+  timer = window.setInterval(tick, 4200);
+  addEventListener('pagehide', () => clearInterval(timer));
+}

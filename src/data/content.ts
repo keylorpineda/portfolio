@@ -144,6 +144,9 @@ const en = {
     sub: 'Three products I designed, built and shipped from scratch, from the database to the interface.',
     code: 'Source code',
     demo: 'Live demo',
+    prev: 'Previous project',
+    next: 'Next project',
+    view: 'See the project',
   },
   projects: {
     hc: {
@@ -269,6 +272,9 @@ const es: typeof en = {
     sub: 'Tres productos que diseñé, construí y publiqué desde cero, de la base de datos a la interfaz.',
     code: 'Código',
     demo: 'Ver demo',
+    prev: 'Proyecto anterior',
+    next: 'Proyecto siguiente',
+    view: 'Ver el proyecto',
   },
   projects: {
     hc: {
