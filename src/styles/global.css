@@ -881,12 +881,78 @@ button {
 .fan-card {
   grid-area: 1 / 1;
   width: min(820px, 84vw);
+  will-change: transform;
+}
+
+/* The window itself. It floats on its own and leans toward the pointer (--mx, --my: -1 to 1).
+   Floating uses `transform` and the lean uses `translate`/`rotate`, so the two add up. */
+.fan-inner {
+  --depth: 1;
+  position: relative;
   border-radius: 14px;
   border: 1px solid var(--line);
   background: var(--surface);
   box-shadow: 0 30px 70px -34px rgba(0, 0, 0, 0.55);
   overflow: hidden;
-  will-change: transform;
+  translate: calc(var(--mx, 0) * 16px * var(--depth)) calc(var(--my, 0) * 12px * var(--depth));
+  rotate: calc(var(--mx, 0) * 1.2deg * var(--depth));
+  transition:
+    translate 0.9s var(--ease),
+    rotate 0.9s var(--ease);
+  animation: fan-float 7s ease-in-out infinite alternate;
+  will-change: transform, translate;
+}
+
+.fan-card.center .fan-inner {
+  --depth: 1.6;
+  animation-duration: 8s;
+}
+
+.fan-card.left .fan-inner {
+  animation-delay: -2.6s;
+}
+
+.fan-card.right .fan-inner {
+  animation-delay: -5.1s;
+  animation-duration: 6.5s;
+}
+
+@keyframes fan-float {
+  from {
+    transform: translateY(-9px);
+  }
+  to {
+    transform: translateY(9px);
+  }
+}
+
+/* A sheen of light crosses each window from time to time. */
+.fan-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.22) 50%, transparent 60%);
+  translate: -100% 0;
+  animation: fan-sheen 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.fan-card.left .fan-inner::after {
+  animation-delay: 3s;
+}
+
+.fan-card.right .fan-inner::after {
+  animation-delay: 6s;
+}
+
+@keyframes fan-sheen {
+  0%,
+  70% {
+    translate: -100% 0;
+  }
+  100% {
+    translate: 100% 0;
+  }
 }
 
 .fan-card .lights {
@@ -897,11 +963,45 @@ button {
   background: var(--surface-2);
 }
 
+/* Inside, the screen drifts slowly, as if someone were looking around the page. */
+.fan-screen {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
 .fan-card img {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
   object-position: top;
+  transform-origin: 30% 20%;
+  animation: fan-look 16s ease-in-out infinite alternate;
+}
+
+.fan-card.left img {
+  transform-origin: 20% 60%;
+  animation-delay: -6s;
+}
+
+.fan-card.right img {
+  transform-origin: 70% 40%;
+  animation-delay: -11s;
+}
+
+@keyframes fan-look {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.09) translate(-1.5%, -2%);
+  }
+}
+
+/* Nothing runs while the opening scene is off screen. */
+.fan.is-idle .fan-inner,
+.fan.is-idle .fan-inner::after,
+.fan.is-idle img {
+  animation-play-state: paused;
 }
 
 .fan-card.center {

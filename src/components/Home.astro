@@ -159,10 +159,10 @@ const slide = [-1, 1, -1];
           </div>
         </dl>
 
-        <div class="fan" aria-hidden="true">
-          <div class="fan-card left"><span class="lights"><i></i><i></i><i></i></span><Shot shot={PROJECTS[0].shots[0]} lang={lang} alt="" /></div>
-          <div class="fan-card right"><span class="lights"><i></i><i></i><i></i></span><Shot shot={PROJECTS[2].shots[2]} lang={lang} alt="" /></div>
-          <div class="fan-card center"><span class="lights"><i></i><i></i><i></i></span><Shot shot={PROJECTS[1].shots[0]} lang={lang} alt="" /></div>
+        <div class="fan" data-fan aria-hidden="true">
+          <div class="fan-card left"><div class="fan-inner"><span class="lights"><i></i><i></i><i></i></span><div class="fan-screen"><Shot shot={PROJECTS[0].shots[0]} lang={lang} alt="" /></div></div></div>
+          <div class="fan-card right"><div class="fan-inner"><span class="lights"><i></i><i></i><i></i></span><div class="fan-screen"><Shot shot={PROJECTS[2].shots[2]} lang={lang} alt="" /></div></div></div>
+          <div class="fan-card center"><div class="fan-inner"><span class="lights"><i></i><i></i><i></i></span><div class="fan-screen"><Shot shot={PROJECTS[1].shots[0]} lang={lang} alt="" /></div></div></div>
         </div>
       </div>
     </section>

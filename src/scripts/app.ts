@@ -446,3 +446,30 @@ if (palette && input && typeof palette.showModal === 'function') {
     else if (action === 'copy') copyText($('[data-copy]')?.dataset.copy ?? '');
   });
 }
+
+/* -------------------------------------------------------------------- fan */
+// The opening windows lean toward the pointer, and their loops pause when the scene is off screen.
+const fan = $('[data-fan]');
+if (fan) {
+  new IntersectionObserver(([e]) => fan.classList.toggle('is-idle', !e.isIntersecting)).observe(fan);
+  if (finePointer && !reduced) {
+    let queued = false;
+    let mx = 0;
+    let my = 0;
+    addEventListener(
+      'pointermove',
+      (e) => {
+        mx = (e.clientX / innerWidth) * 2 - 1;
+        my = (e.clientY / innerHeight) * 2 - 1;
+        if (queued || fan.classList.contains('is-idle')) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          fan.style.setProperty('--mx', mx.toFixed(3));
+          fan.style.setProperty('--my', my.toFixed(3));
+        });
+      },
+      { passive: true },
+    );
+  }
+}
