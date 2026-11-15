@@ -1,5 +1,6 @@
 ---
 import Shot from './Shot.astro';
+import Chars from './Chars.astro';
 import type { Copy, Lang, Project } from '../data/content';
 
 interface Props {
@@ -29,7 +30,8 @@ const kind = (i: number) => {
       <span>{p.kicker}</span>
       <span class="status"><i></i>{p.status}</span>
     </p>
-    <h3 class="project-title reveal">{project.name}</h3>
+    <h3 class="project-title chars" data-chars="view" aria-label={project.name}><Chars text={project.name} /></h3>
+    <span class="project-ghost" aria-hidden="true">{num}</span>
     <p class="project-desc reveal">{p.desc}</p>
   </header>
 
@@ -83,7 +85,7 @@ const kind = (i: number) => {
     <dl class="metrics">
       {
         project.metrics.map((m, i) => (
-          <div class="metric reveal" style={`--d:${i * 90}ms`}>
+          <div class="metric reveal" style={`--d:${i * 90}ms`} data-spot>
             <dt>{p.metrics[i]}</dt>
             <dd data-count={m.count} data-dec={m.decimals ?? 0} data-suffix={m.suffix ?? ''}>
               {m.value}

@@ -539,3 +539,53 @@ if (fan) {
   timer = window.setInterval(tick, 4200);
   addEventListener('pagehide', () => clearInterval(timer));
 }
+
+/* ------------------------------------------------------- pointer on cards */
+// Cards marked data-spot carry a light under the pointer; data-tilt cards also lean toward it.
+if (finePointer && !reduced) {
+  $$('[data-spot]').forEach((el) => {
+    const tilt = el.hasAttribute('data-tilt');
+    let queued = false;
+    let ev: PointerEvent | null = null;
+    el.addEventListener('pointermove', (e) => {
+      ev = e;
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        if (!ev) return;
+        const r = el.getBoundingClientRect();
+        const x = ev.clientX - r.left;
+        const y = ev.clientY - r.top;
+        el.style.setProperty('--mx', `${x.toFixed(0)}px`);
+        el.style.setProperty('--my', `${y.toFixed(0)}px`);
+        if (tilt) {
+          el.style.setProperty('--ry', `${((x / r.width - 0.5) * 9).toFixed(2)}deg`);
+          el.style.setProperty('--rx', `${((0.5 - y / r.height) * 9).toFixed(2)}deg`);
+        }
+      });
+    });
+    el.addEventListener('pointerleave', () => {
+      ev = null;
+      el.style.removeProperty('--mx');
+      el.style.removeProperty('--my');
+      el.style.removeProperty('--rx');
+      el.style.removeProperty('--ry');
+    });
+  });
+}
+
+/* ------------------------------------------------------------ contact glow */
+const glow = $('[data-glow]');
+if (glow) {
+  if (reduced || !('IntersectionObserver' in window)) glow.classList.add('is-lit');
+  else
+    new IntersectionObserver(
+      ([e], io) => {
+        if (!e.isIntersecting) return;
+        glow.classList.add('is-lit');
+        io.disconnect();
+      },
+      { threshold: 0.25 },
+    ).observe(glow);
+}

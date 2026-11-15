@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Project from './Project.astro';
 import Shot from './Shot.astro';
+import Chars from './Chars.astro';
 import { COPY, PROJECTS, SITE, TABS, TOOLS, type Lang } from '../data/content';
 
 interface Props {
@@ -227,7 +228,7 @@ const fanShots = [
     <section class="section" id="work">
       <header class="wrap sec-head">
         <p class="mono sec-label reveal">01 / {t.nav.work}</p>
-        <h2 class="reveal">{t.work.title}</h2>
+        <h2 class="chars" data-chars="view" aria-label={t.work.title}><Chars text={t.work.title} /></h2>
         <p class="sec-sub reveal">{t.work.sub}</p>
       </header>
       <div class="projects">
@@ -239,20 +240,20 @@ const fanShots = [
     <section class="section" id="stack">
       <header class="wrap sec-head">
         <p class="mono sec-label reveal">02 / {t.nav.stack}</p>
-        <h2 class="reveal">{t.stack.title}</h2>
+        <h2 class="chars" data-chars="view" aria-label={t.stack.title}><Chars text={t.stack.title} /></h2>
         <p class="sec-sub reveal">{t.stack.sub}</p>
       </header>
       <ul class="wrap stack">
         {
           groups.map((g) => (
-            <li class="stack-row reveal">
+            <li class="stack-row reveal" data-spot>
               <p class="mono stack-cat">
                 {g.label}
                 <span>{String(g.tools.length).padStart(2, '0')}</span>
               </p>
               <ul class="stack-list">
-                {g.tools.map(([logo, name]) => (
-                  <li>
+                {g.tools.map(([logo, name], k) => (
+                  <li style={`--k:${k}`}>
                     <span class="logo">
                       <img src={`/logos/${logo}.svg`} alt="" width="18" height="18" loading="lazy" />
                     </span>
@@ -270,14 +271,14 @@ const fanShots = [
     <section class="section" id="certs">
       <header class="wrap sec-head">
         <p class="mono sec-label reveal">03 / {t.nav.certs}</p>
-        <h2 class="reveal">{t.certs.title}</h2>
+        <h2 class="chars" data-chars="view" aria-label={t.certs.title}><Chars text={t.certs.title} /></h2>
         <p class="sec-sub reveal">{t.certs.sub}</p>
       </header>
       <ul class="wrap ledger">
         {
-          t.certs.items.map((c) => (
-            <li class="reveal">
-              <a class="ledger-row" href={SITE.certs} target="_blank" rel="noopener">
+          t.certs.items.map((c, i) => (
+            <li class="reveal" style={`--d:${i * 110}ms`}>
+              <a class="ledger-row" data-spot href={SITE.certs} target="_blank" rel="noopener">
                 <span class="logo lg"><img src={`/logos/${c.logo}.svg`} alt="" width="26" height="26" loading="lazy" /></span>
                 <span class="ledger-main">
                   <span class="ledger-name">{c.name}</span>
@@ -301,7 +302,7 @@ const fanShots = [
     <section class="section" id="activity">
       <header class="wrap sec-head">
         <p class="mono sec-label reveal">04 / {t.nav.activity}</p>
-        <h2 class="reveal">{t.activity.title}</h2>
+        <h2 class="chars" data-chars="view" aria-label={t.activity.title}><Chars text={t.activity.title} /></h2>
         <p class="sec-sub reveal">{t.activity.sub}</p>
       </header>
       <div class="wrap">
@@ -318,12 +319,12 @@ const fanShots = [
     <section class="section" id="learning">
       <header class="wrap sec-head">
         <p class="mono sec-label reveal">05</p>
-        <h2 class="reveal">{t.learning.title}</h2>
+        <h2 class="chars" data-chars="view" aria-label={t.learning.title}><Chars text={t.learning.title} /></h2>
       </header>
       <ol class="wrap learning">
         {
           t.learning.items.map((item, i) => (
-            <li class="reveal" style={`--d:${i * 90}ms`}>
+            <li class="reveal" style={`--d:${i * 90}ms`} data-spot data-tilt>
               <span class="mono">{pad(i)}</span>
               <h3>{item.t}</h3>
               <p>{item.d}</p>
@@ -334,7 +335,7 @@ const fanShots = [
     </section>
 
     <!-- CONTACT -->
-    <section class="contact" id="contact">
+    <section class="contact" id="contact" data-glow>
       <div class="wrap">
         <p class="mono sec-label reveal">06 / {t.nav.contact}</p>
         <h2 class="contact-title chars" data-chars="view" aria-label={t.contact.title.join(' ')}>

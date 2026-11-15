@@ -1999,7 +1999,8 @@ html:not(.js) .statement span {
 }
 
 @media (hover: hover) {
-  .mail-link:hover {
+  .mail-link:hover,
+  .js .reveal.is-in .mail-link:hover {
     background-size: 100% 100%;
     color: var(--accent-ink);
   }
@@ -2141,4 +2142,325 @@ html:not(.js) .statement span {
 .theme-btn {
   width: 44px;
   height: 44px;
+}
+
+/* ================================================================= below the hero
+   Every section has its own entrance, and the cards answer the pointer. */
+
+/* The small label above each title draws a line out from itself. */
+.sec-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec-label::after {
+  content: '';
+  width: 56px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.1s var(--ease) 0.3s;
+}
+
+.sec-label.is-in::after,
+html:not(.js) .sec-label::after {
+  transform: scaleX(1);
+}
+
+/* A light that follows the pointer across a card (--mx, --my set by script). */
+html [data-spot][data-spot] {
+  background-image: radial-gradient(280px circle at var(--mx, -999px) var(--my, -999px), color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%);
+}
+
+/* --------------------------------------------------------------- projects */
+.project-top {
+  position: relative;
+  isolation: isolate;
+}
+
+/* A huge outlined number drifts behind each project's title as the page scrolls. */
+.project-ghost {
+  position: absolute;
+  right: -0.04em;
+  top: -0.32em;
+  z-index: -1;
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 4rem + 22vw, 24rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--tint) 45%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+@supports (animation-timeline: view()) {
+  .project-ghost {
+    animation: ghost-drift linear both;
+    animation-timeline: view();
+  }
+
+  @keyframes ghost-drift {
+    from {
+      transform: translateY(35%);
+      opacity: 0;
+    }
+    35% {
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-35%);
+      opacity: 0.4;
+    }
+  }
+}
+
+/* Metric cards: a bar of the project's colour sweeps across the top as they land. */
+.metric {
+  position: relative;
+  overflow: hidden;
+}
+
+.metric::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--tint);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.4s var(--ease) calc(var(--d, 0ms) + 0.25s);
+}
+
+.metric.is-in::before,
+html:not(.js) .metric::before {
+  transform: scaleX(1);
+}
+
+.metric dd {
+  transition: color 0.4s;
+}
+
+@media (hover: hover) {
+  .metric:hover dd {
+    color: var(--tint);
+  }
+}
+
+/* ------------------------------------------------------------------- stack */
+/* The chips cascade into place one after another. */
+.js .stack-row:not(.is-in) .stack-list li {
+  opacity: 0;
+}
+
+.stack-row.is-in .stack-list li {
+  animation: chip-in 0.8s var(--ease) backwards;
+  animation-delay: calc(150ms + var(--k, 0) * 45ms);
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+  }
+}
+
+@media (hover: hover) {
+  .stack-list li:hover .logo {
+    animation: logo-spin 0.7s var(--ease);
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(-200deg) scale(0.6);
+  }
+}
+
+/* ------------------------------------------------------------------- certs */
+/* Each row is wiped in from the left, its logo spins into place, and a light crosses it now and then. */
+.ledger li.is-in .ledger-row {
+  animation: row-wipe 1.1s var(--ease) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes row-wipe {
+  from {
+    clip-path: inset(0 100% 0 0 round 18px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 18px);
+  }
+}
+
+.ledger li.is-in .logo {
+  animation: logo-in 1s var(--ease) backwards;
+  animation-delay: calc(var(--d, 0ms) + 0.35s);
+}
+
+@keyframes logo-in {
+  from {
+    opacity: 0;
+    transform: rotate(-30deg) scale(0.4);
+  }
+}
+
+.ledger-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 40%, color-mix(in srgb, var(--accent) 16%, transparent) 50%, transparent 60%);
+  translate: -100% 0;
+  pointer-events: none;
+}
+
+.ledger li.is-in .ledger-row::after {
+  animation: row-shine 7s ease-in-out infinite;
+  animation-delay: calc(1.6s + var(--d, 0ms) * 4);
+}
+
+@keyframes row-shine {
+  0%,
+  78% {
+    translate: -100% 0;
+  }
+  100% {
+    translate: 100% 0;
+  }
+}
+
+/* ---------------------------------------------------------------- activity */
+/* The activity cards are unveiled from the top. */
+.activity.is-in img {
+  animation: card-wipe 1.3s var(--ease) backwards;
+}
+
+.activity.is-in img:nth-of-type(3),
+.activity.is-in img:nth-of-type(4) {
+  animation-delay: 0.25s;
+}
+
+@keyframes card-wipe {
+  from {
+    clip-path: inset(0 0 100% 0 round 18px);
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 18px);
+  }
+}
+
+/* ---------------------------------------------------------------- learning */
+/* Cards fall forward into place, then lean toward the pointer (--rx, --ry set by script). */
+.learning li.is-in {
+  animation: card-flip 1.1s var(--ease) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+@keyframes card-flip {
+  from {
+    opacity: 0;
+    transform: perspective(900px) rotateX(38deg) translateY(40px);
+  }
+}
+
+.js .learning li.reveal.is-in {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition:
+    transform 0.6s var(--ease),
+    opacity 0.9s var(--ease);
+}
+
+.learning li .mono {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  transition:
+    transform 0.6s var(--ease),
+    background-color 0.3s;
+}
+
+@media (hover: hover) {
+  .learning li:hover .mono {
+    transform: rotate(-8deg) scale(1.12);
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+/* ----------------------------------------------------------------- contact */
+/* A sun rises behind the closing words, the address underlines itself, and the buttons pop in. */
+.contact {
+  position: relative;
+  overflow: clip;
+}
+
+.contact > .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.contact::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -55vmin;
+  width: 120vmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 50%, transparent), color-mix(in srgb, var(--accent) 10%, transparent) 62%, transparent);
+  transform: translateX(-50%) translateY(30%) scale(0.5);
+  opacity: 0;
+  transition:
+    transform 2.2s var(--ease),
+    opacity 1.6s;
+  pointer-events: none;
+}
+
+.contact.is-lit::before {
+  transform: translateX(-50%) translateY(0) scale(1);
+  opacity: 1;
+}
+
+.js .reveal .mail-link {
+  background-size: 0 0.14em;
+  transition: background-size 1.3s var(--ease) 0.45s;
+}
+
+.js .reveal.is-in .mail-link {
+  background-size: 100% 0.14em;
+}
+
+.reveal.is-in .contact-links > * {
+  animation: chip-in 0.8s var(--ease) backwards;
+}
+
+.reveal.is-in .contact-links > :nth-child(1) {
+  animation-delay: 0.55s;
+}
+
+.reveal.is-in .contact-links > :nth-child(2) {
+  animation-delay: 0.65s;
+}
+
+.reveal.is-in .contact-links > :nth-child(3) {
+  animation-delay: 0.75s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact::before {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+
+  .js .reveal .mail-link {
+    background-size: 100% 0.14em;
+  }
 }

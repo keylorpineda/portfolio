@@ -1,0 +1,24 @@
+---
+// Splits a title into characters so each one can animate; words never break across lines.
+// The parent element carries the readable text in aria-label.
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+let n = 0;
+const words = text.split(' ').map((w) => [...w].map((ch) => ({ ch, i: n++ })));
+---
+
+{
+  words.map((word) => (
+    <>
+      <span class="word" aria-hidden="true">
+        {word.map((c) => (
+          <span class="ch" style={`--i:${c.i}`}>
+            {c.ch}
+          </span>
+        ))}
+      </span>{' '}
+    </>
+  ))
+}
