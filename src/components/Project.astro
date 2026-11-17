@@ -25,7 +25,7 @@ const kind = (i: number) => {
 
 <article class="project" id={`project-${project.id}`} style={`--tint:${project.tint}`}>
   <header class="wrap project-top">
-    <p class="project-meta mono reveal">
+    <p class="project-meta reveal">
       <span class="project-idx">{num}</span>
       <span>{p.kicker}</span>
       <span class="status"><i></i>{p.status}</span>
@@ -85,7 +85,7 @@ const kind = (i: number) => {
     <dl class="metrics">
       {
         project.metrics.map((m, i) => (
-          <div class="metric reveal" style={`--d:${i * 90}ms`} data-spot>
+          <div class="metric reveal" style={`--d:${i * 90}ms`}>
             <dt>{p.metrics[i]}</dt>
             <dd data-count={m.count} data-dec={m.decimals ?? 0} data-suffix={m.suffix ?? ''}>
               {m.value}

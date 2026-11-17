@@ -57,7 +57,7 @@ export const PROJECTS: Project[] = [
     shots: [
       { key: 'booth-store', w: 1440, h: 900 },
       { key: 'booth-cart', w: 1440, h: 900, focus: 'right' },
-      { src: '/img/booth-ai-receipt-verification.webp', w: 1400, h: 896 },
+      { key: 'booth-receipt', w: 1440, h: 900, focus: 'right' },
     ],
   },
   {
@@ -105,7 +105,7 @@ const en = {
   meta: {
     title: 'Keylor Pineda · Software developer',
     description:
-      'Software developer in Costa Rica. I build full-stack products end to end, and machine learning that runs right on a phone, even with no signal.',
+      'Software developer in Costa Rica. I build full-stack products end to end: the database, the API, the interface, and the machine learning that makes them useful.',
   },
   skip: 'Skip to content',
   palette: {
@@ -130,7 +130,7 @@ const en = {
     eyebrow: 'Software developer · Costa Rica',
     title: ['Keylor', 'Pineda.'],
     accent: 1, // index of the line drawn in the accent gradient
-    lead: 'I build full-stack products end to end, and machine learning that runs right on a phone, even with no signal.',
+    lead: 'I build full-stack products end to end: the database, the API, the interface, and the machine learning that makes them useful.',
     cta1: 'See my work',
     cta2: 'Get in touch',
     now: 'Now building HealthyCropping',
@@ -151,7 +151,7 @@ const en = {
   },
   projects: {
     hc: {
-      kicker: 'Android · On-device ML',
+      kicker: 'Android app with on-device machine learning',
       status: 'In development',
       desc: 'An offline-first Android app that detects coffee, cacao and banana diseases from a phone photo, built for farms in Costa Rica where the signal drops.',
       steps: [
@@ -164,7 +164,7 @@ const en = {
       note: '',
     },
     booth: {
-      kicker: 'Web app · Commerce',
+      kicker: 'Web app for small shops',
       status: 'Live demo',
       desc: 'Small businesses already sell through WhatsApp, one chat at a time. Booth gives each store a single link with its catalog and keeps orders, payments and stock in one place.',
       steps: [
@@ -177,8 +177,8 @@ const en = {
       note: '',
     },
     rag: {
-      kicker: 'AI · Retrieval',
-      status: 'Live demo · benchmarked in CI',
+      kicker: 'AI search over your own documents',
+      status: 'Live demo, benchmarked in CI',
       desc: 'Upload PDFs and notes, ask in English or Spanish, and get answers that cite the exact passages they use. When the documents do not hold the answer, it refuses instead of guessing.',
       steps: [
         { t: 'Answers with receipts', d: 'Every answer cites numbered passages, and citations to passages the model was never given are removed and reported.' },
@@ -233,7 +233,7 @@ const es: typeof en = {
   meta: {
     title: 'Keylor Pineda · Desarrollador de software',
     description:
-      'Desarrollador de software en Costa Rica. Construyo productos full-stack de punta a punta, y machine learning que corre directamente en el teléfono, incluso sin señal.',
+      'Desarrollador de software en Costa Rica. Construyo productos full-stack de punta a punta: la base de datos, la API, la interfaz y el machine learning que los hace útiles.',
   },
   skip: 'Saltar al contenido',
   palette: {
@@ -258,7 +258,7 @@ const es: typeof en = {
     eyebrow: 'Desarrollador de software · Costa Rica',
     title: ['Keylor', 'Pineda.'],
     accent: 1,
-    lead: 'Construyo productos full-stack de punta a punta, y machine learning que corre directamente en el teléfono, incluso sin señal.',
+    lead: 'Construyo productos full-stack de punta a punta: la base de datos, la API, la interfaz y el machine learning que los hace útiles.',
     cta1: 'Ver proyectos',
     cta2: 'Contactarme',
     now: 'Construyendo HealthyCropping',
@@ -279,7 +279,7 @@ const es: typeof en = {
   },
   projects: {
     hc: {
-      kicker: 'Android · ML en el dispositivo',
+      kicker: 'App Android con machine learning en el teléfono',
       status: 'En desarrollo',
       desc: 'App Android offline-first que detecta enfermedades del café, el cacao y el banano con una foto, pensada para fincas de Costa Rica donde la señal se cae.',
       steps: [
@@ -292,7 +292,7 @@ const es: typeof en = {
       note: '',
     },
     booth: {
-      kicker: 'App web · Comercio',
+      kicker: 'App web para pequeños negocios',
       status: 'Demo en vivo',
       desc: 'Los pequeños negocios ya venden por WhatsApp, un chat a la vez. Booth le da a cada tienda un solo enlace con su catálogo y reúne pedidos, pagos e inventario en un solo lugar.',
       steps: [
@@ -305,8 +305,8 @@ const es: typeof en = {
       note: '',
     },
     rag: {
-      kicker: 'IA · Recuperación',
-      status: 'Demo en vivo · medido en CI',
+      kicker: 'Búsqueda con IA sobre tus documentos',
+      status: 'Demo en vivo, medido en CI',
       desc: 'Subes PDFs y notas, preguntas en inglés o español y recibes respuestas que citan los pasajes exactos que usan. Cuando los documentos no tienen la respuesta, se niega en lugar de adivinar.',
       steps: [
         { t: 'Respuestas con pruebas', d: 'Cada respuesta cita pasajes numerados, y las citas a pasajes que el modelo nunca recibió se eliminan y se reportan.' },

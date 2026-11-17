@@ -2479,3 +2479,130 @@ html:not(.js) .metric::before {
     background-size: 100% 0.14em;
   }
 }
+
+/* ================================================================= design pass
+   Plain labels, distinct shapes for different content, one strong moment per section. */
+
+/* 1. Small labels read as text, not as tracked capitals. */
+.stack-cat,
+.strip dt,
+.project-meta,
+.fan-kicker,
+.palette-group,
+.footer,
+.hero-place {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.project-meta {
+  font-size: 0.9375rem;
+}
+
+.hero-place {
+  color: var(--ink-3);
+  font-size: clamp(0.9375rem, 0.8rem + 0.5vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.fan-kicker {
+  color: var(--ink-3);
+  font-size: 0.8125rem;
+}
+
+.palette-group {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+/* Credential IDs stay in monospace: they are codes to be read character by character. */
+.ledger-id {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+
+.stack-cat {
+  color: var(--ink);
+  font-weight: 650;
+  font-size: 0.9375rem;
+}
+
+/* 3. Metrics are figures on a rule, not cards. */
+.metrics .metric {
+  padding: 22px 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.metric::before {
+  top: -1px;
+}
+
+@media (min-width: 960px) {
+  .metrics {
+    gap: 40px;
+  }
+}
+
+/* 3. Certifications are a list: rows divided by rules, filled only under the pointer. */
+.ledger {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.ledger .ledger-row {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  padding-inline: 4px;
+}
+
+@media (hover: hover) {
+  .ledger .ledger-row:hover {
+    border-radius: 14px;
+    border-bottom-color: transparent;
+  }
+}
+
+@keyframes row-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* 4. One moment per section: the extra loops and hover tricks are gone. */
+.ledger li.is-in .ledger-row::after {
+  animation: none;
+}
+
+.ledger-row::after {
+  display: none;
+}
+
+@media (hover: hover) {
+  .stack-list li:hover .logo {
+    animation: none;
+  }
+
+  .learning li:hover .learn-logo {
+    transform: none;
+  }
+}
+
+.js .learning li.reveal.is-in {
+  transform: none;
+}

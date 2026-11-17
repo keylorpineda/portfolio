@@ -88,13 +88,13 @@ const fanShots = [
       <kbd class="mono">esc</kbd>
     </div>
     <ul class="palette-list" data-palette-list>
-      <li class="palette-group mono">{t.palette.go}</li>
+      <li class="palette-group">{t.palette.go}</li>
       {
         dock.map((d) => (
           <li><a href={d.href} data-cmd>{d.label}<span class="mono">{d.href}</span></a></li>
         ))
       }
-      <li class="palette-group mono">{t.palette.projects}</li>
+      <li class="palette-group">{t.palette.projects}</li>
       {
         PROJECTS.flatMap((p) => [
           p.demo && (
@@ -103,7 +103,7 @@ const fanShots = [
           <li><a href={p.code} target="_blank" rel="noopener" data-cmd>{p.name} · {t.work.code}<span class="mono">↗</span></a></li>,
         ])
       }
-      <li class="palette-group mono">{t.palette.actions}</li>
+      <li class="palette-group">{t.palette.actions}</li>
       <li><button type="button" data-cmd data-action="theme">{t.palette.theme}</button></li>
       <li><button type="button" data-cmd data-action="lang">{t.palette.lang}</button></li>
       <li><button type="button" data-cmd data-action="copy">{t.palette.copy}<span class="mono">{SITE.email}</span></button></li>
@@ -136,7 +136,7 @@ const fanShots = [
           </h1>
           <p class="hero-role hero-fade hero-out" style="--d:450ms">
             {role}
-            <span class="mono">{place}</span>
+            <span class="hero-place">{place}</span>
           </p>
           <div class="cta hero-fade hero-out" style="--d:700ms">
             <a class="btn" href="#work">
@@ -151,17 +151,17 @@ const fanShots = [
           {
             t.hero.facts.map((f, i) => (
               <div class="strip-cell hero-fade" style={`--d:${900 + i * 80}ms`}>
-                <dt class="mono">{f.l}</dt>
+                <dt>{f.l}</dt>
                 <dd>{f.v}</dd>
               </div>
             ))
           }
           <div class="strip-cell hero-fade" style="--d:1060ms">
-            <dt class="mono">{t.clock}</dt>
+            <dt>{t.clock}</dt>
             <dd data-clock>--:--</dd>
           </div>
           <div class="strip-cell strip-now hero-fade" style="--d:1140ms">
-            <dt class="mono">{t.nowLabel}</dt>
+            <dt>{t.nowLabel}</dt>
             <dd><span class="pulse" aria-hidden="true"></span>{t.hero.now}</dd>
           </div>
         </dl>
@@ -188,7 +188,7 @@ const fanShots = [
               {
                 fanShots.map(({ project }, i) => (
                   <a class:list={['fan-label', { 'is-on': i === 1 }]} href={`#project-${project.id}`} data-label={i} style={`--tint:${project.tint}`}>
-                    <span class="mono">{t.projects[project.id as keyof typeof t.projects].kicker}</span>
+                    <span class="fan-kicker">{t.projects[project.id as keyof typeof t.projects].kicker}</span>
                     <b>{project.name}</b>
                     <span class="fan-view">
                       {t.work.view}
@@ -227,7 +227,6 @@ const fanShots = [
     <!-- WORK -->
     <section class="section" id="work">
       <header class="wrap sec-head">
-        <p class="mono sec-label reveal">01 / {t.nav.work}</p>
         <h2 class="chars" data-chars="view" aria-label={t.work.title}><Chars text={t.work.title} /></h2>
         <p class="sec-sub reveal">{t.work.sub}</p>
       </header>
@@ -239,15 +238,14 @@ const fanShots = [
     <!-- STACK -->
     <section class="section" id="stack">
       <header class="wrap sec-head">
-        <p class="mono sec-label reveal">02 / {t.nav.stack}</p>
         <h2 class="chars" data-chars="view" aria-label={t.stack.title}><Chars text={t.stack.title} /></h2>
         <p class="sec-sub reveal">{t.stack.sub}</p>
       </header>
       <ul class="wrap stack">
         {
           groups.map((g) => (
-            <li class="stack-row reveal" data-spot>
-              <p class="mono stack-cat">
+            <li class="stack-row reveal">
+              <p class="stack-cat">
                 {g.label}
                 <span>{String(g.tools.length).padStart(2, '0')}</span>
               </p>
@@ -270,7 +268,6 @@ const fanShots = [
     <!-- CERTIFICATIONS -->
     <section class="section" id="certs">
       <header class="wrap sec-head">
-        <p class="mono sec-label reveal">03 / {t.nav.certs}</p>
         <h2 class="chars" data-chars="view" aria-label={t.certs.title}><Chars text={t.certs.title} /></h2>
         <p class="sec-sub reveal">{t.certs.sub}</p>
       </header>
@@ -278,7 +275,7 @@ const fanShots = [
         {
           t.certs.items.map((c, i) => (
             <li class="reveal" style={`--d:${i * 110}ms`}>
-              <a class="ledger-row" data-spot href={SITE.certs} target="_blank" rel="noopener">
+              <a class="ledger-row" href={SITE.certs} target="_blank" rel="noopener">
                 <span class="logo lg"><img src={`/logos/${c.logo}.svg`} alt="" width="26" height="26" loading="lazy" /></span>
                 <span class="ledger-main">
                   <span class="ledger-name">{c.name}</span>
@@ -286,7 +283,7 @@ const fanShots = [
                     {c.org} · {c.meta}
                   </span>
                 </span>
-                <span class="mono ledger-id">{c.id}</span>
+                <span class="ledger-id">{c.id}</span>
                 <span class="ledger-verify">
                   {t.certs.verify}
                   <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M5.5 4.5h6v6" /></svg>
@@ -301,7 +298,6 @@ const fanShots = [
     <!-- ACTIVITY -->
     <section class="section" id="activity">
       <header class="wrap sec-head">
-        <p class="mono sec-label reveal">04 / {t.nav.activity}</p>
         <h2 class="chars" data-chars="view" aria-label={t.activity.title}><Chars text={t.activity.title} /></h2>
         <p class="sec-sub reveal">{t.activity.sub}</p>
       </header>
@@ -318,13 +314,12 @@ const fanShots = [
     <!-- LEARNING -->
     <section class="section" id="learning">
       <header class="wrap sec-head">
-        <p class="mono sec-label reveal">05</p>
         <h2 class="chars" data-chars="view" aria-label={t.learning.title}><Chars text={t.learning.title} /></h2>
       </header>
       <ol class="wrap learning">
         {
           t.learning.items.map((item, i) => (
-            <li class="reveal" style={`--d:${i * 90}ms`} data-spot data-tilt>
+            <li class="reveal" style={`--d:${i * 90}ms`}>
               <span class="learn-logo" aria-hidden="true">
                 {item.logo ? (
                   <img src={`/logos/${item.logo}.svg`} alt="" width="30" height="30" loading="lazy" />
@@ -346,7 +341,6 @@ const fanShots = [
     <!-- CONTACT -->
     <section class="contact" id="contact" data-glow>
       <div class="wrap">
-        <p class="mono sec-label reveal">06 / {t.nav.contact}</p>
         <h2 class="contact-title chars" data-chars="view" aria-label={t.contact.title.join(' ')}>
           {
             contactLines.map((line) => (
@@ -385,7 +379,7 @@ const fanShots = [
     </section>
   </main>
 
-  <footer class="footer wrap mono">
+  <footer class="footer wrap">
     <p>© {new Date().getFullYear()} Keylor Pineda</p>
     <p>{t.footer}</p>
   </footer>
