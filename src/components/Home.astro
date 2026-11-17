@@ -325,7 +325,16 @@ const fanShots = [
         {
           t.learning.items.map((item, i) => (
             <li class="reveal" style={`--d:${i * 90}ms`} data-spot data-tilt>
-              <span class="mono">{pad(i)}</span>
+              <span class="learn-logo" aria-hidden="true">
+                {item.logo ? (
+                  <img src={`/logos/${item.logo}.svg`} alt="" width="30" height="30" loading="lazy" />
+                ) : (
+                  <svg viewBox="0 0 28 28">
+                    <path d="M14 2.5 4.5 6.5v7c0 6 4.1 10.2 9.5 12 5.4-1.8 9.5-6 9.5-12v-7z" />
+                    <path d="m9.5 14 3.2 3.2 6-6.2" />
+                  </svg>
+                )}
+              </span>
               <h3>{item.t}</h3>
               <p>{item.d}</p>
             </li>

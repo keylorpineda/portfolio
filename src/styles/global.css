@@ -2375,23 +2375,38 @@ html:not(.js) .metric::before {
     opacity 0.9s var(--ease);
 }
 
-.learning li .mono {
-  display: inline-grid;
+/* Each topic carries the logo of what is being learned, on a white tile like the stack. */
+.learn-logo {
+  display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
-  transition:
-    transform 0.6s var(--ease),
-    background-color 0.3s;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.6s var(--ease);
+}
+
+.learn-logo img {
+  width: 58%;
+  height: 58%;
+  object-fit: contain;
+}
+
+.learn-logo svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: #2f6fdf;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 @media (hover: hover) {
-  .learning li:hover .mono {
-    transform: rotate(-8deg) scale(1.12);
-    background: var(--accent);
-    color: var(--accent-ink);
+  .learning li:hover .learn-logo {
+    transform: rotate(-8deg) scale(1.1);
   }
 }
 
