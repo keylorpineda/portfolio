@@ -226,7 +226,13 @@ const en = {
     copy: 'Copy',
     copied: 'Copied',
   },
-  footer: 'Designed and built from scratch in Costa Rica.',
+  footer: 'Designed and built from scratch in Costa Rica, where it is',
+  footerNow: 'right now.',
+  colophon: 'Set in Bricolage Grotesque and Instrument Sans. Built with Astro.',
+  source: 'Source code',
+  loader: ['Database', 'API', 'Interface', 'Machine learning'],
+  loaderDone: 'Keylor Pineda',
+  repo: { last: 'Last commit', commits: 'commits', locale: 'en-US' },
 };
 
 const es: typeof en = {
@@ -354,7 +360,13 @@ const es: typeof en = {
     copy: 'Copiar',
     copied: 'Copiado',
   },
-  footer: 'Diseñado y construido desde cero en Costa Rica.',
+  footer: 'Diseñado y construido desde cero en Costa Rica, donde son las',
+  footerNow: 'ahora mismo.',
+  colophon: 'Compuesto en Bricolage Grotesque e Instrument Sans. Hecho con Astro.',
+  source: 'Código fuente',
+  loader: ['Base de datos', 'API', 'Interfaz', 'Machine learning'],
+  loaderDone: 'Keylor Pineda',
+  repo: { last: 'Último commit', commits: 'commits', locale: 'es-CR' },
 };
 
 export const COPY = { en, es };

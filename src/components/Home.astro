@@ -39,6 +39,21 @@ const fanShots = [
 ---
 
 <Base lang={lang} t={t}>
+  <!-- Loading screen: the four layers of a product fill in, in order, as the page really loads. -->
+  <div class="loader" data-loader aria-hidden="true">
+    <ol class="loader-layers">
+      {
+        t.loader.map((layer, i) => (
+          <li style={`--i:${i}`}>
+            <span class="loader-name">{layer}</span>
+            <span class="loader-bar"><i /></span>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="loader-done">{t.loaderDone}</p>
+  </div>
+
   <a class="skip" href="#main">{t.skip}</a>
 
   <header class="bar" data-bar>
@@ -293,7 +308,12 @@ const fanShots = [
   </main>
 
   <footer class="footer wrap">
+    <p class="footer-now">
+      {t.footer} <b data-clock>--:--</b> {t.footerNow}
+    </p>
+    <p class="footer-colophon">
+      {t.colophon} <a href="https://github.com/keylorpineda/portfolio" target="_blank" rel="noopener">{t.source}</a>
+    </p>
     <p>© {new Date().getFullYear()} Keylor Pineda</p>
-    <p>{t.footer}</p>
   </footer>
 </Base>

@@ -189,11 +189,66 @@ addEventListener('popstate', () => {
   if (location.pathname !== currentPath) switchLanguage(location.href, false);
 });
 
+/* ---------------------------------------------------------------- loader */
+// The four layers fill in order with the page's real progress: fonts, then the hero's screenshots.
+// It never waits longer than 2.6 s, and it only plays once per visit.
+const readyCallbacks: (() => void)[] = [];
+let siteReady = root.classList.contains('is-ready');
+function whenReady(cb: () => void) {
+  if (siteReady) cb();
+  else readyCallbacks.push(cb);
+}
+(() => {
+  const loader = $('[data-loader]');
+  const finish = () => {
+    if (siteReady) return;
+    siteReady = true;
+    root.classList.add('is-ready');
+    try {
+      sessionStorage.setItem('loaded', '1');
+    } catch {
+      /* ignore */
+    }
+    readyCallbacks.splice(0).forEach((cb) => cb());
+    setTimeout(() => loader?.remove(), 1200);
+  };
+  if (siteReady || !loader) {
+    loader?.remove();
+    return;
+  }
+  const bars = $$('.loader-bar i', loader);
+  const tasks: Promise<unknown>[] = [document.fonts?.ready ?? Promise.resolve()];
+  $$<HTMLImageElement>('.fan img').forEach((img) => {
+    if (getComputedStyle(img).display === 'none') return;
+    img.loading = 'eager';
+    tasks.push(img.decode().catch(() => undefined));
+  });
+  let done = 0;
+  let shown = 0;
+  const start = performance.now();
+  tasks.forEach((t) => t.then(() => done++));
+  const tick = (now: number) => {
+    // Real progress, but never faster than a steady minimum pace so each layer is seen filling.
+    const real = done / tasks.length;
+    const paced = Math.min(1, (now - start) / 1400);
+    const target = Math.min(real, paced);
+    shown += (target - shown) * 0.18;
+    bars.forEach((bar, i) => bar.style.setProperty('--fill', Math.max(0, Math.min(1, shown * bars.length - i)).toFixed(3)));
+    if ((real >= 1 && shown > 0.985) || now - start > 2600) {
+      bars.forEach((bar) => bar.style.setProperty('--fill', '1'));
+      setTimeout(finish, 260);
+    } else requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  // Hard stop even when the tab is in the background and frames are throttled.
+  setTimeout(finish, 3000);
+})();
+
 /* --------------------------------------------------------------- headlines */
 $$('[data-chars]').forEach((el) => {
   const enter = () => el.classList.add('is-in');
   if (reduced) enter();
-  else if (el.dataset.chars === 'load') setTimeout(enter, 120);
+  else if (el.dataset.chars === 'load') whenReady(() => setTimeout(enter, 60));
   else
     new IntersectionObserver(
       ([e], io) => {

@@ -1,6 +1,7 @@
 ---
 import Shot from './Shot.astro';
 import Chars from './Chars.astro';
+import { repoFacts } from '../data/github';
 import type { Copy, Lang, Project } from '../data/content';
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 const { project, t, lang, index } = Astro.props;
 const p = t.projects[project.id as keyof Copy['projects']];
 const letters = ['A', 'B', 'C'];
+const facts = await repoFacts(project.code);
+const lastCommit = facts && new Intl.DateTimeFormat(t.repo.locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Costa_Rica' }).format(new Date(facts.lastCommit));
 const num = String(index + 1).padStart(2, '0');
 // Where along the pinned scroll (0 → 1) each step takes over. The first is there from the start.
 const starts = [-1, 0.33, 0.66, 9];
@@ -32,6 +35,18 @@ const kind = (i: number) => {
     </p>
     <h3 class="project-title chars" data-chars="view" aria-label={project.name}><Chars text={project.name} /></h3>
     <p class="project-desc reveal">{p.desc}</p>
+    {
+      facts && (
+        <p class="project-repo reveal">
+          <a href={project.code} target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3" /><path d="M1 8h4M11 8h4" /></svg>
+            {t.repo.last} {lastCommit}
+            <span aria-hidden="true">/</span>
+            {facts.commits.toLocaleString(t.repo.locale)} {t.repo.commits}
+          </a>
+        </p>
+      )
+    }
   </header>
 
   <!-- Pinned scene: the window stays while the scroll drives its three screens. -->

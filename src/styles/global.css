@@ -2792,3 +2792,148 @@ body {
     grid-column: 1 / -1;
   }
 }
+
+/* ================================================================= loading screen */
+.loader {
+  display: none;
+}
+
+.js .loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  align-content: center;
+  padding-inline: var(--gutter);
+  background: var(--bg);
+  transition:
+    clip-path 1s var(--ease) 0.15s,
+    visibility 0s 1.2s;
+  clip-path: inset(0 0 0 0);
+}
+
+.js.is-ready .loader {
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+}
+
+.loader-layers {
+  width: min(560px, 100%);
+  margin-inline: auto;
+  display: grid;
+  gap: 18px;
+}
+
+.loader-layers li {
+  display: grid;
+  gap: 8px;
+  opacity: 0;
+  translate: 0 12px;
+  animation: layer-in 0.6s var(--ease) forwards;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+@keyframes layer-in {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.loader-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 2.4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.loader-bar {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.loader-bar i {
+  --fill: 0;
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(var(--fill));
+  transform-origin: left;
+}
+
+.loader-done {
+  position: absolute;
+  inset: auto var(--gutter) max(28px, env(safe-area-inset-bottom));
+  color: var(--ink-3);
+  font-size: 0.875rem;
+}
+
+/* While the loader is up, the hero waits. */
+.js:not(.is-ready) .hero-fade {
+  animation-play-state: paused;
+}
+
+/* ================================================================= repository facts */
+.project-repo a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-3);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.25s;
+}
+
+.project-repo a:hover {
+  color: var(--ink);
+}
+
+.project-repo svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--tint);
+  stroke-width: 1.6;
+}
+
+/* ================================================================= footer */
+.footer {
+  display: grid;
+  gap: 6px;
+  padding-block: 40px max(28px, env(safe-area-inset-bottom));
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+
+.footer-now b {
+  color: var(--ink);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.footer-colophon a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.footer p:last-child {
+  color: var(--ink-3);
+  font-size: 0.8125rem;
+}
+
+/* Failsafe: if the script never runs, the loading screen still gets out of the way. */
+.js:not(.is-ready) .loader {
+  animation: loader-failsafe 0.6s ease 4s forwards;
+}
+
+@keyframes loader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
