@@ -51,12 +51,7 @@ const path = lang === 'en' ? '/' : '/es/';
           theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
         d.dataset.theme = theme;
-        // The loading screen plays once per visit; later page loads in the same visit skip it.
-        try {
-          if (sessionStorage.getItem('loaded') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('is-ready');
-        } catch (e) {
-          d.classList.add('is-ready');
-        }
+        d.classList.add('is-ready');
         if (!get('lang') && location.pathname === '/' && /^es\b/i.test(navigator.language || '')) {
           location.replace('/es/' + location.hash);
         }
