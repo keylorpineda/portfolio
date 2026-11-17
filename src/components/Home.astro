@@ -39,19 +39,34 @@ const fanShots = [
 ---
 
 <Base lang={lang} t={t}>
-  <!-- Loading screen: the four layers of a product fill in, in order, as the page really loads. -->
+  <!-- Loading screen: a coffee leaf is scanned the way HealthyCropping does it, while the page really loads. -->
   <div class="loader" data-loader aria-hidden="true">
-    <ol class="loader-layers">
-      {
-        t.loader.map((layer, i) => (
-          <li style={`--i:${i}`}>
-            <span class="loader-name">{layer}</span>
-            <span class="loader-bar"><i /></span>
-          </li>
-        ))
-      }
-    </ol>
-    <p class="loader-done">{t.loaderDone}</p>
+    <div class="scan">
+      <svg class="scan-leaf" viewBox="-110 -130 220 260">
+        <defs>
+          <linearGradient id="leaf-fill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2fd38a" />
+            <stop offset="1" stop-color="#0f7a4c" />
+          </linearGradient>
+        </defs>
+        <path class="leaf-fill" d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" />
+        <path class="leaf-line" d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" pathLength="1" />
+        <path class="leaf-veins" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" />
+        <g class="leaf-spots">
+          <circle data-at="0.28" cx="22" cy="-62" r="7" />
+          <circle data-at="0.52" cx="-26" cy="-6" r="9" />
+          <circle data-at="0.71" cx="28" cy="34" r="6" />
+          <circle data-at="0.86" cx="-12" cy="70" r="5" />
+        </g>
+      </svg>
+      <i class="scan-corner tl"></i><i class="scan-corner tr"></i><i class="scan-corner bl"></i><i class="scan-corner br"></i>
+      <i class="scan-line"></i>
+    </div>
+    <p class="scan-read">
+      <span>{t.scan.crop}</span>
+      <span><span data-scan-label>{t.scan.label}</span> <b data-scan-pct>0%</b></span>
+    </p>
+    <p class="scan-verdict"><i></i>{t.scan.verdict} <b>100%</b></p>
   </div>
 
   <a class="skip" href="#main">{t.skip}</a>
@@ -76,6 +91,15 @@ const fanShots = [
     <!-- HERO: pinned. Scrolling pulls the headline apart while the three projects rise into a fan. -->
     <section class="scene scene-hero" id="top" data-scene="hero">
       <div class="scene-pin hero">
+        <div class="leaves" data-leaves aria-hidden="true">
+          <i class="leaf" style="--x:78%;--y:18%;--s:140px;--r:-24deg;--dur:19s;--delay:-3s;--depth:1.4"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+          <i class="leaf" style="--x:90%;--y:58%;--s:90px;--r:38deg;--dur:23s;--delay:-11s;--depth:0.9"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+          <i class="leaf" style="--x:64%;--y:72%;--s:64px;--r:12deg;--dur:17s;--delay:-6s;--depth:0.7"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+          <i class="leaf" style="--x:52%;--y:12%;--s:48px;--r:-52deg;--dur:21s;--delay:-14s;--depth:0.6"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+          <i class="leaf" style="--x:8%;--y:84%;--s:72px;--r:64deg;--dur:25s;--delay:-2s;--depth:0.8"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+          <i class="leaf" style="--x:36%;--y:88%;--s:40px;--r:-10deg;--dur:18s;--delay:-9s;--depth:0.5"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+          <i class="leaf" style="--x:96%;--y:88%;--s:120px;--r:-70deg;--dur:27s;--delay:-17s;--depth:1.2"><svg viewBox="-110 -130 220 260"><path d="M0 -120C64 -86 84 6 0 118C-84 6 -64 -86 0 -120Z" /><path class="v" d="M0 -112V116M0 -70C18 -78 30 -92 40 -104M0 -70C-18 -78 -30 -92 -40 -104M0 -30C24 -38 42 -54 54 -70M0 -30C-24 -38 -42 -54 -54 -70M0 12C26 4 46 -10 60 -28M0 12C-26 4 -46 -10 -60 -28M0 54C22 48 40 36 50 20M0 54C-22 48 -40 36 -50 20" /></svg></i>
+        </div>
         <div class="wrap hero-inner">
           <h1 class="hero-title chars" data-chars="load" aria-label={t.hero.title.join(' ')}>
             {

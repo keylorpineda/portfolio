@@ -203,20 +203,25 @@ function whenReady(cb: () => void) {
   const finish = () => {
     if (siteReady) return;
     siteReady = true;
-    root.classList.add('is-ready');
     try {
       sessionStorage.setItem('loaded', '1');
     } catch {
       /* ignore */
     }
-    readyCallbacks.splice(0).forEach((cb) => cb());
-    setTimeout(() => loader?.remove(), 1200);
+    // Show the verdict for a beat, then dive into the leaf and reveal the page.
+    loader?.classList.add('is-done');
+    setTimeout(() => {
+      root.classList.add('is-ready');
+      readyCallbacks.splice(0).forEach((cb) => cb());
+    }, 650);
+    setTimeout(() => loader?.remove(), 1900);
   };
   if (siteReady || !loader) {
     loader?.remove();
     return;
   }
-  const bars = $$('.loader-bar i', loader);
+  const pct = $('[data-scan-pct]', loader);
+  const spots = $$<SVGCircleElement>('[data-at]', loader);
   const tasks: Promise<unknown>[] = [document.fonts?.ready ?? Promise.resolve()];
   $$<HTMLImageElement>('.fan img').forEach((img) => {
     if (getComputedStyle(img).display === 'none') return;
@@ -228,20 +233,62 @@ function whenReady(cb: () => void) {
   const start = performance.now();
   tasks.forEach((t) => t.then(() => done++));
   const tick = (now: number) => {
-    // Real progress, but never faster than a steady minimum pace so each layer is seen filling.
+    // Real progress, paced so the scan is always seen sweeping the whole leaf.
     const real = done / tasks.length;
-    const paced = Math.min(1, (now - start) / 1400);
-    const target = Math.min(real, paced);
-    shown += (target - shown) * 0.18;
-    bars.forEach((bar, i) => bar.style.setProperty('--fill', Math.max(0, Math.min(1, shown * bars.length - i)).toFixed(3)));
-    if ((real >= 1 && shown > 0.985) || now - start > 2600) {
-      bars.forEach((bar) => bar.style.setProperty('--fill', '1'));
-      setTimeout(finish, 260);
+    const paced = Math.min(1, Math.max(0, now - start - 700) / 1500);
+    shown += (Math.min(real, paced) - shown) * 0.12;
+    loader.style.setProperty('--p', shown.toFixed(4));
+    if (pct) pct.textContent = `${Math.round(shown * 100)}%`;
+    spots.forEach((spot) => spot.classList.toggle('is-found', shown >= Number(spot.dataset.at)));
+    if ((real >= 1 && shown > 0.985) || now - start > 3200) {
+      loader.style.setProperty('--p', '1');
+      if (pct) pct.textContent = '100%';
+      spots.forEach((spot) => spot.classList.add('is-found'));
+      finish();
     } else requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
   // Hard stop even when the tab is in the background and frames are throttled.
-  setTimeout(finish, 3000);
+  setTimeout(finish, 3600);
+})();
+
+/* ----------------------------------------------------------------- leaves */
+// Leaves drift behind the name and lean away from the pointer; a tap sends one spinning.
+(() => {
+  const field = $('[data-leaves]');
+  if (!field || reduced) return;
+  const leaves = $$('.leaf', field);
+  if (finePointer) {
+    let queued = false;
+    let px = -9999;
+    let py = -9999;
+    field.parentElement!.addEventListener('pointermove', (e) => {
+      px = e.clientX;
+      py = e.clientY;
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        for (const leaf of leaves) {
+          const r = leaf.getBoundingClientRect();
+          const dx = r.left + r.width / 2 - px;
+          const dy = r.top + r.height / 2 - py;
+          const d = Math.hypot(dx, dy) || 1;
+          const push = Math.max(0, 1 - d / 260) * 46 * Number(leaf.style.getPropertyValue('--depth') || 1);
+          leaf.style.setProperty('--px', `${((dx / d) * push).toFixed(1)}px`);
+          leaf.style.setProperty('--py', `${((dy / d) * push).toFixed(1)}px`);
+        }
+      });
+    });
+    field.parentElement!.addEventListener('pointerleave', () => leaves.forEach((l) => (l.style.setProperty('--px', '0px'), l.style.setProperty('--py', '0px'))));
+  }
+  leaves.forEach((leaf) =>
+    leaf.addEventListener('click', () => {
+      leaf.classList.remove('is-spun');
+      void leaf.offsetWidth;
+      leaf.classList.add('is-spun');
+    }),
+  );
 })();
 
 /* --------------------------------------------------------------- headlines */

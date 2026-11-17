@@ -230,8 +230,7 @@ const en = {
   footerNow: 'right now.',
   colophon: 'Set in Bricolage Grotesque and Instrument Sans. Built with Astro.',
   source: 'Source code',
-  loader: ['Database', 'API', 'Interface', 'Machine learning'],
-  loaderDone: 'Keylor Pineda',
+  scan: { label: 'Scanning portfolio', verdict: 'Diagnosis: healthy portfolio', crop: 'Coffee leaf' },
   repo: { last: 'Last commit', commits: 'commits', locale: 'en-US' },
 };
 
@@ -364,8 +363,7 @@ const es: typeof en = {
   footerNow: 'ahora mismo.',
   colophon: 'Compuesto en Bricolage Grotesque e Instrument Sans. Hecho con Astro.',
   source: 'Código fuente',
-  loader: ['Base de datos', 'API', 'Interfaz', 'Machine learning'],
-  loaderDone: 'Keylor Pineda',
+  scan: { label: 'Escaneando portafolio', verdict: 'Diagnóstico: portafolio sano', crop: 'Hoja de café' },
   repo: { last: 'Último commit', commits: 'commits', locale: 'es-CR' },
 };
 
