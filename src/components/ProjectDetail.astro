@@ -1,0 +1,145 @@
+---
+// The one thing that is specific to each project, each in its own form:
+// HealthyCropping's crops and diseases, the WhatsApp message Booth sends, the Research Engine's benchmark.
+import { DETAILS } from '../data/details';
+import type { Lang } from '../data/content';
+
+interface Props {
+  id: string;
+  lang: Lang;
+}
+const { id, lang } = Astro.props;
+const d = DETAILS[lang];
+// WhatsApp formatting: *bold* lines.
+const bold = (line: string) => /^\*.*\*/.test(line);
+const strip = (line: string) => line.replace(/^\*(.*?)\*/, '$1');
+---
+
+{
+  id === 'hc' && (
+    <section class="wrap detail detail-hc reveal">
+      <h4 class="detail-title">{d.hc.title}</h4>
+      <p class="detail-sub">{d.hc.sub}</p>
+      <div class="crops">
+        {d.hc.crops.map((c, ci) => (
+          <article class="crop-card" style={`--c:${ci}`}>
+            <div class="crop-head">
+              <h5>{c.name}</h5>
+              <span>{c.organ}</span>
+            </div>
+            <ul class="classes">
+              {c.classes.map((name, k) => (
+                <li class:list={{ ok: k === 0 }} style={`--k:${k}`}>
+                  {name}
+                </li>
+              ))}
+            </ul>
+            <dl class="crop-scores">
+              <div>
+                <dd>{c.acc}</dd>
+                <dt>{d.hc.accLabel}</dt>
+              </div>
+              <div>
+                <dd>{c.f1}</dd>
+                <dt>{d.hc.f1Label}</dt>
+              </div>
+            </dl>
+          </article>
+        ))}
+      </div>
+      <p class="detail-note">{d.hc.rule}</p>
+      <p class="detail-note quiet">{d.hc.honest}</p>
+    </section>
+  )
+}
+
+{
+  id === 'booth' && (
+    <section class="wrap detail detail-booth reveal">
+      <div class="detail-text">
+        <h4 class="detail-title">{d.booth.title}</h4>
+        <p class="detail-sub">{d.booth.sub}</p>
+        <h5 class="path-title">{d.booth.pathTitle}</h5>
+        <ol class="path">
+          {d.booth.path.map((step, i) => (
+            <li style={`--k:${i}`}>
+              <b>{step.t}</b>
+              <span>{step.d}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="chat" aria-label={d.booth.title}>
+        <div class="chat-head">
+          <span class="chat-avatar" aria-hidden="true">
+            {d.booth.chatName.slice(0, 1)}
+          </span>
+          <b>{d.booth.chatName}</b>
+        </div>
+        <div class="chat-body">
+          <p class="bubble">
+            {d.booth.message.map((line, i) =>
+              line === '' ? (
+                <span class="gap" style={`--k:${i}`} />
+              ) : (
+                <span class:list={{ strong: bold(line) }} style={`--k:${i}`}>
+                  {strip(line)}
+                </span>
+              ),
+            )}
+            <time>{d.booth.chatTime} ✓✓</time>
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+{
+  id === 'rag' && (
+    <section class="wrap detail detail-rag reveal">
+      <h4 class="detail-title">{d.rag.title}</h4>
+      <p class="detail-sub">{d.rag.sub}</p>
+      <ol class="bars">
+        {d.rag.bars.map((b, i) => (
+          <li style={`--v:${b.v};--k:${i}`}>
+            <span class="bar-label">{b.label}</span>
+            <span class="bar-track">
+              <i />
+            </span>
+            <b>{b.v.toFixed(2).replace('.', lang === 'es' ? ',' : '.')}</b>
+          </li>
+        ))}
+      </ol>
+      <h5 class="path-title">{d.rag.gateTitle}</h5>
+      <div class="gate">
+        {d.rag.asks.map((a, i) => (
+          <article class:list={['ask', { ok: a.ok }]} style={`--k:${i};--s:${a.score.replace(',', '.')}`}>
+            <p class="ask-q">{a.q}</p>
+            <div class="meter" aria-hidden="true">
+              <i class="meter-fill" />
+              <i class="meter-tau" />
+            </div>
+            <p class="ask-nums">
+              <span>
+                {d.rag.best} <b>{a.score}</b>
+              </span>
+              <span>
+                {d.rag.threshold} <b>{lang === 'es' ? '0,55' : '0.55'}</b>
+              </span>
+            </p>
+            <p class="ask-verdict">{a.verdict}</p>
+          </article>
+        ))}
+      </div>
+      <dl class="rag-facts">
+        {d.rag.facts.map((f) => (
+          <div>
+            <dd>{f.v}</dd>
+            <dt>{f.l}</dt>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}

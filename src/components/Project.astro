@@ -1,6 +1,7 @@
 ---
 import Shot from './Shot.astro';
 import Chars from './Chars.astro';
+import ProjectDetail from './ProjectDetail.astro';
 import { repoFacts } from '../data/github';
 import type { Copy, Lang, Project } from '../data/content';
 
@@ -92,6 +93,8 @@ const kind = (i: number) => {
       </div>
     </div>
   </div>
+
+  <ProjectDetail id={project.id} lang={lang} />
 
   <div class="wrap">
     <dl class="metrics">
