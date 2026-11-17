@@ -31,19 +31,16 @@ const kind = (i: number) => {
       <span class="status"><i></i>{p.status}</span>
     </p>
     <h3 class="project-title chars" data-chars="view" aria-label={project.name}><Chars text={project.name} /></h3>
-    <span class="project-ghost" aria-hidden="true">{num}</span>
     <p class="project-desc reveal">{p.desc}</p>
   </header>
 
   <!-- Pinned scene: the window stays while the scroll drives its three screens. -->
   <div class="scene scene-project" data-scene="project">
     <div class="scene-pin">
-      <div class="scene-glow" aria-hidden="true"></div>
       <div class="wrap scene-grid">
         <div class="scene-media">
           <div class="window">
             <div class="window-bar" aria-hidden="true">
-              <span class="lights"><i></i><i></i><i></i></span>
               <span class="window-url mono">{project.window}</span>
               <span class="window-tabs">
                 {letters.map((l) => <i class="mono">{l}</i>)}

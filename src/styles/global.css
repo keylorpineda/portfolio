@@ -2606,3 +2606,189 @@ html:not(.js) .metric::before {
 .js .learning li.reveal.is-in {
   transform: none;
 }
+
+/* ================================================================= without the template chrome */
+
+/* Body copy never needs a body margin for a dock that is gone. */
+body {
+  padding-bottom: 0;
+}
+
+/* Text navigation in the top bar, from tablet width up. */
+.bar-links {
+  display: none;
+  gap: 28px;
+  margin-left: auto;
+  margin-right: 28px;
+}
+
+.bar-links a {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  transition: color 0.25s;
+}
+
+.bar-links a:hover,
+.bar-links a:focus-visible {
+  color: var(--ink);
+}
+
+@media (min-width: 860px) {
+  .bar-links {
+    display: flex;
+  }
+}
+
+.lang a {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* Hero: the name, the role, what is happening now. */
+.hero-now {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: clamp(14px, 2vh, 22px);
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+
+.cta {
+  margin-bottom: clamp(32px, 6vh, 72px);
+}
+
+/* The fan's windows are plain frames now; nothing reserves room for a dock. */
+.fan {
+  padding-bottom: 30px;
+}
+
+.fan-card .fan-screen {
+  border-radius: 13px;
+}
+
+.window-bar {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  position: relative;
+}
+
+.window-tabs {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.scene-project .scene-pin {
+  padding-bottom: 24px;
+}
+
+/* Toolbox: a definition list, one line per layer. */
+.stack {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.stack .stack-row {
+  display: grid;
+  gap: 6px;
+  padding: 20px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.stack-row dt {
+  font-weight: 650;
+}
+
+.stack-row dd {
+  color: var(--ink-2);
+  line-height: 1.6;
+  max-width: 70ch;
+}
+
+@media (min-width: 900px) {
+  .stack .stack-row {
+    grid-template-columns: 240px 1fr;
+    grid-column: auto;
+    gap: 24px;
+  }
+}
+
+/* Learning: rows with a small logo, not cards. */
+.learning {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.learning li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 18px;
+  align-items: start;
+  padding: 22px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+}
+
+.learning li .learn-logo {
+  grid-row: span 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.learning h3 {
+  font-size: 1.375rem;
+}
+
+@media (min-width: 820px) {
+  .learning {
+    grid-template-columns: 1fr;
+  }
+
+  .learning li {
+    grid-template-columns: 44px 220px 1fr;
+    column-gap: 24px;
+    align-items: center;
+  }
+
+  .learning li .learn-logo {
+    grid-row: auto;
+  }
+
+  .learning p {
+    max-width: 62ch;
+  }
+}
+
+.learning li.is-in {
+  animation: none;
+}
+
+/* Sections are separated by space and a rule, not by glows. */
+.contact::before {
+  display: none;
+}
+
+/* The toolbox list is one column at every width (the old panel grid used six). */
+@media (min-width: 900px) {
+  .stack {
+    grid-template-columns: 1fr;
+  }
+
+  .stack .stack-row,
+  .stack .stack-row:nth-child(n + 3) {
+    grid-column: 1 / -1;
+  }
+}
