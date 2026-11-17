@@ -1,0 +1,507 @@
+/* ================================================================= cross-section
+   The screen lifts and the layers under it separate: interface, API, data, model.
+   --x (0 → 1) tilts and spreads the stack; data-active (0-3) puts one layer forward. */
+@property --raise {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.scene-strata {
+  height: 420vh;
+}
+
+.scene-strata .scene-pin {
+  --x: 0;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+}
+
+.strata-grid {
+  display: grid;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .strata-grid {
+    grid-template-columns: 1.25fr 1fr;
+    gap: 56px;
+  }
+}
+
+.strata-stage {
+  --w: min(520px, 78vw);
+  --gap: clamp(64px, 9vw, 120px);
+  display: grid;
+  place-items: center;
+  height: min(78svh, 680px);
+  perspective: 2200px;
+  perspective-origin: 50% 30%;
+}
+
+.strata-rig {
+  position: relative;
+  width: var(--w);
+  aspect-ratio: 16 / 10;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--x) * 58deg)) rotateZ(calc(var(--x) * -36deg));
+}
+
+.slab {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  /* Layer 0 is on top. Before the split they all sit together, the screen covering the rest. */
+  --z: calc((1.5 - var(--i)) * var(--gap) * var(--x) + (3 - var(--i)) * 1px);
+  transform: translateZ(calc(var(--z) + var(--raise)));
+  transition: --raise 0.7s var(--ease);
+}
+
+.slab-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.35);
+  transition:
+    opacity 0.6s var(--ease),
+    border-color 0.6s var(--ease),
+    box-shadow 0.6s var(--ease);
+}
+
+/* The lower layers read as a blueprint of the screen above them. */
+.slab:not(.slab-ui) .slab-face {
+  background:
+    linear-gradient(var(--line-2) 1px, transparent 1px) 0 0 / 100% 18px,
+    color-mix(in srgb, var(--tint) 7%, var(--surface));
+}
+
+.slab-tag {
+  position: absolute;
+  left: 0;
+  top: -26px;
+  padding: 3px 8px;
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: var(--x);
+  transition:
+    background-color 0.5s var(--ease),
+    color 0.5s var(--ease);
+}
+
+/* Wires from each corner down to the layer below: the drawing of an exploded view. */
+.wire {
+  position: absolute;
+  width: 0;
+  height: calc(var(--gap) * var(--x));
+  border-left: 1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+  transform-origin: top;
+  transform: rotateX(-90deg);
+  opacity: var(--x);
+}
+
+.w-a {
+  left: 0;
+  top: 0;
+}
+
+.w-b {
+  right: 0;
+  top: 0;
+}
+
+.w-c {
+  left: 0;
+  top: 100%;
+}
+
+.w-d {
+  right: 0;
+  top: 100%;
+}
+
+/* One layer forward, the rest step back. */
+/* Faces stay solid so the layers never show through each other; only their contents dim. */
+.slab-face > * {
+  transition: opacity 0.6s var(--ease), filter 0.6s var(--ease);
+}
+
+.scene-strata .scene-pin:is([data-active='0'], [data-active='1'], [data-active='2'], [data-active='3']) .slab .slab-face > * {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.scene-strata .scene-pin[data-active='0'] .slab:nth-child(1),
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(2),
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(3),
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(4) {
+  --raise: calc(var(--gap) * 0.35);
+}
+
+.scene-strata .scene-pin[data-active='0'] .slab:nth-child(1) .slab-face,
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(2) .slab-face,
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(3) .slab-face,
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(4) .slab-face {
+  border-color: var(--tint);
+  box-shadow:
+    0 0 0 1px var(--tint),
+    0 40px 80px -30px color-mix(in srgb, var(--tint) 60%, transparent);
+}
+
+.scene-strata .scene-pin[data-active='0'] .slab:nth-child(1) .slab-tag,
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(2) .slab-tag,
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(3) .slab-tag,
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(4) .slab-tag {
+  background: var(--tint);
+  color: #fff;
+}
+
+.scene-strata .scene-pin[data-active='0'] .slab:nth-child(1) .slab-face > *,
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(2) .slab-face > *,
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(3) .slab-face > *,
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(4) .slab-face > * {
+  opacity: 1;
+  filter: none;
+}
+
+/* Going deeper peels the layers above away, so the one in front is never covered. */
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(-n + 1),
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(-n + 2),
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(-n + 3) {
+  --raise: calc(var(--gap) * 1.7);
+}
+
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(-n + 1) .slab-face,
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(-n + 2) .slab-face,
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(-n + 3) .slab-face {
+  opacity: 0.07;
+  box-shadow: none;
+}
+
+.scene-strata .scene-pin[data-active='1'] .slab:nth-child(-n + 1) :is(.slab-tag, .wire),
+.scene-strata .scene-pin[data-active='2'] .slab:nth-child(-n + 2) :is(.slab-tag, .wire),
+.scene-strata .scene-pin[data-active='3'] .slab:nth-child(-n + 3) :is(.slab-tag, .wire) {
+  visibility: hidden;
+}
+
+/* Layer faces */
+.slab-shot,
+.slab-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.slab-shot.whole img {
+  object-fit: contain;
+}
+
+.slab-code,
+.slab-table {
+  font-family: var(--font-mono);
+  font-weight: 450;
+  letter-spacing: 0;
+  text-transform: none;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  height: 100%;
+  padding: 18px 20px;
+  font-size: clamp(0.625rem, 0.5rem + 0.35vw, 0.8125rem);
+  line-height: 1.5;
+}
+
+.slab-code .req b {
+  color: var(--tint);
+}
+
+.slab-code .res {
+  color: var(--ink-3);
+}
+
+.slab-code .ok {
+  color: #1d9a5b;
+  font-weight: 600;
+}
+
+.slab-code pre {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font: inherit;
+  color: var(--ink-2);
+  white-space: pre;
+}
+
+.tbl-name span,
+.tbl-index {
+  color: var(--ink-3);
+}
+
+.slab-table table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.slab-table th,
+.slab-table td {
+  padding: 5px 6px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.slab-table th {
+  color: var(--tint);
+  font-weight: 600;
+}
+
+.slab-pipe {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  height: 100%;
+  padding: 18px;
+  counter-reset: pipe;
+}
+
+.slab-pipe li {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 0;
+  border: 1px solid color-mix(in srgb, var(--tint) 40%, var(--line));
+  background: var(--surface);
+  counter-increment: pipe;
+}
+
+.slab-pipe b {
+  font-family: var(--font-display);
+  font-size: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
+  letter-spacing: -0.01em;
+}
+
+.slab-pipe b::before {
+  content: counter(pipe) ' ';
+  color: var(--tint);
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+}
+
+.slab-pipe span {
+  color: var(--ink-3);
+  font-size: clamp(0.625rem, 0.55rem + 0.25vw, 0.75rem);
+}
+
+/* Text column */
+.strata-kicker {
+  color: var(--tint);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.strata-title {
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.strata-list {
+  display: grid;
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.strata-list li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  opacity: 0.38;
+  transition: opacity 0.5s var(--ease);
+}
+
+.strata-n {
+  padding-top: 3px;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  transition: color 0.5s var(--ease);
+}
+
+.strata-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.strata-name b {
+  font-size: 1.0625rem;
+}
+
+.strata-name span {
+  color: var(--ink-3);
+  font-size: 0.875rem;
+}
+
+/* Only the layer in front explains itself. */
+.strata-line {
+  max-height: 0;
+  overflow: hidden;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+  transition:
+    max-height 0.5s var(--ease),
+    margin 0.5s var(--ease);
+}
+
+.scene-pin:not([data-active]) .strata-list li,
+.scene-pin[data-active='-1'] .strata-list li,
+.scene-pin[data-active='0'] .strata-list li:nth-child(1),
+.scene-pin[data-active='1'] .strata-list li:nth-child(2),
+.scene-pin[data-active='2'] .strata-list li:nth-child(3),
+.scene-pin[data-active='3'] .strata-list li:nth-child(4) {
+  opacity: 1;
+}
+
+.scene-pin[data-active='0'] .strata-list li:nth-child(1) .strata-line,
+.scene-pin[data-active='1'] .strata-list li:nth-child(2) .strata-line,
+.scene-pin[data-active='2'] .strata-list li:nth-child(3) .strata-line,
+.scene-pin[data-active='3'] .strata-list li:nth-child(4) .strata-line {
+  max-height: 6em;
+  margin-top: 4px;
+}
+
+.scene-pin[data-active='0'] .strata-list li:nth-child(1) .strata-n,
+.scene-pin[data-active='1'] .strata-list li:nth-child(2) .strata-n,
+.scene-pin[data-active='2'] .strata-list li:nth-child(3) .strata-n,
+.scene-pin[data-active='3'] .strata-list li:nth-child(4) .strata-n {
+  color: var(--tint);
+}
+
+.strata-hint {
+  margin-top: 18px;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  opacity: calc(1 - var(--x));
+}
+
+/* Phones: the stack on top, the list under it, only the layer in front shown. */
+@media (max-width: 899px) {
+  .strata-stage {
+    --w: min(70vw, 400px);
+    --gap: clamp(44px, 12vw, 66px);
+    height: 46svh;
+  }
+
+  .strata-text {
+    min-height: 32svh;
+  }
+
+  .strata-title {
+    font-size: 1.375rem;
+  }
+
+  .strata-list {
+    margin-top: 12px;
+  }
+
+  .strata-list li {
+    padding: 10px 0;
+  }
+
+  .scene-pin:is([data-active='0'], [data-active='1'], [data-active='2'], [data-active='3']) .strata-list li {
+    display: none;
+  }
+
+  .scene-pin[data-active='0'] .strata-list li:nth-child(1),
+  .scene-pin[data-active='1'] .strata-list li:nth-child(2),
+  .scene-pin[data-active='2'] .strata-list li:nth-child(3),
+  .scene-pin[data-active='3'] .strata-list li:nth-child(4) {
+    display: grid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slab,
+  .slab-face,
+  .strata-line {
+    transition: none;
+  }
+}
+
+html:not(.js) .scene-strata {
+  height: auto;
+}
+
+html:not(.js) .scene-strata .scene-pin {
+  --x: 1;
+  position: static;
+  height: auto;
+  padding: 80px 0;
+}
+
+/* Drawing-set overrides for the exploded view. */
+.scene-strata {
+  margin-top: clamp(40px, 8vh, 90px);
+}
+
+.scene-strata .scene-pin {
+  padding: calc(var(--frame) + var(--top)) 0 calc(var(--frame) + var(--foot));
+}
+
+.strata-kicker {
+  color: var(--accent-text);
+  font-size: 0.6875rem;
+}
+
+.strata-title {
+  font-stretch: 72%;
+  font-weight: 750;
+  text-transform: uppercase;
+  font-size: clamp(1.75rem, 1rem + 2vw, 3rem);
+  line-height: 0.95;
+}
+
+.strata-list {
+  border-top-color: var(--ink);
+}
+
+.strata-name b {
+  font-weight: 650;
+}
+
+.slab-face {
+  border-color: var(--ink);
+}
+
+.slab-tag {
+  border-radius: 0;
+  font-size: 0.625rem;
+}
+
+.strata-hint {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

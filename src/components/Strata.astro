@@ -1,0 +1,119 @@
+---
+// Cross-section: the project's screen lifts off and the layers under it separate, one by one.
+// Interface, API, data and model, each showing what that layer really holds.
+import Shot from './Shot.astro';
+import { STRATA } from '../data/strata';
+import type { Lang, Project } from '../data/content';
+
+interface Props {
+  project: Project;
+  lang: Lang;
+  fig: string;
+}
+const { project, lang, fig } = Astro.props;
+const s = STRATA[lang];
+const layers = s.layers[project.id] ?? [];
+const shot = project.shots[0];
+---
+
+{
+  layers.length > 0 && (
+    <section class="scene scene-strata" data-scene="strata" aria-label={s.kicker}>
+      <div class="scene-pin">
+        <div class="wrap strata-grid">
+          <div class="strata-stage" aria-hidden="true">
+            <div class="strata-rig">
+              {layers.map((l, i) => (
+                <div class:list={['slab', `slab-${l.kind}`]} style={`--i:${i}`}>
+                  <div class="slab-face">
+                    {l.kind === 'ui' && (
+                      <div class:list={['slab-shot', { whole: shot.whole }]}>
+                        <Shot shot={shot} lang={lang} alt="" />
+                      </div>
+                    )}
+                    {l.kind === 'api' && (
+                      <div class="slab-code">
+                        <p class="req">
+                          <b>{l.method}</b> {l.path}
+                        </p>
+                        <p class="res">
+                          <span class="ok">{l.status}</span> <span>{l.time}</span>
+                        </p>
+                        <pre>{l.body.join('\n')}</pre>
+                      </div>
+                    )}
+                    {l.kind === 'data' && (
+                      <div class="slab-table">
+                        <p class="tbl-name">
+                          <b>{l.name}</b> <span>{l.engine}</span>
+                        </p>
+                        <table>
+                          <thead>
+                            <tr>
+                              {l.cols.map((c) => (
+                                <th>{c}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {l.rows.map((r) => (
+                              <tr>
+                                {r.map((c) => (
+                                  <td>{c}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        <p class="tbl-index">{l.index}</p>
+                      </div>
+                    )}
+                    {l.kind === 'model' && (
+                      <ol class="slab-pipe">
+                        {l.steps.map((st) => (
+                          <li>
+                            <b>{st.name}</b>
+                            <span>{st.detail}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    )}
+                  </div>
+                  <span class="slab-tag">{l.label}</span>
+                  {i < layers.length - 1 && (
+                    <>
+                      <i class="wire w-a" />
+                      <i class="wire w-b" />
+                      <i class="wire w-c" />
+                      <i class="wire w-d" />
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="strata-text">
+            <p class="strata-kicker">{fig}</p>
+            <h4 class="strata-title">{s.title}</h4>
+            <ol class="strata-list">
+              {layers.map((l, i) => (
+                <li style={`--i:${i}`}>
+                  <span class="strata-n">0{i + 1}</span>
+                  <div>
+                    <p class="strata-name">
+                      <b>{l.label}</b>
+                      <span>{l.tech}</span>
+                    </p>
+                    <p class="strata-line">{l.line}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <p class="strata-hint">{s.hint}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

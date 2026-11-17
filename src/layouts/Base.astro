@@ -1,8 +1,8 @@
 ---
-import '@fontsource-variable/bricolage-grotesque';
-import '@fontsource-variable/instrument-sans';
-import '@fontsource-variable/geist-mono';
-import '../styles/global.css';
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/sheet.css';
 import { SITE, type Copy, type Lang } from '../data/content';
 
 interface Props {
@@ -31,8 +31,8 @@ const path = lang === 'en' ? '/' : '/es/';
     <meta property="og:url" content={SITE.url + path} />
     <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_CR'} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#f4f3ee" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ecebe5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101112" media="(prefers-color-scheme: dark)" />
     <meta name="color-scheme" content="light dark" />
     <!-- Runs before paint: no theme flash, and a first-time Spanish visitor lands on /es/. -->
     <script is:inline>

@@ -64,7 +64,7 @@ $('[data-theme-toggle]')?.addEventListener('click', toggleTheme);
 // Switching language does not reload the page. The other language's page is fetched and every
 // text here is rewritten in place: short texts are decoded letter by letter, long ones cross-fade.
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const SYNCED = ['.skip', '.bar', '.dock', '.palette', 'main', '.footer'];
+const SYNCED = ['.skip', '.frame', 'main', '.footer'];
 const HEAD = ['meta[name="description"]', 'link[rel="canonical"]', 'meta[property="og:title"]', 'meta[property="og:description"]', 'meta[property="og:url"]', 'meta[property="og:locale"]'];
 let currentPath = location.pathname;
 let switching = false;
@@ -210,7 +210,7 @@ $$('[data-chars]').forEach((el) => {
     ).observe(el);
 
   // Letters rise toward the pointer as it passes.
-  if (!finePointer || reduced) return;
+  if (!finePointer || reduced || el.hasAttribute('data-name')) return;
   let chars = $$('.ch', el);
   let boxes: { x: number; y: number }[] = [];
   const measure = () =>
@@ -286,7 +286,6 @@ if (clocks.length) {
 // --e (0 → 1 while it scrolls into view) and --p (0 → 1 while it is pinned).
 // Both are eased toward their target every frame so the motion glides instead of ticking.
 type Scene = { el: HTMLElement; pin: HTMLElement; top: number; height: number; p: number; e: number; active: number };
-const bar = $('[data-bar]');
 const scenes: Scene[] = $$('[data-scene]').map((el) => ({ el, pin: $('.scene-pin', el)!, top: 0, height: 0, p: -1, e: -1, active: -1 }));
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 let running = false;
@@ -318,6 +317,12 @@ function frame() {
     if (s.el.dataset.scene === 'project') {
       const active = p < 0.33 ? 0 : p < 0.66 ? 1 : 2;
       if (active !== s.active) s.pin.dataset.active = String((s.active = active));
+    } else if (s.el.dataset.scene === 'strata') {
+      // First fifth: the stack tilts and comes apart (--x). Then each layer takes its turn.
+      const x = clamp01(p / 0.2);
+      s.pin.style.setProperty('--x', (x * x * (3 - 2 * x)).toFixed(4));
+      const active = p < 0.2 ? -1 : Math.min(3, Math.floor(((p - 0.2) / 0.72) * 4));
+      if (active !== s.active) s.pin.dataset.active = String((s.active = active));
     }
   }
   running = moving;
@@ -325,7 +330,6 @@ function frame() {
 }
 
 function kick() {
-  bar?.classList.toggle('is-scrolled', scrollY > 24);
   if (!running) {
     running = true;
     requestAnimationFrame(frame);
@@ -338,33 +342,6 @@ addEventListener('resize', () => (measure(), kick()));
 addEventListener('load', () => (measure(), kick()));
 new ResizeObserver(() => (measure(), kick())).observe(document.body);
 kick();
-
-/* ------------------------------------------------------------------- dock */
-const dock = $('[data-dock]');
-const dockLinks = $$<HTMLAnchorElement>('a.dock-item');
-if ('IntersectionObserver' in window) {
-  const spy = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => e.isIntersecting && dockLinks.forEach((a) => a.classList.toggle('is-active', a.getAttribute('href') === '#' + e.target.id))),
-    { rootMargin: '-45% 0px -50% 0px' },
-  );
-  dockLinks.forEach((a) => {
-    const s = $(a.getAttribute('href')!);
-    if (s) spy.observe(s);
-  });
-}
-// Icons swell under the pointer, like a desktop dock.
-if (dock && finePointer && !reduced) {
-  const items = $$('.dock-item', dock);
-  dock.addEventListener('pointermove', (e) => {
-    for (const item of items) {
-      const r = item.getBoundingClientRect();
-      const d = Math.abs(e.clientX - (r.left + r.width / 2));
-      item.style.setProperty('--s', (1 + 0.42 * Math.max(0, 1 - d / 120)).toFixed(3));
-    }
-  });
-  dock.addEventListener('pointerleave', () => items.forEach((item) => item.style.setProperty('--s', '1')));
-}
 
 /* ------------------------------------------------------------- copy email */
 async function copyText(text: string) {
@@ -392,205 +369,138 @@ if (copyBtn) {
   });
 }
 
-/* ---------------------------------------------------------------- palette */
-const palette = $<HTMLDialogElement>('[data-palette]');
-const input = $<HTMLInputElement>('[data-palette-input]');
-if (palette && input && typeof palette.showModal === 'function') {
-  const cmds = $$('[data-cmd]', palette);
-  const groups = $$('.palette-group', palette);
-  const empty = $('[data-palette-empty]', palette)!;
-  let sel = 0;
-  const visible = () => cmds.filter((c) => !c.parentElement!.hidden);
-  const select = (i: number) => {
-    const list = visible();
-    if (!list.length) return;
-    sel = (i + list.length) % list.length;
-    cmds.forEach((c) => c.classList.remove('is-sel'));
-    list[sel].classList.add('is-sel');
-    list[sel].scrollIntoView({ block: 'nearest' });
-  };
-  const filter = () => {
-    const q = input.value.trim().toLowerCase();
-    cmds.forEach((c) => (c.parentElement!.hidden = !!q && !c.textContent!.toLowerCase().includes(q)));
-    groups.forEach((g) => (g.hidden = !!q));
-    empty.hidden = visible().length > 0;
-    select(0);
-  };
-  const open = () => {
-    if (palette.open) return;
-    input.value = '';
-    palette.showModal();
-    filter();
-  };
-  $$('[data-palette-open]').forEach((b) => b.addEventListener('click', open));
-  addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      palette.open ? palette.close() : open();
-    }
-  });
-  input.addEventListener('input', filter);
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') (e.preventDefault(), select(sel + 1));
-    else if (e.key === 'ArrowUp') (e.preventDefault(), select(sel - 1));
-    else if (e.key === 'Enter') (e.preventDefault(), visible()[sel]?.click());
-  });
-  palette.addEventListener('pointermove', (e) => {
-    const cmd = (e.target as HTMLElement).closest<HTMLElement>('[data-cmd]');
-    if (cmd) select(visible().indexOf(cmd));
-  });
-  palette.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    if (target === palette) return palette.close(); // click on the backdrop
-    const cmd = target.closest<HTMLElement>('[data-cmd]');
-    if (!cmd) return;
-    palette.close();
-    const action = cmd.dataset.action;
-    if (action === 'theme') toggleTheme();
-    else if (action === 'lang') $<HTMLAnchorElement>('[data-lang]:not([aria-current])')?.click();
-    else if (action === 'copy') copyText($('[data-copy]')?.dataset.copy ?? '');
-  });
+/* ------------------------------------------------------------ the drawing */
+// The name is fitted to the width of the sheet, and the dimension line above it reports that width.
+const nameEl = $('[data-name]');
+function fitName() {
+  if (!nameEl) return;
+  // The wrapper holds the name and its outline twin; the sheet's grid sets the width to fill.
+  const box = nameEl.parentElement!;
+  const grid = nameEl.closest('.cover-grid') as HTMLElement;
+  const cs = getComputedStyle(grid);
+  const avail = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  // Measure a still copy: the real name may be mid-animation, drawn thinner (and narrower) than it ends.
+  const probe = nameEl.cloneNode(true) as HTMLElement;
+  probe.classList.remove('is-in');
+  probe.removeAttribute('data-name');
+  probe.style.cssText = 'position:absolute;visibility:hidden;left:0;top:0;--name-size:100px';
+  box.append(probe);
+  const w = probe.getBoundingClientRect().width;
+  probe.remove();
+  if (!w) return;
+  const size = Math.max(40, (100 * avail) / w);
+  box.style.setProperty('--name-size', `${size.toFixed(2)}px`);
 }
-
-/* -------------------------------------------------------------------- fan */
-// The opening windows lean toward the pointer, and their loops pause when the scene is off screen.
-const fan = $('[data-fan]');
-if (fan) {
-  new IntersectionObserver(([e]) => fan.classList.toggle('is-idle', !e.isIntersecting)).observe(fan);
-  if (finePointer && !reduced) {
-    let queued = false;
-    let mx = 0;
-    let my = 0;
-    addEventListener(
-      'pointermove',
-      (e) => {
-        mx = (e.clientX / innerWidth) * 2 - 1;
-        my = (e.clientY / innerHeight) * 2 - 1;
-        if (queued || fan.classList.contains('is-idle')) return;
-        queued = true;
-        requestAnimationFrame(() => {
-          queued = false;
-          fan.style.setProperty('--mx', mx.toFixed(3));
-          fan.style.setProperty('--my', my.toFixed(3));
-        });
-      },
-      { passive: true },
-    );
+// Sheet titles keep their size unless their longest word would not fit; then they shrink just enough.
+const titles = $$('.sheet-title, .contact-title');
+function fitTitles() {
+  for (const el of titles) {
+    el.style.fontSize = '';
+    const avail = el.clientWidth;
+    const widest = Math.max(...$$('.word', el).map((w) => w.scrollWidth));
+    if (avail && widest > avail) el.style.fontSize = `${(parseFloat(getComputedStyle(el).fontSize) * avail) / widest}px`;
   }
 }
+const fitAll = () => (fitName(), fitTitles());
+fitAll();
+document.fonts?.ready.then(fitAll);
+addEventListener('resize', fitAll);
 
-/* --------------------------------------------------------------- carousel */
-// The fan is a carousel. data-pos 0 is the front card, 1 the right one, 2 the left one.
-if (fan) {
-  const cards = $$('[data-card]', fan);
-  const labels = $$('[data-label]', fan);
-  const dots = $$('[data-dot]', fan);
-  const heroPin = $('.scene-hero .scene-pin');
-  let front = 1;
-  let timer = 0;
-  let resumeAt = 0;
-
-  const show = (next: number) => {
-    next = (next + cards.length) % cards.length;
-    if (next === front) return;
-    const rising = cards[next];
-    rising.classList.add('is-rising');
-    setTimeout(() => rising.classList.remove('is-rising'), 700);
-    front = next;
-    cards.forEach((card, i) => (card.dataset.pos = String((i - front + cards.length) % cards.length)));
-    labels.forEach((l, i) => l.classList.toggle('is-on', i === front));
-    dots.forEach((d, i) => d.classList.toggle('is-on', i === front));
+// X-ray lens over the name: the solid letters open in a circle under the pointer and the
+// outline drawing of the same name shows through. The lens glides after the pointer.
+const lens = $('[data-lens]');
+if (lens && finePointer && !reduced) {
+  const ring = document.createElement('i');
+  ring.className = 'lens-ring';
+  ring.setAttribute('aria-hidden', 'true');
+  lens.append(ring);
+  let tx = 0;
+  let ty = 0;
+  let x = 0;
+  let y = 0;
+  let raf = 0;
+  const step = () => {
+    x += (tx - x) * 0.18;
+    y += (ty - y) * 0.18;
+    lens.style.setProperty('--lx', `${x.toFixed(1)}px`);
+    lens.style.setProperty('--ly', `${y.toFixed(1)}px`);
+    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(step) : 0;
   };
-  // Any choice by the visitor holds the autoplay back for a while.
-  const choose = (next: number) => {
-    resumeAt = performance.now() + 9000;
-    show(next);
+  const aim = (e: PointerEvent, jump = false) => {
+    const r = lens.getBoundingClientRect();
+    tx = e.clientX - r.left;
+    ty = e.clientY - r.top;
+    if (jump) {
+      x = tx;
+      y = ty;
+    }
+    if (!raf) raf = requestAnimationFrame(step);
   };
-
-  $$<HTMLButtonElement>('[data-fan-step]', fan).forEach((b) => b.addEventListener('click', () => choose(front + Number(b.dataset.fanStep))));
-  cards.forEach((card, i) =>
-    card.addEventListener('click', () => {
-      if (i !== front) choose(i);
-    }),
-  );
-  fan.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') choose(front + 1);
-    else if (e.key === 'ArrowLeft') choose(front - 1);
+  lens.addEventListener('pointerenter', (e) => {
+    aim(e, true);
+    lens.classList.remove('is-closing');
+    lens.classList.add('is-lens');
   });
-
-  // Swipe sideways on touch screens; vertical drags still scroll the page.
-  let startX = 0;
-  let startY = 0;
-  fan.addEventListener('pointerdown', (e) => {
-    startX = e.clientX;
-    startY = e.clientY;
+  lens.addEventListener('pointermove', (e) => aim(e));
+  lens.addEventListener('pointerleave', () => {
+    // Keep the mask on while the lens shrinks back to nothing.
+    lens.classList.remove('is-lens');
+    lens.classList.add('is-closing');
+    setTimeout(() => lens.classList.remove('is-closing'), 500);
   });
-  fan.addEventListener('pointerup', (e) => {
-    if (e.pointerType === 'mouse') return;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(e.clientY - startY) * 1.4) choose(front + (dx < 0 ? 1 : -1));
-  });
-
-  // The fan only takes clicks once it has risen, and only plays on its own while it is fully up.
-  const tick = () => {
-    const f = Number(getComputedStyle(heroPin ?? fan).getPropertyValue('--p')) || 0;
-    const ready = (f - 0.12) / 0.7 > 0.85;
-    fan.classList.toggle('is-ready', ready);
-    if (ready && !reduced && !fan.classList.contains('is-idle') && !fan.matches(':hover') && performance.now() > resumeAt) show(front + 1);
-  };
-  const ready = () => fan.classList.toggle('is-ready', (Number(getComputedStyle(heroPin ?? fan).getPropertyValue('--p')) - 0.12) / 0.7 > 0.85);
-  addEventListener('scroll', ready, { passive: true });
-  ready();
-  timer = window.setInterval(tick, 4200);
-  addEventListener('pagehide', () => clearInterval(timer));
 }
 
-/* ------------------------------------------------------- pointer on cards */
-// Cards marked data-spot carry a light under the pointer; data-tilt cards also lean toward it.
-if (finePointer && !reduced) {
-  $$('[data-spot]').forEach((el) => {
-    const tilt = el.hasAttribute('data-tilt');
-    let queued = false;
-    let ev: PointerEvent | null = null;
-    el.addEventListener('pointermove', (e) => {
-      ev = e;
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(() => {
-        queued = false;
-        if (!ev) return;
-        const r = el.getBoundingClientRect();
-        const x = ev.clientX - r.left;
-        const y = ev.clientY - r.top;
-        el.style.setProperty('--mx', `${x.toFixed(0)}px`);
-        el.style.setProperty('--my', `${y.toFixed(0)}px`);
-        if (tilt) {
-          el.style.setProperty('--ry', `${((x / r.width - 0.5) * 9).toFixed(2)}deg`);
-          el.style.setProperty('--rx', `${((0.5 - y / r.height) * 9).toFixed(2)}deg`);
-        }
-      });
+// The register: a screenshot of the project follows the pointer down the rows.
+const preview = $('[data-reg-preview]');
+if (preview && finePointer && !reduced) {
+  const img = $<HTMLImageElement>('img', preview)!;
+  $$<HTMLAnchorElement>('[data-preview]').forEach((row) => {
+    row.addEventListener('pointerenter', () => {
+      img.src = row.dataset.preview!;
+      preview.classList.add('is-on');
     });
-    el.addEventListener('pointerleave', () => {
-      ev = null;
-      el.style.removeProperty('--mx');
-      el.style.removeProperty('--my');
-      el.style.removeProperty('--rx');
-      el.style.removeProperty('--ry');
+    row.addEventListener('pointerleave', () => preview.classList.remove('is-on'));
+    row.addEventListener('pointermove', (e) => {
+      const w = preview.offsetWidth;
+      const h = preview.offsetHeight;
+      const x = Math.min(innerWidth - w - 24, e.clientX + 28);
+      preview.style.setProperty('--px', `${x}px`);
+      preview.style.setProperty('--py', `${e.clientY - h / 2}px`);
     });
   });
 }
 
-/* ------------------------------------------------------------ contact glow */
-const glow = $('[data-glow]');
-if (glow) {
-  if (reduced || !('IntersectionObserver' in window)) glow.classList.add('is-lit');
-  else
-    new IntersectionObserver(
-      ([e], io) => {
-        if (!e.isIntersecting) return;
-        glow.classList.add('is-lit');
-        io.disconnect();
-      },
-      { threshold: 0.25 },
-    ).observe(glow);
+// Which sheet is in view: marked in the index and counted in the frame.
+const sheetNow = $('[data-sheet-now]');
+const sheetLinks = $$('[data-sheet-link]');
+const sheets = $$('[data-sheet]');
+const ruler = $('[data-progress]');
+let current = -1;
+function spy() {
+  const mid = innerHeight * 0.45;
+  let on = 0;
+  sheets.forEach((el) => {
+    if (el.getBoundingClientRect().top < mid) on = Number(el.dataset.sheet);
+  });
+  if (on !== current) {
+    current = on;
+    sheetLinks.forEach((a) => a.classList.toggle('is-on', Number(a.dataset.sheetLink) === on));
+    if (sheetNow) sheetNow.textContent = String(on + 1).padStart(2, '0');
+  }
+  const max = document.documentElement.scrollHeight - innerHeight;
+  ruler?.style.setProperty('--read', (max > 0 ? scrollY / max : 0).toFixed(4));
 }
+let spyQueued = false;
+addEventListener(
+  'scroll',
+  () => {
+    if (spyQueued) return;
+    spyQueued = true;
+    requestAnimationFrame(() => {
+      spyQueued = false;
+      spy();
+    });
+  },
+  { passive: true },
+);
+spy();
