@@ -1,0 +1,256 @@
+/* ----------------------------------------------------------------- plotter */
+/* The first visit opens with the set being plotted: the pen draws the frame around the screen,
+   the monogram fills in like hatching, the title block writes itself, and a counter follows the
+   real load. Then the sheet lifts off and the site's own frame is exactly where the pen drew. */
+.plotter {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.js:not(.no-plot) .plotter {
+  display: block;
+  pointer-events: auto;
+  /* If the script never runs, the sheet still gets out of the way. */
+  animation: plot-failsafe 0s 5s forwards;
+}
+
+@keyframes plot-failsafe {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.plot-paper {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.plot-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.plot-frame rect {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The pen: a small crosshair that rides the line being drawn. */
+.plot-head {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  transform: translate(var(--hx, 0px), var(--hy, 0px));
+  transition: opacity 0.3s;
+}
+
+.plot-head::before,
+.plot-head::after {
+  content: '';
+  position: absolute;
+  background: var(--accent);
+}
+
+.plot-head::before {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100%;
+}
+
+.plot-head::after {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+.plot-head i {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+}
+
+/* The monogram in the middle, hatched in from the bottom as the counter climbs. */
+.plot-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -54%;
+  margin: 0;
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(120px, 24vw, 340px);
+  font-stretch: 62%;
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  -webkit-text-stroke: 1px var(--ink);
+  background:
+    repeating-linear-gradient(-45deg, var(--ink) 0 1px, transparent 1px 7px) left bottom / 100% calc(var(--fill, 0) * 1%) no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.plot-mark.is-solid {
+  background: var(--ink);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background 0.3s;
+}
+
+.plot-count {
+  position: absolute;
+  left: calc(var(--frame) + var(--pad));
+  bottom: calc(var(--frame) + 20px);
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: clamp(64px, 10vw, 150px);
+  font-stretch: 62%;
+  font-weight: 800;
+  line-height: 0.8;
+  font-variant-numeric: tabular-nums;
+}
+
+.plot-count small {
+  margin-top: 0.08em;
+  color: var(--accent-text);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.plot-sheet {
+  position: absolute;
+  left: calc(var(--frame) + var(--pad));
+  top: calc(var(--frame) + 22px);
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.plot-sheet b {
+  color: var(--accent-text);
+  font-weight: 500;
+}
+
+/* The title block, written one row at a time. */
+.plot-block {
+  position: absolute;
+  right: calc(var(--frame) + var(--pad));
+  bottom: calc(var(--frame) + 20px);
+  display: grid;
+  width: min(330px, calc(100vw - 2 * var(--frame) - 2 * var(--pad)));
+  margin: 0;
+  border-top: 1px solid var(--ink);
+}
+
+.plot-block div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0 7px;
+  background: linear-gradient(var(--line), var(--line)) left bottom / 0 1px no-repeat;
+  opacity: 0;
+  transition:
+    opacity 0.35s,
+    background-size 0.6s var(--ease);
+}
+
+.plot-block div.is-on {
+  opacity: 1;
+  background-size: 100% 1px;
+}
+
+.plot-block dt {
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plot-block dd {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.plot-block [data-plot-state] {
+  color: var(--accent-text);
+}
+
+/* The exit: what was written slides down and fades, then the sheet is pulled up off the frame. */
+.plot-count,
+.plot-block,
+.plot-sheet,
+.plot-mark,
+.plot-head {
+  transition:
+    opacity 0.45s var(--ease),
+    transform 0.6s var(--ease);
+}
+
+.plotter.is-out .plot-count,
+.plotter.is-out .plot-block,
+.plotter.is-out .plot-sheet,
+.plotter.is-out .plot-mark,
+.plotter.is-out .plot-head {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+/* The pen follows the script every frame, so only its fade is eased. */
+.plot-head,
+.plotter.is-out .plot-head {
+  transform: translate(var(--hx, 0px), var(--hy, 0px));
+  transition: opacity 0.3s;
+}
+
+.plotter.is-lift .plot-paper {
+  clip-path: inset(0 0 100% 0);
+}
+
+.plotter.is-lift .plot-frame {
+  opacity: 0;
+  transition: opacity 0.2s 0.5s;
+}
+
+.plotter.is-gone {
+  display: none !important;
+}
+
+@media (max-width: 819px) {
+  .plot-block {
+    bottom: calc(var(--frame) + 120px);
+    left: calc(var(--frame) + var(--pad));
+    right: auto;
+  }
+}

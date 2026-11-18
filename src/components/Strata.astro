@@ -13,7 +13,7 @@ interface Props {
 const { project, lang, fig } = Astro.props;
 const s = STRATA[lang];
 const layers = s.layers[project.id] ?? [];
-const shot = project.shots[0];
+const shot = project.ui ?? project.shots[0];
 ---
 
 {

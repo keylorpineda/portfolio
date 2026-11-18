@@ -4,7 +4,9 @@ import type { Lang } from './content';
 const en = {
   sheet: 'Sheet',
   of: 'of',
-  sheets: ['Cover', 'HealthyCropping', 'Booth', 'Research Engine', 'Materials', 'Contact'],
+  sheets: ['Cover', 'Projects', 'Materials', 'Contact'],
+  plot: { drawn: 'Drawn by', set: 'Set', setName: 'Portfolio', sheets: 'Sheets', scale: 'Scale', state: 'State', plotting: 'Plotting', ready: 'Ready', title: 'Plotting sheet' },
+  act: { demo: 'Open the live demo', code: 'Read the code', doc: 'Read the model card', open: 'Open demo', openCode: 'View code', label: 'Project links' },
   coords: '9.93° N  84.08° W',
   place: 'San José, Costa Rica',
   local: 'local time',
@@ -45,7 +47,9 @@ const en = {
 const es: typeof en = {
   sheet: 'Lámina',
   of: 'de',
-  sheets: ['Portada', 'HealthyCropping', 'Booth', 'Research Engine', 'Materiales', 'Contacto'],
+  sheets: ['Portada', 'Proyectos', 'Materiales', 'Contacto'],
+  plot: { drawn: 'Dibujó', set: 'Juego', setName: 'Portafolio', sheets: 'Láminas', scale: 'Escala', state: 'Estado', plotting: 'Ploteando', ready: 'Listo', title: 'Ploteando lámina' },
+  act: { demo: 'Abrir la demo en vivo', code: 'Ver el código', doc: 'Leer la model card', open: 'Abrir demo', openCode: 'Ver código', label: 'Enlaces del proyecto' },
   coords: '9.93° N  84.08° O',
   place: 'San José, Costa Rica',
   local: 'hora local',

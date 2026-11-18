@@ -52,6 +52,16 @@ const path = lang === 'en' ? '/' : '/es/';
         }
         d.dataset.theme = theme;
         d.classList.add('is-ready');
+        // The plotted opening plays once per session, and never with reduced motion.
+        var seen = null;
+        try {
+          // ?plot replays it on demand.
+          seen = /[?&]plot\b/.test(location.search) ? null : sessionStorage.getItem('plotted');
+          sessionStorage.setItem('plotted', '1');
+        } catch (e) {
+          seen = '1';
+        }
+        if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('no-plot');
         if (!get('lang') && location.pathname === '/' && /^es\b/i.test(navigator.language || '')) {
           location.replace('/es/' + location.hash);
         }

@@ -190,8 +190,95 @@ addEventListener('popstate', () => {
 });
 
 // The headline starts as soon as the script runs.
+/* ---------------------------------------------------------------- plotter */
+// The opening: the pen draws the frame along the screen's edge while a counter follows the real
+// load (fonts and the page), the title block writes itself, then the sheet lifts off.
+// Everything that animates on arrival waits for it through whenReady().
+const plotter = $('[data-plotter]');
+const plotting = !!plotter && !root.classList.contains('no-plot') && getComputedStyle(plotter).display !== 'none';
+const waiting: (() => void)[] = [];
+let plotted = !plotting;
 function whenReady(cb: () => void) {
-  cb();
+  if (plotted) cb();
+  else waiting.push(cb);
+}
+if (plotting && plotter) runPlotter(plotter);
+else plotter?.classList.add('is-gone');
+
+function runPlotter(el: HTMLElement) {
+  const svg = $<SVGSVGElement>('[data-plot-frame]', el)!;
+  const rect = svg.querySelector('rect')!;
+  const head = $('[data-plot-head]', el)!;
+  const mark = $('[data-plot-mark]', el)!;
+  const num = $('[data-plot-n]', el)!;
+  const state = $('[data-plot-state]', el);
+  const rows = $$('.plot-block div', el);
+  const f = parseFloat(getComputedStyle(root).getPropertyValue('--frame')) || 14;
+  // The frame the pen draws is the site's own frame, to the pixel.
+  const W = innerWidth;
+  const H = innerHeight;
+  const w = W - 2 * f - 1;
+  const h = H - 2 * f - 1;
+  const per = 2 * (w + h);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  rect.setAttribute('x', String(f + 0.5));
+  rect.setAttribute('y', String(f + 0.5));
+  rect.setAttribute('width', String(w));
+  rect.setAttribute('height', String(h));
+  rect.style.strokeDasharray = `${per}`;
+  rect.style.strokeDashoffset = `${per}`;
+  // Point on the frame at a distance d along it, clockwise from the top-left corner.
+  const at = (d: number): [number, number] => {
+    if (d < w) return [f + d, f];
+    if ((d -= w) < h) return [f + w, f + d];
+    if ((d -= h) < w) return [f + w - d, f + h];
+    return [f, f + h - (d - w)];
+  };
+
+  let loaded = document.readyState === 'complete';
+  addEventListener('load', () => (loaded = true), { once: true });
+  let fonts = false;
+  document.fonts?.ready.then(() => (fonts = true));
+  const MIN = 1500; // the drawing never rushes
+  const MAX = 3200; // and never holds the page hostage
+  const t0 = performance.now();
+  const ease = (x: number) => 1 - Math.pow(1 - x, 3);
+  let shown = 0;
+  rows.forEach((r, i) => setTimeout(() => r.classList.add('is-on'), 220 + i * 170));
+
+  const frame = (now: number) => {
+    const t = now - t0;
+    const ready = (loaded && fonts) || t > MAX;
+    // Time sets the pace; until the page is ready the counter stops short of the end.
+    const target = Math.min(ease(Math.min(t / MIN, 1)), ready ? 1 : 0.92);
+    shown += (target - shown) * 0.2;
+    if (ready && t > MIN && 1 - shown < 0.004) shown = 1;
+    const d = shown * per;
+    rect.style.strokeDashoffset = `${per - d}`;
+    const [x, y] = at(Math.min(d, per - 0.01));
+    head.style.setProperty('--hx', `${x}px`);
+    head.style.setProperty('--hy', `${y}px`);
+    mark.style.setProperty('--fill', (shown * 100).toFixed(1));
+    num.textContent = String(Math.round(shown * 100)).padStart(3, '0');
+    if (shown < 1) return requestAnimationFrame(frame);
+    finish();
+  };
+  requestAnimationFrame(frame);
+
+  function finish() {
+    mark.classList.add('is-solid');
+    if (state) state.textContent = state.dataset.ready ?? '';
+    setTimeout(() => {
+      el.classList.add('is-out');
+      setTimeout(() => {
+        el.classList.add('is-lift');
+        // The cover starts plotting in as the sheet comes off it.
+        plotted = true;
+        waiting.splice(0).forEach((cb) => cb());
+        setTimeout(() => el.classList.add('is-gone'), 1000);
+      }, 260);
+    }, 320);
+  }
 }
 
 /* --------------------------------------------------------------- headlines */
@@ -239,7 +326,9 @@ $$('[data-chars]').forEach((el) => {
 const reveals = $$('.reveal');
 if (reduced || !('IntersectionObserver' in window)) {
   reveals.forEach((el) => el.classList.add('is-in'));
-} else {
+} else whenReady(observeReveals);
+
+function observeReveals() {
   const io = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
@@ -338,6 +427,35 @@ function kick() {
 
 measure();
 addEventListener('scroll', kick, { passive: true });
+
+// The cover name unplots as the cover scrolls away (see .name .ch in the CSS).
+const unplotWrap = $('[data-lens]');
+if (unplotWrap && !reduced) {
+  let last = -1;
+  let queued = false;
+  const unplot = () => {
+    queued = false;
+    // Done by the time the name's bottom edge reaches the top bar, so all of it plays in view.
+    const r = unplotWrap.getBoundingClientRect();
+    const range = Math.max(r.bottom + scrollY - 90, 1);
+    const out = Math.min(Math.max(scrollY / range, 0), 1);
+    if (Math.abs(out - last) < 0.001) return;
+    last = out;
+    unplotWrap.style.setProperty('--out', out.toFixed(3));
+  };
+  whenReady(() => {
+    unplot();
+    addEventListener(
+      'scroll',
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(unplot);
+      },
+      { passive: true },
+    );
+  });
+}
 addEventListener('resize', () => (measure(), kick()));
 addEventListener('load', () => (measure(), kick()));
 new ResizeObserver(() => (measure(), kick())).observe(document.body);
@@ -474,6 +592,9 @@ if (preview && finePointer && !reduced) {
 const sheetNow = $('[data-sheet-now]');
 const sheetLinks = $$('[data-sheet-link]');
 const sheets = $$('[data-sheet]');
+const frameEl = $('[data-sheet-nos]');
+const sheetNos: string[] = JSON.parse(frameEl?.dataset.sheetNos ?? '[]');
+const sheetIndex: number[] = JSON.parse(frameEl?.dataset.sheetIndex ?? '[]');
 const ruler = $('[data-progress]');
 let current = -1;
 function spy() {
@@ -484,8 +605,16 @@ function spy() {
   });
   if (on !== current) {
     current = on;
-    sheetLinks.forEach((a) => a.classList.toggle('is-on', Number(a.dataset.sheetLink) === on));
-    if (sheetNow) sheetNow.textContent = String(on + 1).padStart(2, '0');
+    const link = sheetIndex[on] ?? on;
+    const no = sheetNos[on] ?? String(on + 1).padStart(2, '0');
+    sheetLinks.forEach((a) => {
+      const isOn = Number(a.dataset.sheetLink) === link;
+      a.classList.toggle('is-on', isOn);
+      // The projects link counts which project is in view: 02.1, 02.2, 02.3.
+      const n = a.querySelector<HTMLElement>('[data-index-n]');
+      if (n) n.textContent = isOn ? no : n.dataset.indexN!;
+    });
+    if (sheetNow) sheetNow.textContent = no;
   }
   const max = document.documentElement.scrollHeight - innerHeight;
   ruler?.style.setProperty('--read', (max > 0 ? scrollY / max : 0).toFixed(4));

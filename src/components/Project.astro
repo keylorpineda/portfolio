@@ -20,7 +20,8 @@ const s = SHEET[lang];
 const p = t.projects[project.id as keyof Copy['projects']];
 const facts = await repoFacts(project.code);
 const lastCommit = facts && new Intl.DateTimeFormat(t.repo.locale, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Costa_Rica' }).format(new Date(facts.lastCommit));
-const no = String(index + 2).padStart(2, '0');
+// The projects share sheet 02: 02.1, 02.2, 02.3. Figures on a sheet are lettered.
+const no = `02.${index + 1}`;
 // Where along the pinned scroll (0 → 1) each figure takes over. The first is there from the start.
 const starts = [-1, 0.33, 0.66, 9];
 const timing = (i: number) => `--s:${starts[i]};--n:${starts[i + 1]}`;
@@ -28,7 +29,21 @@ const kind = (i: number) => {
   const sh = project.shots[i];
   return [sh.fit ?? 'cover', { 'focus-right': sh.focus === 'right', whole: sh.whole, paper: !sh.key && !sh.dark && sh.fit === 'contain' }];
 };
-const fig = (i: number) => `${s.fig} ${no}.${i + 1}`;
+// Where each link goes, shown under its label so it is clear before clicking.
+const host = (url: string) => {
+  const u = new URL(url);
+  const parts = u.pathname.split('/').filter(Boolean);
+  // A repository reads as its path; a demo as just its domain.
+  if (u.hostname === 'github.com') return parts.length > 2 ? `github · ${parts[1]} · ${parts.at(-1)}` : `github.com/${parts.join('/')}`;
+  return u.hostname;
+};
+// The main action is the live demo; without one, the code.
+const links = [
+  project.demo && { url: project.demo, label: s.act.demo },
+  { url: project.code, label: s.act.code },
+  project.doc && { url: project.doc, label: s.act.doc },
+].filter(Boolean) as { url: string; label: string }[];
+const fig = (i: number) => `${s.fig} ${no}${'abcd'[i]}`;
 ---
 
 <article class="sheet project" id={`project-${project.id}`} data-sheet={index + 1} style={`--tint:${project.tint}`}>
@@ -47,7 +62,20 @@ const fig = (i: number) => `${s.fig} ${no}.${i + 1}`;
   <h2 class="sheet-title chars" data-chars="view" aria-label={project.name}><Chars text={project.name} /></h2>
 
   <div class="spec">
-    <p class="spec-desc reveal">{p.desc}</p>
+    <div class="spec-main">
+      <p class="spec-desc reveal">{p.desc}</p>
+      <nav class="actions reveal" aria-label={`${s.act.label}: ${project.name}`}>
+        {
+          links.map((l, i) => (
+            <a class:list={['act', { 'act-main': i === 0 }]} href={l.url} target="_blank" rel="noopener">
+              <span class="act-k">{l.label}</span>
+              <span class="act-u">{host(l.url)}</span>
+              <span class="act-arrow" aria-hidden="true">↗</span>
+            </a>
+          ))
+        }
+      </nav>
+    </div>
     <dl class="spec-table reveal">
       <div>
         <dt>{s.spec.type}</dt>
@@ -60,17 +88,6 @@ const fig = (i: number) => `${s.fig} ${no}.${i + 1}`;
       <div>
         <dt>{s.spec.stack}</dt>
         <dd>{project.chips.join(' · ')}</dd>
-      </div>
-      <div class="spec-links">
-        <dt>{s.spec.code}</dt>
-        <dd>
-          <a href={project.code} target="_blank" rel="noopener">github.com/keylorpineda ↗</a>
-          {project.demo && (
-            <a href={project.demo} target="_blank" rel="noopener">
-              {s.spec.demo} ↗
-            </a>
-          )}
-        </dd>
       </div>
     </dl>
   </div>
@@ -90,6 +107,9 @@ const fig = (i: number) => `${s.fig} ${no}.${i + 1}`;
               ))
             }
           </div>
+          <a class="plate-open" href={links[0].url} target="_blank" rel="noopener">
+            {project.demo ? s.act.open : s.act.openCode} <span aria-hidden="true">↗</span>
+          </a>
           <i class="cmark tl" aria-hidden="true"></i>
           <i class="cmark tr" aria-hidden="true"></i>
           <i class="cmark bl" aria-hidden="true"></i>
@@ -118,7 +138,7 @@ const fig = (i: number) => `${s.fig} ${no}.${i + 1}`;
     </div>
   </div>
 
-  <Strata project={project} lang={lang} fig={`${s.fig} ${no}.4 — ${s.exploded}`} />
+  <Strata project={project} lang={lang} fig={`${fig(3)} — ${s.exploded}`} />
 
   <ProjectDetail id={project.id} lang={lang} />
 

@@ -20,10 +20,12 @@ export type Project = {
   tint: string; // the project's own colour, used for its glow and markers
   code: string;
   demo?: string;
+  doc?: string; // a document worth reading when there is no live demo
   window: string; // label shown in the window's title bar
   metrics: { value: string; count?: number; decimals?: number; suffix?: string }[];
   chips: string[];
   shots: Shot[];
+  ui?: Shot; // the screen used on the exploded view's top layer, when it differs from the first figure
 };
 
 export const PROJECTS: Project[] = [
@@ -33,6 +35,7 @@ export const PROJECTS: Project[] = [
     tint: '#17b877',
     window: 'healthycropping / docs',
     code: 'https://github.com/keylorpineda/healthycropping',
+    doc: 'https://github.com/keylorpineda/healthycropping/blob/develop/docs/MODEL_CARD.md',
     metrics: [
       { value: '0.97', count: 0.97, decimals: 2 },
       { value: '6 MB', count: 6, suffix: ' MB' },
@@ -40,10 +43,12 @@ export const PROJECTS: Project[] = [
     ],
     chips: ['React Native', 'Expo', 'TypeScript', 'TensorFlow Lite', 'Python', 'FastAPI', 'Firebase', 'SQLite', 'Gemini'],
     shots: [
-      { src: '/img/hc-slide-light.webp', dark: '/img/hc-slide-dark.webp', w: 1440, h: 900, whole: true },
-      { src: '/img/hc-dataset.webp', w: 695, h: 926, fit: 'contain' },
-      { src: '/img/hc-gradcam.webp', w: 631, h: 1056, fit: 'contain' },
+      { src: '/img/hc-models-light.webp', dark: '/img/hc-models-dark.webp', w: 1440, h: 900, whole: true },
+      { src: '/img/hc-field-light.webp', dark: '/img/hc-field-dark.webp', w: 1440, h: 900, whole: true },
+      { src: '/img/hc-gradcam-light.webp', dark: '/img/hc-gradcam-dark.webp', w: 1440, h: 900, whole: true },
     ],
+    // The exploded view's top layer is the app itself, not a figure.
+    ui: { src: '/img/hc-slide-light.webp', dark: '/img/hc-slide-dark.webp', w: 1440, h: 900, whole: true },
   },
   {
     id: 'booth',
@@ -160,7 +165,7 @@ const en = {
         { t: 'It shows where it looks', d: 'Grad-CAM heatmaps show which part of the leaf drove each prediction, and every experiment, including the failed ones, is documented.' },
       ],
       metrics: ['banana test Macro-F1', 'per model, float16', 'crops, one model each'],
-      alts: ['HealthyCropping overview', 'Field photo dataset', 'Grad-CAM heatmaps per class'],
+      alts: ['One model per crop, measured on the phone', 'Field photos for each class', 'Grad-CAM on held-out photos'],
       note: '',
     },
     booth: {
@@ -292,7 +297,7 @@ const es: typeof en = {
         { t: 'Muestra dónde mira', d: 'Los mapas Grad-CAM muestran qué parte de la hoja decidió cada predicción, y cada experimento, incluidos los que fallaron, está documentado.' },
       ],
       metrics: ['Macro-F1 de prueba en banano', 'por modelo, float16', 'cultivos, un modelo cada uno'],
-      alts: ['Resumen de HealthyCropping', 'Dataset de fotos de campo', 'Mapas Grad-CAM por clase'],
+      alts: ['Un modelo por cultivo, medido en el teléfono', 'Fotos de campo de cada clase', 'Grad-CAM en fotos de prueba'],
       note: '',
     },
     booth: {

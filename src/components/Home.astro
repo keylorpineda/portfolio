@@ -13,9 +13,13 @@ const { lang } = Astro.props;
 const t = COPY[lang];
 const s = SHEET[lang];
 
-const anchors = ['top', 'project-hc', 'project-booth', 'project-rag', 'materials', 'contact'];
+// Four sheets; the projects share sheet 02 as 02.1, 02.2 and 02.3.
+const anchors = ['top', 'project-hc', 'materials', 'contact'];
 const pad = (i: number) => String(i + 1).padStart(2, '0');
 const total = pad(anchors.length - 1);
+// Sheet number of each data-sheet element, in page order: cover, three projects, materials, contact.
+const sheetNos = ['01', ...PROJECTS.map((_, i) => `02.${i + 1}`), '03', '04'];
+const sheetIndex = [0, ...PROJECTS.map(() => 1), 2, 3];
 const groups = TABS.filter((c) => c !== 'all').map((cat) => ({ label: t.stack.tabs[cat], tools: TOOLS.filter((tool) => tool[2] === cat) }));
 const activity = 'https://raw.githubusercontent.com/keylorpineda/keylorpineda/output/activity-';
 let ni = 0;
@@ -25,16 +29,34 @@ const nameWords = s.name
   .map((w) => [...w].map((ch) => ({ ch, i: ni++ })));
 const built = new Intl.DateTimeFormat(t.repo.locale, { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'America/Costa_Rica' }).format(new Date());
 const preview = (p: (typeof PROJECTS)[number]) => {
-  const shot = p.shots[0];
+  const shot = p.ui ?? p.shots[0];
   return shot.key ? `/img/shots/${shot.key}-en-light.webp` : shot.src!;
 };
 ---
 
 <Base lang={lang} t={t}>
+  <!-- First visit of the session: the sheet is plotted, then lifted off. -->
+  <div class="plotter" data-plotter aria-hidden="true">
+    <div class="plot-paper">
+      <svg class="plot-frame" data-plot-frame><rect></rect></svg>
+      <p class="plot-sheet">{s.plot.title} <b>01</b> / {total}</p>
+      <p class="plot-mark" data-plot-mark>KP</p>
+      <div class="plot-count"><span data-plot-n>000</span><small>%</small></div>
+      <dl class="plot-block">
+        <div><dt>{s.plot.drawn}</dt><dd>{s.name}</dd></div>
+        <div><dt>{s.plot.set}</dt><dd>{s.plot.setName}</dd></div>
+        <div><dt>{s.plot.sheets}</dt><dd>{total}</dd></div>
+        <div><dt>{s.plot.scale}</dt><dd>1 : 1</dd></div>
+        <div><dt>{s.plot.state}</dt><dd data-plot-state data-ready={s.plot.ready}>{s.plot.plotting}</dd></div>
+      </dl>
+      <i class="plot-head" data-plot-head><i></i></i>
+    </div>
+  </div>
+
   <a class="skip" href="#main">{t.skip}</a>
 
   <!-- The drawing frame: fixed border, corner readouts, and the sheet index. -->
-  <div class="frame" aria-hidden="false">
+  <div class="frame" data-sheet-nos={JSON.stringify(sheetNos)} data-sheet-index={JSON.stringify(sheetIndex)}>
     <header class="frame-top" data-bar>
       <a class="mark" href="#top" aria-label={s.name}>
         <span class="mark-kp">KP</span>
@@ -44,7 +66,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
         {
           s.sheets.map((label, i) => (
             <a href={`#${anchors[i]}`} data-sheet-link={i}>
-              <span class="index-n">{pad(i)}</span>
+              <span class="index-n" data-index-n={pad(i)}>{pad(i)}</span>
               <span class="index-l">{label}</span>
             </a>
           ))
@@ -99,7 +121,9 @@ const preview = (p: (typeof PROJECTS)[number]) => {
                   {wi > 0 && <span class="gap" />}
                   <span class="nl">
                     {word.map((c) => (
-                      <span class="ch">{c.ch}</span>
+                      <span class="ch" style={`--i:${c.i}`}>
+                        {c.ch}
+                      </span>
                     ))}
                   </span>
                 </>
@@ -113,10 +137,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
           {
             s.lead.slice(1, 5).map((part, i) => (
               <>
-                <span class="callout">
-                  {part}
-                  <sup>{pad(i)}</sup>
-                </span>
+                <span class="callout">{part}</span>
                 {i < 3 ? ', ' : ' '}
               </>
             ))
@@ -162,7 +183,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
               return (
                 <li class="reveal" style={`--d:${i * 80}ms`}>
                   <a class="reg-row" href={`#project-${p.id}`} data-preview={preview(p)}>
-                    <span class="reg-n">{pad(i + 1)}</span>
+                    <span class="reg-n">02.{i + 1}</span>
                     <span class="reg-name">{p.name}</span>
                     <span class="reg-what">{c.kicker}</span>
                     <span class="reg-status">{c.status}</span>
@@ -180,13 +201,13 @@ const preview = (p: (typeof PROJECTS)[number]) => {
       </div>
     </section>
 
-    <!-- 02-04 PROJECT SHEETS -->
+    <!-- 02.1-02.3 PROJECT SHEETS -->
     {PROJECTS.map((project, i) => <Project project={project} t={t} lang={lang} index={i} />)}
 
-    <!-- 05 MATERIALS -->
+    <!-- 03 MATERIALS -->
     <section class="sheet materials" id="materials" data-sheet="4">
       <header class="sheet-head reveal">
-        <span class="sheet-no">{s.sheet} 05</span>
+        <span class="sheet-no">{s.sheet} 03</span>
         <span>{s.materialsSub}</span>
       </header>
       <h2 class="sheet-title chars" data-chars="view" aria-label={s.materials}><Chars text={s.materials} /></h2>
@@ -266,7 +287,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
     <!-- 06 CONTACT -->
     <section class="sheet contact" id="contact" data-sheet="5">
       <header class="sheet-head reveal">
-        <span class="sheet-no">{s.sheet} 06</span>
+        <span class="sheet-no">{s.sheet} 04</span>
         <span>{s.contactKicker}</span>
       </header>
       <h2 class="contact-title chars" data-chars="view" aria-label={s.contactTitle.join(' ')}>

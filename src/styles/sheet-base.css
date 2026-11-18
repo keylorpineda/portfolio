@@ -597,19 +597,13 @@ main {
   letter-spacing: -0.015em;
 }
 
-/* The four layers are numbered like callouts, and the numbers come back on every project. */
-.callout {
-  white-space: nowrap;
-  background: linear-gradient(var(--accent), var(--accent)) left 92% / 100% 1px no-repeat;
+/* The sentence is set quiet; the four layers stand out in full ink. */
+.lead {
+  color: var(--ink-3);
 }
 
-.callout sup {
-  margin-left: 2px;
-  font-family: var(--font-mono);
-  font-size: 0.42em;
-  font-weight: 500;
-  color: var(--accent-text);
-  vertical-align: 1.1em;
+.callout {
+  color: var(--ink);
 }
 
 .now {
@@ -713,25 +707,29 @@ main {
   --lr: clamp(70px, 9vw, 130px);
 }
 
-.name-wrap.is-lens .name:not(.name-ghost),
-.name-wrap.is-closing .name:not(.name-ghost) {
-  -webkit-mask-image: radial-gradient(circle var(--lr) at var(--lx) var(--ly), transparent calc(100% - 1px), #000 100%);
-  mask-image: radial-gradient(circle var(--lr) at var(--lx) var(--ly), transparent calc(100% - 1px), #000 100%);
-}
-
-/* The twin reaches past the letters so the grid fills the whole lens; padding keeps the text aligned. */
+/* Inside the lens the name is seen as on film: the paper turns to ink with a fine grid, and the
+   letters come out in the accent. The twin is opaque, so the solid name underneath stays untouched.
+   It reaches past the letters so the disc is whole; the padding keeps the text aligned. */
 .name-ghost {
   position: absolute;
   inset: -160px -160px auto;
   padding: 160px 160px;
-  color: transparent;
-  -webkit-text-stroke: 1.2px var(--accent);
-  background:
-    linear-gradient(color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px) 0 0 / 12px 12px,
-    linear-gradient(90deg, color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px) 0 0 / 12px 12px;
-  -webkit-mask-image: radial-gradient(circle var(--lr) at calc(var(--lx) + 160px) calc(var(--ly) + 160px), #000 calc(100% - 1px), transparent 100%);
-  mask-image: radial-gradient(circle var(--lr) at calc(var(--lx) + 160px) calc(var(--ly) + 160px), #000 calc(100% - 1px), transparent 100%);
+  color: var(--accent);
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--bg) 13%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--bg) 13%, transparent) 1px, transparent 1px);
+  background-size: 12px 12px;
+  -webkit-mask-image: radial-gradient(circle var(--lr) at calc(var(--lx, -999px) + 160px) calc(var(--ly, -999px) + 160px), #000 calc(100% - 1px), transparent 100%);
+  mask-image: radial-gradient(circle var(--lr) at calc(var(--lx, -999px) + 160px) calc(var(--ly, -999px) + 160px), #000 calc(100% - 1px), transparent 100%);
   pointer-events: none;
+  /* Only there while the lens is open or closing: never a full orange name before the pointer arrives. */
+  visibility: hidden;
+}
+
+.name-wrap.is-lens .name-ghost,
+.name-wrap.is-closing .name-ghost {
+  visibility: visible;
 }
 
 .name-ghost .ch {
@@ -950,8 +948,11 @@ main {
   row-gap: 32px;
 }
 
-.spec-desc {
+.spec-main {
   grid-column: 1 / 7;
+}
+
+.spec-desc {
   font-size: clamp(1.25rem, 0.95rem + 0.9vw, 1.75rem);
   font-weight: 450;
   font-stretch: 94%;
@@ -1574,7 +1575,7 @@ main {
     margin-top: 32px;
   }
 
-  .spec-desc,
+  .spec-main,
   .spec-table {
     grid-column: 1 / -1;
   }
@@ -1780,5 +1781,156 @@ html:not(.js) .step {
 @media (hover: none), (pointer: coarse) {
   .name-ghost {
     display: none;
+  }
+}
+
+
+/* ---------------------------------------------------------------- actions */
+/* Each project's links, under its description: the live demo first, filled in the accent; the
+   code and documents outlined. The address each one opens is printed under its label. */
+.spec-main {
+  display: grid;
+  align-content: start;
+  gap: clamp(22px, 3.5vh, 34px);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+.act {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 26px;
+  row-gap: 3px;
+  align-items: baseline;
+  padding: 13px 16px 12px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.35s var(--ease), border-color 0.35s;
+}
+
+/* The fill wipes in from the left on hover. */
+.act::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
+}
+
+.act:hover::before,
+.act:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.act:hover,
+.act:focus-visible {
+  color: var(--bg);
+}
+
+.act-k {
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.act-u {
+  grid-column: 1;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  opacity: 0.7;
+}
+
+.act-arrow {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: transform 0.45s var(--ease);
+}
+
+.act:hover .act-arrow {
+  transform: translate(3px, -3px);
+}
+
+.act-main {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #141414;
+}
+
+.act-main::before {
+  background: var(--ink);
+}
+
+.act-main:hover,
+.act-main:focus-visible {
+  border-color: var(--ink);
+}
+
+/* On the plate: a tab on its top edge that stays while the figures change. */
+.plate-open {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 11px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.plate-open:hover,
+.plate-open:focus-visible {
+  background: var(--accent);
+  color: #141414;
+}
+
+@media (max-width: 819px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .act {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+/* --------------------------------------------------------------- unplot */
+/* Leaving the cover, the name is unplotted letter by letter: each one thins from heavy to hairline
+   and retracts upward, in reading order. --out (0 → 1) follows the scroll; scrolling back plots it again. */
+.name-wrap {
+  --out: 0;
+}
+
+.js .name .ch {
+  --o: clamp(0, calc((var(--out) * 18 - var(--i, 0)) / 6), 1);
+  font-weight: calc(800 - var(--o) * 680);
+  clip-path: inset(0 0 calc(var(--o) * 100%) 0);
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .name .ch {
+    --o: 0;
   }
 }
