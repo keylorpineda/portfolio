@@ -83,7 +83,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
       </div>
     </header>
     <div class="frame-foot" aria-hidden="true">
-      <span class="frame-coords">{s.coords} <b data-clock>--:--</b> {s.local}</span>
+      <span class="frame-coords"><span class="coords-ll">{s.coords} </span><b data-clock>--:--</b> <span class="coords-local">{s.local}</span></span>
       <span class="frame-ruler"><i data-progress></i></span>
       <span class="frame-sheet">
         {s.sheet} <b data-sheet-now>01</b> {s.of} {total}
@@ -137,7 +137,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
           {
             s.lead.slice(1, 5).map((part, i) => (
               <>
-                <span class="callout">{part}</span>
+                <span class="callout" tabindex="0" data-note={s.leadNotes[i]}>{part}</span>
                 {i < 3 ? ', ' : ' '}
               </>
             ))

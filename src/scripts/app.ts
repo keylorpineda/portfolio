@@ -3,6 +3,12 @@
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+// The scroll position and viewport height, read once per scroll/resize event while layout is clean.
+// Animation frames use these instead of reading scrollY after styles were written (a forced layout).
+let sy = scrollY;
+let vh = innerHeight;
+addEventListener('scroll', () => (sy = scrollY), { passive: true });
+addEventListener('resize', () => ((sy = scrollY), (vh = innerHeight)));
 const $ = <T extends Element = HTMLElement>(sel: string, el: ParentNode = document) => el.querySelector<T>(sel);
 const $$ = <T extends Element = HTMLElement>(sel: string, el: ParentNode = document) => Array.from(el.querySelectorAll<T>(sel));
 const store = {
@@ -388,8 +394,7 @@ function measure() {
 }
 
 function frame() {
-  const y = scrollY;
-  const vh = innerHeight;
+  const y = sy;
   let moving = false;
   for (const s of scenes) {
     const tp = clamp01((y - s.top) / Math.max(1, s.height - vh));
@@ -433,12 +438,20 @@ const unplotWrap = $('[data-lens]');
 if (unplotWrap && !reduced) {
   let last = -1;
   let queued = false;
+  // Done by the time the name's bottom edge reaches the top bar, so all of it plays in view.
+  let range = 1;
+  let start = 0;
+  const measureRange = () => {
+    const r = unplotWrap.getBoundingClientRect();
+    // It starts when the name's top reaches the top bar, and is done when its bottom does.
+    start = Math.max(r.top + scrollY - 70, 0);
+    range = Math.max(r.bottom + scrollY - 90 - start, 1);
+  };
+  measureRange();
+  addEventListener('resize', measureRange);
   const unplot = () => {
     queued = false;
-    // Done by the time the name's bottom edge reaches the top bar, so all of it plays in view.
-    const r = unplotWrap.getBoundingClientRect();
-    const range = Math.max(r.bottom + scrollY - 90, 1);
-    const out = Math.min(Math.max(scrollY / range, 0), 1);
+    const out = Math.min(Math.max((sy - start) / range, 0), 1);
     if (Math.abs(out - last) < 0.001) return;
     last = out;
     unplotWrap.style.setProperty('--out', out.toFixed(3));
@@ -597,12 +610,17 @@ const sheetNos: string[] = JSON.parse(frameEl?.dataset.sheetNos ?? '[]');
 const sheetIndex: number[] = JSON.parse(frameEl?.dataset.sheetIndex ?? '[]');
 const ruler = $('[data-progress]');
 let current = -1;
+// Sheet tops are measured once (and on resize/load), not on every scroll frame.
+let sheetTops: [number, number][] = [];
+function measureSheets() {
+  sheetTops = sheets.map((el) => [el.getBoundingClientRect().top + scrollY, Number(el.dataset.sheet)]);
+  docMax = document.documentElement.scrollHeight - innerHeight;
+}
+let docMax = 0;
 function spy() {
-  const mid = innerHeight * 0.45;
+  const mid = sy + vh * 0.45;
   let on = 0;
-  sheets.forEach((el) => {
-    if (el.getBoundingClientRect().top < mid) on = Number(el.dataset.sheet);
-  });
+  for (const [top, n] of sheetTops) if (top < mid) on = n;
   if (on !== current) {
     current = on;
     const link = sheetIndex[on] ?? on;
@@ -616,8 +634,7 @@ function spy() {
     });
     if (sheetNow) sheetNow.textContent = no;
   }
-  const max = document.documentElement.scrollHeight - innerHeight;
-  ruler?.style.setProperty('--read', (max > 0 ? scrollY / max : 0).toFixed(4));
+  ruler?.style.setProperty('--read', (docMax > 0 ? sy / docMax : 0).toFixed(4));
 }
 let spyQueued = false;
 addEventListener(
@@ -632,4 +649,7 @@ addEventListener(
   },
   { passive: true },
 );
+measureSheets();
 spy();
+addEventListener('resize', () => (measureSheets(), spy()));
+addEventListener('load', () => (measureSheets(), spy()));

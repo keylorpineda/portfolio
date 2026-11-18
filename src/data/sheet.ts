@@ -14,6 +14,8 @@ const en = {
   width: 'width of this name',
   // The lead sentence, with the four layers numbered like callouts on a drawing.
   lead: ['I build products end to end:', 'the database', 'the API', 'the interface', 'and the machine learning', 'that makes them useful.'],
+  // What sits behind each of the four layers, shown over the word on hover.
+  leadNotes: ['PostgreSQL · SQLite · pgvector', 'FastAPI · NestJS · REST', 'React · Angular · React Native', 'TensorFlow Lite · RAG · Gemini'],
   block: [
     ['Drawn by', 'Keylor Pineda'],
     ['Role', 'Software developer'],
@@ -56,6 +58,7 @@ const es: typeof en = {
   name: 'Keylor Pineda',
   width: 'ancho de este nombre',
   lead: ['Construyo productos de punta a punta:', 'la base de datos', 'la API', 'la interfaz', 'y el machine learning', 'que los hace útiles.'],
+  leadNotes: ['PostgreSQL · SQLite · pgvector', 'FastAPI · NestJS · REST', 'React · Angular · React Native', 'TensorFlow Lite · RAG · Gemini'],
   block: [
     ['Dibujó', 'Keylor Pineda'],
     ['Rol', 'Desarrollador de software'],

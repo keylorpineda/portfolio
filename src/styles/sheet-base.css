@@ -1116,12 +1116,11 @@ main {
 .shot::after {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  top: calc((1 - var(--in)) * 100%);
-  height: 2px;
-  background: var(--accent);
+  inset: 0;
+  /* The line is painted, not positioned: moving a background never re-lays out the page. */
+  background: linear-gradient(var(--accent), var(--accent)) 0 calc((1 - var(--in)) * 100%) / 100% 2px no-repeat;
   opacity: calc(var(--in) * (1 - var(--in)) * 4);
+  pointer-events: none;
 }
 
 .shot img {
@@ -1201,10 +1200,13 @@ main {
 
 .step-n::before {
   content: '';
-  width: calc(var(--in) * (1 - var(--out)) * clamp(30px, 5vw, 80px));
+  flex: none;
+  width: clamp(30px, 5vw, 80px);
   height: 1px;
   margin-left: calc(clamp(30px, 5vw, 80px) * -1);
   background: var(--accent);
+  transform: scaleX(calc(var(--in) * (1 - var(--out))));
+  transform-origin: left;
 }
 
 .step h3 {
@@ -1932,5 +1934,122 @@ html:not(.js) .step {
 @media (prefers-reduced-motion: reduce) {
   .js .name .ch {
     --o: 0;
+  }
+}
+
+/* ------------------------------------------------------------ cover hovers */
+/* The sentence: each of the four layers underlines itself on hover, the rest of the sentence steps
+   back, and a note over the word names the tools behind that layer. */
+.callout {
+  position: relative;
+  outline: none;
+  background: linear-gradient(var(--accent), var(--accent)) left 94% / 0 2px no-repeat;
+  transition:
+    background-size 0.5s var(--ease),
+    color 0.3s;
+  cursor: default;
+}
+
+.callout::after {
+  content: attr(data-note);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 2px);
+  padding: 5px 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.25s,
+    transform 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.lead {
+  transition: color 0.35s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lead:has(.callout:hover) {
+    color: color-mix(in srgb, var(--ink-3) 55%, transparent);
+  }
+
+  .lead:has(.callout:hover) .callout:not(:hover) {
+    color: var(--ink-3);
+  }
+
+  .callout:hover,
+  .callout:focus-visible {
+    background-size: 100% 2px;
+  }
+
+  .callout:hover::after,
+  .callout:focus-visible::after {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The title block: a cell lifts off the sheet under the pointer, with a hard shadow in the accent,
+   and its value grows a little. */
+.titleblock div {
+  position: relative;
+  background: transparent;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease),
+    background-color 0.3s;
+}
+
+.titleblock dd {
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .titleblock div:hover {
+    z-index: 1;
+    background: var(--surface);
+    transform: translate(-5px, -5px);
+    box-shadow:
+      0 0 0 1px var(--ink),
+      5px 5px 0 var(--accent);
+  }
+
+  .titleblock div:hover dd {
+    transform: scale(1.08);
+  }
+
+  .titleblock div:hover dt {
+    color: var(--accent-text);
+  }
+}
+
+/* ------------------------------------------------------- small phones */
+/* The bottom bar keeps the clock and the sheet number; the coordinates step out. */
+@media (max-width: 430px) {
+  .coords-ll,
+  .coords-local {
+    display: none;
+  }
+}
+
+/* Long addresses wrap inside their button instead of spilling out. */
+.act > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* On narrow screens the header wraps; the commit line then starts at the left like the rest. */
+@media (max-width: 819px) {
+  .sheet-rev {
+    margin-left: 0;
   }
 }

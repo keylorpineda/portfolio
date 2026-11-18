@@ -102,10 +102,10 @@
 .wire {
   position: absolute;
   width: 0;
-  height: calc(var(--gap) * var(--x));
+  height: var(--gap);
   border-left: 1px dashed color-mix(in srgb, var(--ink) 35%, transparent);
   transform-origin: top;
-  transform: rotateX(-90deg);
+  transform: rotateX(-90deg) scaleY(var(--x));
   opacity: var(--x);
 }
 
