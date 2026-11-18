@@ -132,7 +132,7 @@ const preview = (p: (typeof PROJECTS)[number]) => {
           </div>
         </div>
 
-        <p class="lead reveal">
+        <p class="lead reveal" data-lead>
           {s.lead[0]}{' '}
           {
             s.lead.slice(1, 5).map((part, i) => (
@@ -145,22 +145,34 @@ const preview = (p: (typeof PROJECTS)[number]) => {
           {s.lead[5]}
         </p>
 
-        <dl class="titleblock reveal">
+        <dl class="titleblock reveal" data-titleblock>
           {
-            s.block.map(([k, v], i) => (
-              <div class:list={{ live: i === s.block.length - 1 }}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))
+            s.block.map(([k, v], i) =>
+              i === s.block.length - 1 ? (
+                <div class="live">
+                  <dt>{k}</dt>
+                  <dd>
+                    <a class="live-link" href="#contact">
+                      <span class="live-v">{v}</span>
+                      <span class="live-h" aria-hidden="true">{s.write}</span>
+                    </a>
+                  </dd>
+                </div>
+              ) : (
+                <div>
+                  <dt>{k}</dt>
+                  <dd data-decode>{v}</dd>
+                </div>
+              ),
+            )
           }
           <div>
             <dt>{s.sheet}</dt>
-            <dd>01 / {total}</dd>
+            <dd data-decode>01 / {total}</dd>
           </div>
           <div>
             <dt>Rev.</dt>
-            <dd>{built}</dd>
+            <dd data-decode>{built}</dd>
           </div>
         </dl>
 

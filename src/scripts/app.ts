@@ -328,6 +328,69 @@ $$('[data-chars]').forEach((el) => {
   el.addEventListener('pointerleave', () => chars.forEach((c) => c.style.setProperty('--lift', '0')));
 });
 
+/* ------------------------------------------------------------ cover, alive */
+// The title block's values are written in with the decoding effect when the cover first shows.
+const block = $('[data-titleblock]');
+if (block && !reduced) {
+  const cells = $$('[data-decode]', block)
+    .map((dd) => dd.firstChild)
+    .filter((n): n is Text => n?.nodeType === 3);
+  const texts = cells.map((n) => n.data);
+  cells.forEach((n) => (n.data = ''));
+  whenReady(() =>
+    new IntersectionObserver(([e], io) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      cells.forEach((n, i) => decode(n, texts[i], 250 + i * 110));
+    }).observe(block),
+  );
+}
+
+// The sentence's four layers take turns, each underlined with the tools behind it, while the cover
+// is in view. Pointing at one takes over; the turns resume when the pointer leaves the sentence.
+const lead = $('[data-lead]');
+if (lead && !reduced) {
+  const terms = $$('.callout', lead);
+  let turn = -1;
+  let timer = 0;
+  let visible = false;
+  let hovering = false;
+  const place = () =>
+    terms.forEach((t) => {
+      const r = t.getBoundingClientRect();
+      t.classList.toggle('is-end', r.left + 250 > innerWidth - 16);
+    });
+  const show = (i: number) => terms.forEach((t, k) => t.classList.toggle('is-on', k === i));
+  const step = () => {
+    turn = (turn + 1) % terms.length;
+    show(turn);
+  };
+  const run = () => {
+    clearInterval(timer);
+    if (visible && !hovering) {
+      place();
+      step();
+      timer = window.setInterval(step, 2600);
+    } else show(-1);
+  };
+  lead.addEventListener('pointerenter', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    hovering = true;
+    run();
+  });
+  lead.addEventListener('pointerleave', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    hovering = false;
+    run();
+  });
+  whenReady(() =>
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      run();
+    }, { threshold: 0.6 }).observe(lead),
+  );
+}
+
 /* ----------------------------------------------------------------- reveal */
 const reveals = $$('.reveal');
 if (reduced || !('IntersectionObserver' in window)) {

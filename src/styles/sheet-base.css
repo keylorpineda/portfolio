@@ -681,7 +681,7 @@ main {
   font-weight: 550;
 }
 
-.titleblock .live dd::before {
+.titleblock .live .live-v::before {
   content: '';
   display: inline-block;
   width: 7px;
@@ -2051,5 +2051,77 @@ html:not(.js) .step {
 @media (max-width: 819px) {
   .sheet-rev {
     margin-left: 0;
+  }
+}
+
+/* --------------------------------------------------------- cover, alive */
+/* The four layers take turns on their own (.is-on), the same look as a hover. */
+.callout.is-on {
+  background-size: 100% 2px;
+}
+
+.callout.is-on::after {
+  opacity: 1;
+  transform: none;
+}
+
+/* A note near the right edge opens toward the left, so it stays on screen. */
+.callout.is-end::after {
+  left: auto;
+  right: 0;
+}
+
+/* The status cell is a link to the contact sheet: its value rolls over to "Write me". */
+.live-link {
+  position: relative;
+  display: inline-grid;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.live-link::after {
+  content: '';
+  position: absolute;
+  inset: -40px -400px -40px -400px;
+}
+
+.live-v,
+.live-h {
+  grid-area: 1 / 1;
+  transition: transform 0.45s var(--ease);
+}
+
+.live-h {
+  color: var(--accent-text);
+  transform: translateY(105%);
+}
+
+.titleblock .live:hover .live-v,
+.live-link:focus-visible .live-v {
+  transform: translateY(-105%);
+}
+
+.titleblock .live:hover .live-h,
+.live-link:focus-visible .live-h {
+  transform: none;
+}
+
+.titleblock .live {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* On touch there is no hover, so the invitation is shown under the status. */
+@media (hover: none), (pointer: coarse) {
+  .live-link {
+    overflow: visible;
+  }
+
+  .live-h {
+    display: none;
+  }
+
+  .titleblock .live dd::after {
+    content: '';
   }
 }
