@@ -247,10 +247,45 @@
   display: none !important;
 }
 
+/* The monogram waits for its own font, so it never shows first in a fallback with other metrics. */
+.plot-mark {
+  opacity: 0;
+  transition:
+    opacity 0.3s,
+    transform 0.6s var(--ease);
+}
+
+.plotter.is-type .plot-mark {
+  opacity: 1;
+}
+
+.plotter.is-type.is-out .plot-mark {
+  opacity: 0;
+}
+
+/* Phones: the title block goes under the top label, the monogram keeps the middle to itself, and the
+   counter stays at the bottom. Sized on the visible viewport, so the browser bars never push it down. */
 @media (max-width: 819px) {
+  .plotter {
+    height: 100dvh;
+    bottom: auto;
+  }
+
   .plot-block {
-    bottom: calc(var(--frame) + 120px);
+    top: calc(var(--frame) + 52px);
+    bottom: auto;
     left: calc(var(--frame) + var(--pad));
     right: auto;
+  }
+
+  .plot-mark {
+    top: 56%;
+    font-size: clamp(96px, 30vw, 180px);
+  }
+}
+
+@media (max-width: 819px) and (max-height: 620px) {
+  .plot-block div:nth-child(n + 3):not(:last-child) {
+    display: none;
   }
 }

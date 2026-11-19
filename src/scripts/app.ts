@@ -245,6 +245,10 @@ function runPlotter(el: HTMLElement) {
   addEventListener('load', () => (loaded = true), { once: true });
   let fonts = false;
   document.fonts?.ready.then(() => (fonts = true));
+  // Show the monogram once its typeface is in (or after a short wait, whichever comes first).
+  const type = () => el.classList.add('is-type');
+  document.fonts?.load('800 100px "Archivo Variable"').then(type, type);
+  setTimeout(type, 900);
   const MIN = 1500; // the drawing never rushes
   const MAX = 3200; // and never holds the page hostage
   const t0 = performance.now();
@@ -349,45 +353,65 @@ if (block && !reduced) {
 // The sentence's four layers take turns, each underlined with the tools behind it, while the cover
 // is in view. Pointing at one takes over; the turns resume when the pointer leaves the sentence.
 const lead = $('[data-lead]');
-if (lead && !reduced) {
+const note = $('[data-lead-note]');
+if (lead && note) {
   const terms = $$('.callout', lead);
   let turn = -1;
   let timer = 0;
   let visible = false;
   let hovering = false;
-  const place = () =>
-    terms.forEach((t) => {
-      const r = t.getBoundingClientRect();
-      t.classList.toggle('is-end', r.left + 250 > innerWidth - 16);
-    });
-  const show = (i: number) => terms.forEach((t, k) => t.classList.toggle('is-on', k === i));
+  // Over the first line of the word, clamped so the whole note stays within the sentence.
+  const point = (t: HTMLElement | null) => {
+    terms.forEach((x) => x.classList.toggle('is-on', x === t));
+    if (!t) return note.classList.remove('is-shown');
+    note.textContent = t.dataset.note ?? '';
+    const box = lead.getBoundingClientRect();
+    const r = t.getClientRects()[0] ?? t.getBoundingClientRect();
+    const w = note.offsetWidth;
+    const x = Math.min(Math.max(r.left - box.left, 0), Math.max(lead.clientWidth - w, 0));
+    const y = r.top - box.top - note.offsetHeight - 2;
+    note.style.setProperty('--nx', `${Math.round(x)}px`);
+    note.style.setProperty('--ny', `${Math.round(y)}px`);
+    note.classList.add('is-shown');
+  };
   const step = () => {
     turn = (turn + 1) % terms.length;
-    show(turn);
+    point(terms[turn]);
   };
   const run = () => {
     clearInterval(timer);
-    if (visible && !hovering) {
-      place();
+    if (hovering) return;
+    if (visible && !reduced) {
       step();
       timer = window.setInterval(step, 2600);
-    } else show(-1);
+    } else point(null);
   };
-  lead.addEventListener('pointerenter', (e) => {
-    if (e.pointerType !== 'mouse') return;
-    hovering = true;
-    run();
+  terms.forEach((t) => {
+    t.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      hovering = true;
+      clearInterval(timer);
+      point(t);
+    });
+    t.addEventListener('focus', () => point(t));
   });
   lead.addEventListener('pointerleave', (e) => {
     if (e.pointerType !== 'mouse') return;
     hovering = false;
     run();
   });
+  addEventListener('resize', () => {
+    const on = terms.find((t) => t.classList.contains('is-on'));
+    if (on) point(on);
+  });
   whenReady(() =>
-    new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      run();
-    }, { threshold: 0.6 }).observe(lead),
+    new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting;
+        run();
+      },
+      { threshold: 0.6 },
+    ).observe(lead),
   );
 }
 

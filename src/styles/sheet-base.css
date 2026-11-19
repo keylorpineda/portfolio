@@ -1950,28 +1950,6 @@ html:not(.js) .step {
   cursor: default;
 }
 
-.callout::after {
-  content: attr(data-note);
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 2px);
-  padding: 5px 8px;
-  background: var(--ink);
-  color: var(--bg);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
-  white-space: nowrap;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.25s,
-    transform 0.4s var(--ease);
-  pointer-events: none;
-}
-
 .lead {
   transition: color 0.35s;
 }
@@ -1988,12 +1966,6 @@ html:not(.js) .step {
   .callout:hover,
   .callout:focus-visible {
     background-size: 100% 2px;
-  }
-
-  .callout:hover::after,
-  .callout:focus-visible::after {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -2060,17 +2032,6 @@ html:not(.js) .step {
   background-size: 100% 2px;
 }
 
-.callout.is-on::after {
-  opacity: 1;
-  transform: none;
-}
-
-/* A note near the right edge opens toward the left, so it stays on screen. */
-.callout.is-end::after {
-  left: auto;
-  right: 0;
-}
-
 /* The status cell is a link to the contact sheet: its value rolls over to "Write me". */
 .live-link {
   position: relative;
@@ -2123,5 +2084,45 @@ html:not(.js) .step {
 
   .titleblock .live dd::after {
     content: '';
+  }
+}
+
+/* The tools behind a layer: one note, placed over the active word by the script and kept inside the
+   sentence's width, so it never runs off the sheet, even when the word breaks across lines. */
+.lead {
+  position: relative;
+}
+
+.lead-note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: 100%;
+  padding: 5px 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  white-space: nowrap;
+  opacity: 0;
+  translate: var(--nx, 0px) calc(var(--ny, 0px) + 6px);
+  transition:
+    opacity 0.25s,
+    translate 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.lead-note.is-shown {
+  opacity: 1;
+  translate: var(--nx, 0px) var(--ny, 0px);
+}
+
+@media (max-width: 430px) {
+  .lead-note {
+    font-size: 0.625rem;
+    white-space: normal;
   }
 }
